@@ -286,6 +286,52 @@
   .map-day-tab.a-sat { background: #ff7eb318; border-color: var(--sat); color: var(--sat); }
   .map-day-tab.a-sun { background: #4dffc418; border-color: var(--sun); color: var(--sun); }
 
+  /* SAVES BAR */
+  .saves-wrap { padding: 0 20px 2px; }
+  .saves-row { display: flex; align-items: center; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 6px; }
+  .saves-row::-webkit-scrollbar { display: none; }
+  .saves-label { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); letter-spacing: 0.1em; flex-shrink: 0; }
+  .saves-pill {
+    flex-shrink: 0; display: flex; align-items: center; gap: 5px;
+    padding: 5px 8px 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border2); background: var(--surface);
+    cursor: pointer; font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--text); letter-spacing: 0.05em; transition: border-color 0.15s;
+  }
+  .saves-pill:active { border-color: var(--accent); }
+  .saves-pill-del {
+    width: 15px; height: 15px; border-radius: 50%;
+    border: none; background: #ffffff14; color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 11px; line-height: 1; padding: 0; flex-shrink: 0;
+  }
+  .saves-new-btn {
+    flex-shrink: 0; padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border2); background: none; cursor: pointer;
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--muted); letter-spacing: 0.06em; transition: all 0.15s;
+  }
+  .saves-new-btn:active { color: var(--accent); border-color: var(--accent); }
+  .save-input-row { display: none; gap: 8px; align-items: center; padding: 6px 20px 6px; }
+  .save-input-row.open { display: flex; }
+  .save-input-row input {
+    flex: 1; padding: 8px 12px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+    font-family: 'DM Mono', monospace; font-size: 12px; outline: none; transition: border-color 0.2s;
+  }
+  .save-input-row input:focus { border-color: var(--border2); }
+  .save-input-row input::placeholder { color: var(--muted); }
+  .save-confirm-btn {
+    padding: 8px 14px; border-radius: 8px; border: 1px solid var(--accent);
+    background: none; color: var(--accent); font-family: 'DM Mono', monospace;
+    font-size: 11px; cursor: pointer; flex-shrink: 0;
+  }
+  .save-cancel-btn {
+    padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border);
+    background: none; color: var(--muted); font-family: 'DM Mono', monospace;
+    font-size: 11px; cursor: pointer; flex-shrink: 0;
+  }
+
   /* TOAST */
   .toast {
     position: fixed; bottom: calc(84px + env(safe-area-inset-bottom));
@@ -314,6 +360,14 @@
   <div class="section-head">
     <h1>Lineup</h1>
     <p>MAY 15 + 16 + 17 · LAS VEGAS MOTOR SPEEDWAY</p>
+  </div>
+  <div class="saves-wrap">
+    <div class="saves-row" id="saves-row"></div>
+    <div class="save-input-row" id="save-input-row">
+      <input id="save-name-input" placeholder="name this save…" autocomplete="off" autocorrect="off" spellcheck="false">
+      <button class="save-confirm-btn" onclick="confirmSave()">SAVE</button>
+      <button class="save-cancel-btn" onclick="cancelSave()">×</button>
+    </div>
   </div>
   <div class="sticky-bar">
     <div class="browse-controls" id="browse-controls"></div>
@@ -722,11 +776,27 @@ function renderMap() {
     else stops[stops.length-1].artists.push(a);
   });
 
-  // SVG path between stops
-  let pathD = '';
-  stops.forEach((s,i)=>{
-    pathD += i===0 ? `M${s.pos.x},${s.pos.y}` : ` L${s.pos.x},${s.pos.y}`;
+  // Offset step markers when multiple stops share the same stage
+  const stageStopCounts = {};
+  stops.forEach(s => { stageStopCounts[s.stage] = (stageStopCounts[s.stage] || 0) + 1; });
+  const stageStopIdx = {};
+  stops.forEach(s => {
+    const idx = (stageStopIdx[s.stage] = (stageStopIdx[s.stage] ?? -1) + 1);
+    const count = stageStopCounts[s.stage];
+    s.markerX = s.pos.x + (idx - (count - 1) / 2) * 26;
+    s.markerY = s.pos.y;
   });
+
+  // Per-segment paths: solid = fast/tight walk, dashed = easy walk
+  const pathSegs = stops.slice(0,-1).map((s,i)=>{
+    const next = stops[i+1];
+    const wt = WALK[`${s.stage}-${next.stage}`];
+    const gap = toMins(next.artists[0].start) - toMins(s.artists[s.artists.length-1].end);
+    const tight = wt != null && gap < wt;
+    return `<path d="M${s.markerX},${s.markerY} L${next.markerX},${next.markerY}"
+      fill="none" stroke="${routeColor}" stroke-width="3" stroke-linecap="round"
+      ${tight ? '' : 'stroke-dasharray="7 5"'} opacity="0.85"/>`;
+  }).join('');
 
   // Stage pins for all stages
   const allStagePins = Object.entries(STAGE_POS).map(([name,pos])=>{
@@ -734,21 +804,21 @@ function renderMap() {
     const color = sc(name);
     return `
       <g>
-        <circle cx="${pos.x}" cy="${pos.y}" r="${isActive?14:8}" 
-          fill="${isActive?color+'22':'#1a1a2a'}" 
-          stroke="${isActive?color:'#333'}" 
+        <circle cx="${pos.x}" cy="${pos.y}" r="${isActive?14:8}"
+          fill="${isActive?color+'22':'#1a1a2a'}"
+          stroke="${isActive?color:'#333'}"
           stroke-width="${isActive?1.5:1}"/>
         ${isActive?`<circle cx="${pos.x}" cy="${pos.y}" r="4" fill="${color}"/>` : ''}
-        <text x="${pos.x}" y="${pos.y+32}" text-anchor="middle" 
-          font-family="DM Mono,monospace" font-size="${isActive?22:18}" 
+        <text x="${pos.x}" y="${pos.y+32}" text-anchor="middle"
+          font-family="DM Mono,monospace" font-size="${isActive?22:18}"
           fill="${isActive?color:'#8884a8'}">${name.replace(/([A-Z])/g,' $1').trim()}</text>
       </g>`;
   }).join('');
 
-  // Step numbers on route
+  // Step number markers, offset when same stage repeats
   const stepMarkers = stops.map((s,i)=>`
-    <circle cx="${s.pos.x}" cy="${s.pos.y}" r="10" fill="${routeColor}" opacity="0.9"/>
-    <text x="${s.pos.x}" y="${s.pos.y+4}" text-anchor="middle" 
+    <circle cx="${s.markerX}" cy="${s.markerY}" r="10" fill="${routeColor}" opacity="0.9"/>
+    <text x="${s.markerX}" y="${s.markerY+4}" text-anchor="middle"
       font-family="DM Mono,monospace" font-size="10" fill="#000" font-weight="700">${i+1}</text>
   `).join('');
 
@@ -775,24 +845,29 @@ function renderMap() {
     <div class="map-container" style="padding-top:32px">
       <div class="map-svg-wrap">
         <svg viewBox="0 0 680 780" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="${routeColor}" stroke-width="1.5" stroke-linecap="round"/>
-            </marker>
-          </defs>
           <!-- venue oval -->
           <ellipse cx="340" cy="400" rx="306" ry="362" fill="#0d0b1f" stroke="#1e1c35" stroke-width="2"/>
           <!-- all stage pins -->
           ${allStagePins}
-          <!-- route path -->
-          ${stops.length>1?`<path d="${pathD}" fill="none" stroke="${routeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr)" opacity="0.85"/>`:''}
+          <!-- route path: solid = comfortable walk, dashed = tight walk -->
+          ${pathSegs}
           <!-- step numbers -->
           ${stepMarkers}
         </svg>
       </div>
     </div>
     <div style="padding:16px 12px 8px 12px">
-      <div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;padding:0 4px 12px">${dayLabels[mapDay].toUpperCase()} · YOUR ROUTE</div>
+      <div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;padding:0 4px 10px">${dayLabels[mapDay].toUpperCase()} · YOUR ROUTE</div>
+      <div style="display:flex;gap:20px;align-items:center;padding:0 4px 14px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
+        <div style="display:flex;align-items:center;gap:7px">
+          <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round"/></svg>
+          <span>walk fast</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4"/></svg>
+          <span>easy walk</span>
+        </div>
+      </div>
       ${routeList}
     </div>`;
 }
@@ -817,12 +892,76 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'),2200);
 }
 
+// ── SAVES ─────────────────────────────────────────────────
+function getSaves() { return JSON.parse(localStorage.getItem('edc_saves') || '{}'); }
+function setSaves(s) { localStorage.setItem('edc_saves', JSON.stringify(s)); }
+
+function renderSavesBar() {
+  const row = document.getElementById('saves-row');
+  if (!row) return;
+  const saves = getSaves();
+  const names = Object.keys(saves);
+  row.innerHTML =
+    `<span class="saves-label">SAVES</span>` +
+    names.map(n =>
+      `<div class="saves-pill" onclick="loadSave('${n.replace(/'/g,"\\'")}')">
+        ${n}
+        <button class="saves-pill-del" onclick="event.stopPropagation();deleteSave('${n.replace(/'/g,"\\'")}')">×</button>
+      </div>`
+    ).join('') +
+    `<button class="saves-new-btn" onclick="startSave()">+ SAVE</button>`;
+}
+
+function startSave() {
+  const row = document.getElementById('save-input-row');
+  row.classList.add('open');
+  document.getElementById('save-name-input').focus();
+}
+
+function cancelSave() {
+  document.getElementById('save-input-row').classList.remove('open');
+  document.getElementById('save-name-input').value = '';
+}
+
+function confirmSave() {
+  const name = document.getElementById('save-name-input').value.trim();
+  if (!name) return;
+  const saves = getSaves();
+  saves[name] = [...selected];
+  setSaves(saves);
+  cancelSave();
+  renderSavesBar();
+  showToast(`Saved "${name}"`);
+}
+
+function loadSave(name) {
+  const saves = getSaves();
+  if (!saves[name]) return;
+  selected = new Set(saves[name]);
+  saveSelected();
+  renderBrowse();
+  showToast(`Loaded "${name}"`);
+}
+
+function deleteSave(name) {
+  const saves = getSaves();
+  delete saves[name];
+  setSaves(saves);
+  renderSavesBar();
+}
+
+document.getElementById('save-name-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') confirmSave();
+  if (e.key === 'Escape') cancelSave();
+});
+
 // ── SERVICE WORKER ────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(()=>{});
 }
 
 // ── INIT ──────────────────────────────────────────────────
+renderSavesBar();
 renderBrowse();
 </script>
 </body>
