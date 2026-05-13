@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080810">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>EDC LV 2026</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
+
+  :root {
+    --bg:       #080810;
+    --bg2:      #0e0e1c;
+    --surface:  #12121e;
+    --surface2: #1a1a2a;
+    --border:   #ffffff14;
+    --border2:  #ffffff24;
+    --text:     #f0eeff;
+    --muted:    #8884a8;
+    --accent:   #c8b4ff;
+    --warn:     #ffb347;
+    --fri:      #9b8dff;
+    --sat:      #ff7eb3;
+    --sun:      #4dffc4;
+    --nav-h:    54px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); min-height: 100dvh; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px; height: var(--nav-h); background: var(--bg);
+  }
+  .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 0.15em; color: var(--muted); }
+  .nav-logo span { color: var(--accent); }
+  .nav-refresh {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 20px;
+    border: 1px solid var(--border2); background: none;
+    color: var(--muted); font-family: 'DM Mono', monospace;
+    font-size: 10px; letter-spacing: 0.06em; cursor: pointer; transition: all 0.2s;
+  }
+  .nav-refresh:active { color: var(--accent); border-color: var(--accent); }
+  .nav-refresh svg { width: 13px; height: 13px; stroke-width: 2; stroke: currentColor; fill: none; flex-shrink: 0; }
+  .nav-refresh.spinning svg { animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TABS */
+  .tab-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
+    display: flex; background: var(--bg2); border-top: 1px solid var(--border);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .tab-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+    padding: 10px 0 8px; background: none; border: none; cursor: pointer;
+    font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 500;
+    color: var(--muted); letter-spacing: 0.08em; transition: color 0.2s;
+    position: relative;
+  }
+  .tab-btn svg { width: 20px; height: 20px; stroke-width: 1.5; stroke: currentColor; fill: none; transition: stroke 0.2s; }
+  .tab-btn.active { color: var(--accent); }
+  .tab-btn.active svg { stroke: var(--accent); }
+  .tab-btn.active::before {
+    content: '';
+    position: absolute; top: 0; left: 20%; right: 20%; height: 2px;
+    background: var(--accent); border-radius: 0 0 2px 2px;
+  }
+  /* badge on schedule tab */
+  .tab-badge {
+    position: absolute; top: 6px; right: calc(50% - 18px);
+    min-width: 16px; height: 16px; border-radius: 8px;
+    background: var(--accent); color: #0a0818;
+    font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700;
+    display: none; align-items: center; justify-content: center;
+    padding: 0 4px; line-height: 1;
+  }
+  .tab-badge.visible { display: flex; }
+
+  /* SCREENS */
+  .screen { display: none; padding: var(--nav-h) 0 84px; min-height: 100dvh; overflow: visible; }
+  .screen.active { display: block; }
+
+  /* HEADER */
+  .section-head { padding: 0 20px 6px; background: var(--bg); }
+  .section-head h1 { font-size: 18px; font-weight: 800; line-height: 1; }
+  .section-head p { font-size: 10px; color: var(--muted); margin-top: 2px; font-family: 'DM Mono', monospace; }
+
+  /* STICKY BAR */
+  .sticky-bar {
+    position: sticky; top: var(--nav-h); z-index: 90;
+    background: var(--bg); overflow: visible;
+  }
+  .sticky-bar::after {
+    content: ''; position: absolute; left: 0; right: 0; top: 100%;
+    height: 28px; background: linear-gradient(to bottom, var(--bg), transparent);
+    pointer-events: none;
+  }
+  .sticky-bar .day-pills { padding-bottom: 10px; }
+  .sticky-bar--fade-only { height: 0; padding: 0; background: transparent; }
+  .sticky-bar--fade-only::after { height: 28px; }
+
+  /* BROWSE CONTROLS ROW */
+  .browse-controls {
+    display: flex; align-items: center; gap: 8px;
+    padding: 0 20px; overflow-x: auto; scrollbar-width: none;
+    padding-bottom: 10px;
+  }
+  .browse-controls::-webkit-scrollbar { display: none; }
+
+  /* DAY PILLS */
+  .day-pills { display: flex; gap: 8px; padding: 0 20px 14px; overflow-x: auto; scrollbar-width: none; }
+  .day-pills::-webkit-scrollbar { display: none; }
+  .day-pill {
+    flex-shrink: 0; padding: 7px 16px; border-radius: 20px;
+    border: 1px solid var(--border2); background: none; cursor: pointer;
+    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+    letter-spacing: 0.06em; transition: all 0.18s;
+  }
+  .day-pill.a-all { background: #c8b4ff18; border-color: var(--accent); color: var(--accent); }
+  .day-pill.a-fri { background: #9b8dff18; border-color: var(--fri);    color: var(--fri);    }
+  .day-pill.a-sat { background: #ff7eb318; border-color: var(--sat);    color: var(--sat);    }
+  .day-pill.a-sun { background: #4dffc418; border-color: var(--sun);    color: var(--sun);    }
+
+  /* SORT PILL */
+  .sort-pill {
+    flex-shrink: 0; padding: 7px 12px; border-radius: 20px;
+    border: 1px solid var(--border2); background: none; cursor: pointer;
+    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+    letter-spacing: 0.06em; transition: all 0.18s;
+    display: flex; align-items: center; gap: 5px; white-space: nowrap;
+  }
+  .sort-pill.active { background: #ffffff10; border-color: var(--border2); color: var(--text); }
+  .sort-pill svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* SEARCH */
+  .search-wrap { padding: 32px 20px 12px; }
+  .search-input {
+    width: 100%; padding: 11px 14px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 8px; color: var(--text);
+    font-family: 'DM Mono', monospace; font-size: 13px; outline: none; transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--border2); }
+  .search-input::placeholder { color: var(--muted); }
+
+  /* STAGE LEGEND */
+  .stage-legend { display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 0 20px 14px; }
+  .s-leg { display: flex; align-items: center; gap: 5px; font-family: 'DM Mono', monospace; font-size: 10px; }
+  .s-leg-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  /* ARTIST GRID */
+  .artist-grid {
+    display: grid; grid-template-columns: repeat(2,1fr);
+    gap: 8px; padding: 0 20px 8px; align-items: start;
+  }
+  .artist-chip {
+    padding: 12px 12px 10px; border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    cursor: pointer; user-select: none;
+    display: flex; flex-direction: column; gap: 5px;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s;
+    position: relative;
+  }
+  .artist-chip:active { transform: scale(0.97); }
+  .artist-chip.s-fri { border-color: var(--fri); background: #9b8dff12; }
+  .artist-chip.s-sat { border-color: var(--sat); background: #ff7eb312; }
+  .artist-chip.s-sun { border-color: var(--sun); background: #4dffc412; }
+  .chip-top { display: block; }
+  .chip-name {
+    font-size: 13px; font-weight: 700; line-height: 1.7; color: var(--text);
+    white-space: normal; word-break: break-word; display: block; padding-right: 26px;
+  }
+  .chip-check {
+    position: absolute; top: 12px; right: 12px;
+    width: 16px; height: 16px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent; visibility: hidden;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .artist-chip.s-fri .chip-check { visibility: visible; background: var(--fri); }
+  .artist-chip.s-sat .chip-check { visibility: visible; background: var(--sat); }
+  .artist-chip.s-sun .chip-check { visibility: visible; background: var(--sun); }
+  .chip-check svg { width: 9px; height: 9px; stroke: #000; stroke-width: 3; fill: none; }
+  .chip-row { display: flex; align-items: center; gap: 5px; }
+  .chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .chip-stage { font-size: 10px; font-family: 'DM Mono', monospace; }
+  .chip-time { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; }
+
+  /* FAB */
+  .fab {
+    position: fixed; bottom: calc(68px + env(safe-area-inset-bottom));
+    left: 50%; transform: translateX(-50%);
+    padding: 13px 28px; border-radius: 40px;
+    background: var(--accent); color: #0a0818;
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
+    border: none; cursor: pointer; white-space: nowrap;
+    box-shadow: 0 6px 28px #c8b4ff44;
+    transition: all 0.2s; opacity: 0; pointer-events: none; z-index: 90;
+  }
+  .fab.visible { opacity: 1; pointer-events: all; }
+  .fab:active { transform: translateX(-50%) scale(0.96); }
+
+  /* SCHEDULE */
+  #schedule-list { padding-top: 36px; }
+  .sched-empty {
+    padding: 20px 20px 60px; text-align: center;
+    color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; line-height: 2.4;
+  }
+  .sched-empty-icon { font-size: 32px; display: block; margin-bottom: 12px; opacity: 0.3; }
+  .day-section { margin-bottom: 28px; }
+  .day-label {
+    padding: 0 20px 10px; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; font-family: 'DM Mono', monospace;
+  }
+  .day-label.fri { color: var(--fri); }
+  .day-label.sat { color: var(--sat); }
+  .day-label.sun { color: var(--sun); }
+  .sched-item {
+    margin: 0 20px 8px; padding: 13px 14px; border-radius: 12px;
+    background: var(--surface); border: 1px solid var(--border);
+    display: flex; align-items: center; gap: 11px; position: relative;
+  }
+  .sched-item.conflict { border-color: #ffb34740; background: #ffb34712; }
+  .conflict-pill {
+    position: absolute; top: -8px; right: 12px;
+    background: var(--warn); color: #1a0e00;
+    font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700;
+    padding: 2px 8px; border-radius: 10px; letter-spacing: 0.05em;
+  }
+  .sched-time {
+    font-family: 'DM Mono', monospace; font-size: 10px;
+    color: var(--muted); min-width: 48px; line-height: 1.7; flex-shrink: 0;
+  }
+  .sched-bar { width: 3px; border-radius: 2px; align-self: stretch; min-height: 36px; flex-shrink: 0; }
+  .sched-info { flex: 1; min-width: 0; }
+  .sched-name { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.25; white-space: normal; word-break: break-word; }
+  .sched-stage-row { display: flex; align-items: center; gap: 5px; margin-top: 3px; }
+  .sched-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .sched-stage { font-size: 11px; font-family: 'DM Mono', monospace; }
+  .sched-remove {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: none; border: 1px solid var(--border);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--muted); flex-shrink: 0; transition: all 0.15s;
+  }
+  .sched-remove:active { border-color: #ff606060; color: #ff6060; }
+  .sched-remove svg { width: 12px; height: 12px; stroke-width: 2.5; stroke: currentColor; fill: none; }
+  .walk-row { display: flex; align-items: center; gap: 8px; padding: 2px 20px 5px; }
+  .walk-line { flex: 1; height: 1px; background: var(--border); }
+  .walk-label { font-family: 'DM Mono', monospace; font-size: 10px; white-space: nowrap; }
+  .conflict-banner {
+    margin: 36px 20px 14px; padding: 11px 14px; border-radius: 8px;
+    background: #ffb34712; border: 1px solid #ffb34738;
+    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--warn);
+    display: none; line-height: 1.5;
+  }
+  .conflict-banner.visible { display: block; }
+
+  /* MAP SCREEN */
+  #screen-map { padding: var(--nav-h) 0 84px; }
+  .map-container { padding: 0 16px; }
+  .map-svg-wrap { width: 100%; border-radius: 12px; overflow: hidden; background: var(--surface); }
+  .map-svg-wrap svg { width: 100%; display: block; }
+  .map-legend { padding: 16px 4px 0; display: flex; flex-wrap: wrap; gap: 6px 14px; }
+  .map-leg-item { display: flex; align-items: center; gap: 5px; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+  .map-leg-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .map-no-sel {
+    padding: 40px 20px; text-align: center;
+    font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); line-height: 2;
+  }
+  .map-day-tabs { display: flex; gap: 8px; padding: 0 16px 10px; overflow-x: auto; scrollbar-width: none; }
+  .map-day-tabs::-webkit-scrollbar { display: none; }
+  .map-day-tab {
+    flex-shrink: 0; padding: 6px 14px; border-radius: 20px;
+    border: 1px solid var(--border2); background: none; cursor: pointer;
+    font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted);
+    transition: all 0.18s;
+  }
+  .map-day-tab.a-fri { background: #9b8dff18; border-color: var(--fri); color: var(--fri); }
+  .map-day-tab.a-sat { background: #ff7eb318; border-color: var(--sat); color: var(--sat); }
+  .map-day-tab.a-sun { background: #4dffc418; border-color: var(--sun); color: var(--sun); }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: calc(84px + env(safe-area-inset-bottom));
+    left: 50%; transform: translateX(-50%) translateY(12px);
+    background: var(--surface2); border: 1px solid var(--border2);
+    padding: 10px 20px; border-radius: 40px;
+    font-family: 'DM Mono', monospace; font-size: 12px; color: var(--text);
+    opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  ::-webkit-scrollbar { width: 0; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">EDC <span>LV</span> 2026</div>
+  <button class="nav-refresh" id="refresh-btn" onclick="refreshLineup()">
+    <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    REFRESH
+  </button>
+</nav>
+
+<!-- BROWSE -->
+<div class="screen active" id="screen-browse">
+  <div class="section-head">
+    <h1>Lineup</h1>
+    <p>MAY 15 + 16 + 17 · LAS VEGAS MOTOR SPEEDWAY</p>
+  </div>
+  <div class="sticky-bar">
+    <div class="browse-controls" id="browse-controls"></div>
+  </div>
+  <div class="search-wrap">
+    <input class="search-input" id="search" placeholder="search artists…" autocomplete="off" autocorrect="off" spellcheck="false">
+  </div>
+  <div class="stage-legend" id="stage-legend"></div>
+  <div class="artist-grid" id="artist-grid"></div>
+</div>
+
+<!-- SCHEDULE -->
+<div class="screen" id="screen-schedule">
+  <div class="section-head">
+    <h1>My Schedule</h1>
+    <p id="sched-count">0 artists selected</p>
+  </div>
+  <div class="sticky-bar sticky-bar--fade-only"></div>
+  <div class="conflict-banner" id="conflict-banner">⚠ conflicts detected — overlapping sets highlighted</div>
+  <div id="schedule-list"></div>
+</div>
+
+<!-- MAP -->
+<div class="screen" id="screen-map">
+  <div class="section-head">
+    <h1>Route Map</h1>
+    <p>YOUR ARTISTS · OPTIMIZED WALKING ROUTES</p>
+  </div>
+  <div class="sticky-bar" id="map-sticky">
+    <div class="map-day-tabs" id="map-day-tabs"></div>
+  </div>
+  <div id="map-content"></div>
+</div>
+
+<button class="fab" id="fab" onclick="goToSchedule()"></button>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('browse',this)" id="tab-browse">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 3.5 3.5"/></svg>
+    BROWSE
+  </button>
+  <button class="tab-btn" onclick="switchTab('schedule',this)" id="tab-schedule">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+    <div class="tab-badge" id="sched-badge"></div>
+    SCHEDULE
+  </button>
+  <button class="tab-btn" onclick="switchTab('map',this)" id="tab-map">
+    <svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3V7z"/><path d="M9 4v13M15 7v13"/></svg>
+    MAP
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── STAGE COLORS ──────────────────────────────────────────
+const STAGE_CFG = {
+  kineticField:   '#e8c840',
+  quantumValley:  '#7eb8ff',
+  cosmicMeadow:   '#5dffa0',
+  neonGarden:     '#e070ff',
+  circuitGrounds: '#ff6e6e',
+  bassPod:        '#ff9c42',
+  wasteLand:      '#ff4fa0',
+  stereoBloom:    '#42d4ff',
+  bionicJungle:   '#a0ff70',
+};
+const sc = s => STAGE_CFG[s] || '#888';
+
+// ── WALK TIMES ────────────────────────────────────────────
+const WALK = {
+  'kineticField-quantumValley':4,   'quantumValley-kineticField':4,
+  'kineticField-cosmicMeadow':6,    'cosmicMeadow-kineticField':6,
+  'kineticField-neonGarden':5,      'neonGarden-kineticField':5,
+  'kineticField-circuitGrounds':12, 'circuitGrounds-kineticField':12,
+  'kineticField-bassPod':10,        'bassPod-kineticField':10,
+  'kineticField-wasteLand':14,      'wasteLand-kineticField':14,
+  'kineticField-stereoBloom':5,     'stereoBloom-kineticField':5,
+  'kineticField-bionicJungle':7,    'bionicJungle-kineticField':7,
+  'quantumValley-neonGarden':5,     'neonGarden-quantumValley':5,
+  'quantumValley-cosmicMeadow':8,   'cosmicMeadow-quantumValley':8,
+  'quantumValley-circuitGrounds':8, 'circuitGrounds-quantumValley':8,
+  'quantumValley-bassPod':10,       'bassPod-quantumValley':10,
+  'neonGarden-cosmicMeadow':8,      'cosmicMeadow-neonGarden':8,
+  'neonGarden-circuitGrounds':8,    'circuitGrounds-neonGarden':8,
+  'cosmicMeadow-circuitGrounds':14, 'circuitGrounds-cosmicMeadow':14,
+  'cosmicMeadow-bassPod':8,         'bassPod-cosmicMeadow':8,
+  'cosmicMeadow-wasteLand':6,       'wasteLand-cosmicMeadow':6,
+  'circuitGrounds-bassPod':4,       'bassPod-circuitGrounds':4,
+  'bassPod-wasteLand':4,            'wasteLand-bassPod':4,
+};
+
+// ── STAGE POSITIONS on SVG map (x,y center) ──────────────
+const STAGE_POS = {
+  kineticField:   { x:340, y:72  },
+  quantumValley:  { x:545, y:131 },
+  bionicJungle:   { x:126, y:143 },
+  stereoBloom:    { x:200, y:264 },
+  cosmicMeadow:   { x:134, y:386 },
+  neonGarden:     { x:516, y:364 },
+  forestHouse:    { x:610, y:478 },
+  wasteLand:      { x:128, y:598 },
+  bassPod:        { x:324, y:638 },
+  circuitGrounds: { x:521, y:598 },
+};
+
+// ── LINEUP DATA ───────────────────────────────────────────
+const DEFAULT_LINEUP = [
+  {day:'FRI',name:'1991',               stage:'cosmicMeadow',  start:'21:00',end:'22:00'},
+  {day:'FRI',name:'Adriatique',         stage:'neonGarden',    start:'01:00',end:'02:30'},
+  {day:'FRI',name:'Argy',               stage:'kineticField',  start:'21:00',end:'22:00'},
+  {day:'FRI',name:'Cold Blue',          stage:'quantumValley', start:'21:00',end:'22:00'},
+  {day:'FRI',name:'Cosmic Gate',        stage:'quantumValley', start:'00:00',end:'01:00'},
+  {day:'FRI',name:'Darren Porter',      stage:'quantumValley', start:'04:00',end:'05:30'},
+  {day:'FRI',name:'Fisher',             stage:'kineticField',  start:'23:00',end:'00:30'},
+  {day:'FRI',name:'Gareth Emery',       stage:'quantumValley', start:'01:00',end:'02:00'},
+  {day:'FRI',name:'Gorillaz',           stage:'kineticField',  start:'21:30',end:'23:00'},
+  {day:'FRI',name:'Ilan Bluestone',     stage:'quantumValley', start:'02:00',end:'03:00'},
+  {day:'FRI',name:'Meduza',             stage:'cosmicMeadow',  start:'23:00',end:'00:30'},
+  {day:'FRI',name:'Nico Moreno',        stage:'neonGarden',    start:'23:00',end:'00:30'},
+  {day:'FRI',name:'Paul van Dyk',       stage:'quantumValley', start:'03:00',end:'04:00'},
+  {day:'FRI',name:'Peggy Gou',          stage:'neonGarden',    start:'23:30',end:'01:00'},
+  {day:'FRI',name:'Porter Robinson',    stage:'kineticField',  start:'00:30',end:'02:00'},
+  {day:'FRI',name:'San Pacho',          stage:'cosmicMeadow',  start:'04:02',end:'05:30'},
+  {day:'FRI',name:'Sofi Tukker',        stage:'kineticField',  start:'23:19',end:'00:28'},
+  {day:'FRI',name:'Underworld',         stage:'kineticField',  start:'02:00',end:'03:30'},
+  {day:'FRI',name:'Wooli',              stage:'bassPod',       start:'02:00',end:'03:30'},
+  {day:'SAT',name:'Above & Beyond',     stage:'kineticField',  start:'04:00',end:'05:30'},
+  {day:'SAT',name:'Andrew Rayel',       stage:'quantumValley', start:'23:30',end:'00:30'},
+  {day:'SAT',name:'Boys Noize',         stage:'neonGarden',    start:'23:00',end:'00:30'},
+  {day:'SAT',name:'Da Tweekaz',         stage:'bassPod',       start:'21:00',end:'22:30'},
+  {day:'SAT',name:'Dead X',             stage:'bassPod',       start:'23:00',end:'00:30'},
+  {day:'SAT',name:'Getter',             stage:'bassPod',       start:'22:30',end:'23:00'},
+  {day:'SAT',name:'Hardwell',           stage:'kineticField',  start:'23:00',end:'00:30'},
+  {day:'SAT',name:'Hayla',              stage:'kineticField',  start:'20:00',end:'21:00'},
+  {day:'SAT',name:'John Summit',        stage:'kineticField',  start:'00:32',end:'01:40'},
+  {day:'SAT',name:'Kaskade',            stage:'cosmicMeadow',  start:'23:00',end:'00:30'},
+  {day:'SAT',name:'Kettama',            stage:'neonGarden',    start:'01:00',end:'02:30'},
+  {day:'SAT',name:'Luciano',            stage:'neonGarden',    start:'00:30',end:'01:00'},
+  {day:'SAT',name:'Maddix',             stage:'quantumValley', start:'00:30',end:'01:30'},
+  {day:'SAT',name:'Paul Oakenfold',     stage:'quantumValley', start:'22:30',end:'23:30'},
+  {day:'SAT',name:'Peggy Gou B2B Ki/Ki',stage:'circuitGrounds',start:'01:45',end:'03:15'},
+  {day:'SAT',name:'The Prodigy',        stage:'kineticField',  start:'21:30',end:'23:00'},
+  {day:'SAT',name:'Tiësto',             stage:'circuitGrounds',start:'00:15',end:'01:45'},
+  {day:'SAT',name:'VTSS',               stage:'neonGarden',    start:'21:30',end:'23:00'},
+  {day:'SAT',name:'Wax Motif',          stage:'cosmicMeadow',  start:'21:00',end:'22:30'},
+  {day:'SUN',name:'999999999',          stage:'neonGarden',    start:'02:00',end:'03:30'},
+  {day:'SUN',name:'Alison Wonderland',  stage:'kineticField',  start:'21:00',end:'22:30'},
+  {day:'SUN',name:'Armin van Buuren',   stage:'kineticField',  start:'04:14',end:'05:28'},
+  {day:'SUN',name:'Chris Stussy',       stage:'neonGarden',    start:'23:30',end:'01:00'},
+  {day:'SUN',name:'Cloonee',            stage:'neonGarden',    start:'22:00',end:'23:30'},
+  {day:'SUN',name:'Indira Paganotto',   stage:'neonGarden',    start:'01:00',end:'02:00'},
+  {day:'SUN',name:'Kevin de Vries',     stage:'neonGarden',    start:'00:00',end:'01:00'},
+  {day:'SUN',name:'Kream',              stage:'quantumValley', start:'04:30',end:'05:30'},
+  {day:'SUN',name:'Martin Garrix',      stage:'kineticField',  start:'01:47',end:'02:57'},
+  {day:'SUN',name:'Massano',            stage:'neonGarden',    start:'03:30',end:'05:00'},
+  {day:'SUN',name:'Peekaboo',           stage:'bassPod',       start:'23:00',end:'00:30'},
+  {day:'SUN',name:'Rooler',             stage:'wasteLand',     start:'23:00',end:'00:30'},
+  {day:'SUN',name:'Seven Lions',        stage:'cosmicMeadow',  start:'01:05',end:'02:20'},
+  {day:'SUN',name:'Shingo Nakamura',    stage:'quantumValley', start:'23:00',end:'00:00'},
+  {day:'SUN',name:'Solomun',            stage:'neonGarden',    start:'21:00',end:'22:00'},
+  {day:'SUN',name:'Sub Zero Project',   stage:'wasteLand',     start:'00:30',end:'02:00'},
+  {day:'SUN',name:'Tinlicker',          stage:'quantumValley', start:'00:00',end:'01:00'},
+  {day:'SUN',name:'Vintage Culture',    stage:'cosmicMeadow',  start:'23:00',end:'00:30'},
+  {day:'SUN',name:'Virtual Riot',       stage:'bassPod',       start:'00:30',end:'02:00'},
+  {day:'SUN',name:'Zedd',               stage:'kineticField',  start:'23:30',end:'01:00'},
+];
+
+// ── STATE ─────────────────────────────────────────────────
+let lineup   = JSON.parse(localStorage.getItem('edc_lineup') || 'null') || DEFAULT_LINEUP;
+let selected = new Set(JSON.parse(localStorage.getItem('edc_sel') || '[]'));
+let browseDay = 'ALL';
+let sortMode  = 'name'; // 'name' | 'time' | 'stage'
+let mapDay    = 'FRI';
+
+function saveSelected() { localStorage.setItem('edc_sel', JSON.stringify([...selected])); }
+
+// ── HELPERS ───────────────────────────────────────────────
+function toMins(t) {
+  const [h,m] = t.split(':').map(Number);
+  return h < 8 ? (h+24)*60+m : h*60+m;
+}
+function fmt(t) {
+  let [h,m] = t.split(':').map(Number);
+  const ap = (h%24)<12?'am':'pm'; const h12=(h%12)||12;
+  return `${h12}:${m.toString().padStart(2,'0')}${ap}`;
+}
+function dc(day) { return {FRI:'fri',SAT:'sat',SUN:'sun'}[day]; }
+
+function hasConflict(name) {
+  const a = lineup.find(x=>x.name===name); if(!a) return false;
+  const as=toMins(a.start), ae=toMins(a.end);
+  return [...selected].some(n=>{
+    if(n===name) return false;
+    const b=lineup.find(x=>x.name===n);
+    if(!b||b.day!==a.day) return false;
+    return as<toMins(b.end) && toMins(b.start)<ae;
+  });
+}
+
+function updateBadge() {
+  const badge = document.getElementById('sched-badge');
+  const n = selected.size;
+  badge.textContent = n > 99 ? '99+' : n;
+  badge.classList.toggle('visible', n > 0);
+}
+
+// ── REFRESH ───────────────────────────────────────────────
+async function refreshLineup() {
+  const btn = document.getElementById('refresh-btn');
+  btn.classList.add('spinning');
+  try {
+    const res = await fetch('./lineup.json?nocache=' + Date.now());
+    if (!res.ok) throw new Error('fetch failed');
+    lineup = await res.json();
+    localStorage.setItem('edc_lineup', JSON.stringify(lineup));
+    renderBrowse(); renderSchedule(); renderMap();
+    showToast('Lineup refreshed ✓');
+  } catch(e) {
+    showToast('Refresh failed — check connection');
+  } finally {
+    btn.classList.remove('spinning');
+  }
+}
+
+// ── BROWSE ────────────────────────────────────────────────
+function renderBrowse() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const days=['ALL','FRI','SAT','SUN'];
+  const dlabels={ALL:'All Days',FRI:'Fri May 15',SAT:'Sat May 16',SUN:'Sun May 17'};
+  const dkeys={ALL:'a-all',FRI:'a-fri',SAT:'a-sat',SUN:'a-sun'};
+
+  const sorts = [
+    { key:'name',  label:'A–Z',   icon:'<path d="M4 6h16M4 12h10M4 18h6"/>' },
+    { key:'time',  label:'Time',  icon:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>' },
+    { key:'stage', label:'Stage', icon:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>' },
+  ];
+
+  document.getElementById('browse-controls').innerHTML =
+    days.map(d=>
+      `<button class="day-pill ${browseDay===d?dkeys[d]:''}" onclick="setBrowseDay('${d}')">${dlabels[d]}</button>`
+    ).join('') +
+    `<div style="width:1px;height:20px;background:var(--border2);flex-shrink:0;margin:0 2px"></div>` +
+    sorts.map(s=>
+      `<button class="sort-pill ${sortMode===s.key?'active':''}" onclick="setSort('${s.key}')">
+        <svg viewBox="0 0 24 24" style="width:10px;height:10px;stroke:currentColor;fill:none;stroke-width:2">${s.icon}</svg>
+        ${s.label}
+      </button>`
+    ).join('');
+
+  const usedStages = [...new Set(lineup.map(a=>a.stage))].sort();
+  document.getElementById('stage-legend').innerHTML = usedStages.map(s=>
+    `<div class="s-leg"><span class="s-leg-dot" style="background:${sc(s)}"></span><span style="color:${sc(s)}">${s}</span></div>`
+  ).join('');
+
+  let filtered = lineup.filter(a=>(browseDay==='ALL'||a.day===browseDay) && a.name.toLowerCase().includes(q));
+
+  if (sortMode==='name')  filtered.sort((a,b)=>a.name.localeCompare(b.name));
+  if (sortMode==='time')  filtered.sort((a,b)=>toMins(a.start)-toMins(b.start));
+  if (sortMode==='stage') filtered.sort((a,b)=>a.stage.localeCompare(b.stage)||a.name.localeCompare(b.name));
+
+  document.getElementById('artist-grid').innerHTML = filtered.map(a=>{
+    const sel = selected.has(a.name);
+    const color = sc(a.stage);
+    return `
+      <div class="artist-chip ${sel?'s-'+dc(a.day):''}" onclick="toggleArtist('${a.name.replace(/'/g,"\\'")}')">
+        <div class="chip-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="chip-top"><div class="chip-name">${a.name}</div></div>
+        <div class="chip-row">
+          <span class="chip-dot" style="background:${color}"></span>
+          <span class="chip-stage" style="color:${color}">${a.stage}</span>
+        </div>
+        <div class="chip-time">${fmt(a.start)} – ${fmt(a.end)}</div>
+      </div>`;
+  }).join('');
+
+  const fab = document.getElementById('fab');
+  fab.textContent = `View My Schedule (${selected.size})`;
+  fab.classList.toggle('visible', selected.size > 0);
+  updateBadge();
+}
+
+function setBrowseDay(d) { browseDay=d; renderBrowse(); }
+function setSort(s) { sortMode=s; renderBrowse(); }
+
+function toggleArtist(name) {
+  selected.has(name)?selected.delete(name):selected.add(name);
+  saveSelected(); renderBrowse(); updateBadge();
+}
+
+document.getElementById('search').addEventListener('input', renderBrowse);
+
+// ── SCHEDULE ──────────────────────────────────────────────
+function renderSchedule() {
+  document.getElementById('sched-count').textContent =
+    `${selected.size} artist${selected.size!==1?'s':''} selected`;
+
+  if (selected.size===0) {
+    document.getElementById('schedule-list').innerHTML =
+      `<div class="sched-empty"><span class="sched-empty-icon">🎪</span>no artists selected yet<br>browse the lineup to build your plan</div>`;
+    document.getElementById('conflict-banner').classList.remove('visible');
+    return;
+  }
+
+  const byDay={FRI:[],SAT:[],SUN:[]};
+  [...selected].forEach(name=>{
+    const a=lineup.find(x=>x.name===name);
+    if(a) byDay[a.day].push(a);
+  });
+
+  let anyConflict=false, html='';
+
+  ['FRI','SAT','SUN'].forEach(day=>{
+    const artists=byDay[day].sort((a,b)=>toMins(a.start)-toMins(b.start));
+    if(!artists.length) return;
+    const dl={FRI:'FRI · MAY 15',SAT:'SAT · MAY 16',SUN:'SUN · MAY 17'};
+    html+=`<div class="day-section"><div class="day-label ${dc(day)}">${dl[day]}</div>`;
+
+    artists.forEach((a,i)=>{
+      const conflict=hasConflict(a.name);
+      if(conflict) anyConflict=true;
+      const color=sc(a.stage);
+
+      if(i>0){
+        const prev=artists[i-1];
+        const wt=WALK[`${prev.stage}-${a.stage}`];
+        const gap=toMins(a.start)-toMins(prev.end);
+        if(wt!=null){
+          const tight=gap<wt;
+          html+=`<div class="walk-row">
+            <div class="walk-line"></div>
+            <div class="walk-label" style="color:${tight?'var(--warn)':'var(--muted)'}">~${wt} min walk${tight?' ⚠':''}</div>
+            <div class="walk-line"></div>
+          </div>`;
+        }
+      }
+
+      html+=`
+        <div class="sched-item ${conflict?'conflict':''}">
+          ${conflict?'<div class="conflict-pill">CONFLICT</div>':''}
+          <div class="sched-time">${fmt(a.start)}<br>${fmt(a.end)}</div>
+          <div class="sched-bar" style="background:${color}"></div>
+          <div class="sched-info">
+            <div class="sched-name">${a.name}</div>
+            <div class="sched-stage-row">
+              <span class="sched-dot" style="background:${color}"></span>
+              <span class="sched-stage" style="color:${color}">${a.stage}</span>
+            </div>
+          </div>
+          <button class="sched-remove" onclick="removeArtist('${a.name.replace(/'/g,"\\'")}')">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>`;
+    });
+    html+=`</div>`;
+  });
+
+  document.getElementById('schedule-list').innerHTML=html;
+  document.getElementById('conflict-banner').classList.toggle('visible',anyConflict);
+}
+
+function removeArtist(name) {
+  selected.delete(name); saveSelected(); renderSchedule(); renderBrowse();
+}
+
+function goToSchedule() {
+  switchTab('schedule', document.getElementById('tab-schedule'));
+}
+
+// ── MAP ───────────────────────────────────────────────────
+function renderMap() {
+  const days = ['FRI','SAT','SUN'];
+  const dayLabels = {FRI:'Fri May 15',SAT:'Sat May 16',SUN:'Sun May 17'};
+  const content = document.getElementById('map-content');
+
+  // render day tabs into sticky bar
+  document.getElementById('map-day-tabs').innerHTML =
+    days.map(d=>`<button class="map-day-tab ${mapDay===d?'a-'+dc(d):''}" onclick="setMapDay('${d}')">${dayLabels[d]}</button>`).join('');
+
+  // get selected artists for current mapDay
+  const dayArtists = [...selected]
+    .map(n=>lineup.find(x=>x.name===n))
+    .filter(a=>a && a.day===mapDay)
+    .sort((a,b)=>toMins(a.start)-toMins(b.start));
+
+  if (selected.size===0) {
+    content.innerHTML = `<div class="map-no-sel">select artists in Browse<br>to see your route</div>`;
+    return;
+  }
+
+  if (!dayArtists.length) {
+    content.innerHTML = `<div class="map-no-sel">no artists selected for ${dayLabels[mapDay]}</div>`;
+    return;
+  }
+
+  // Build route path through selected stages in time order
+  const routeColor = {FRI:'#9b8dff',SAT:'#ff7eb3',SUN:'#4dffc4'}[mapDay];
+
+  // Dedupe consecutive same-stage stops
+  const stops = [];
+  dayArtists.forEach(a=>{
+    const pos = STAGE_POS[a.stage];
+    if(!pos) return;
+    if(!stops.length || stops[stops.length-1].stage!==a.stage)
+      stops.push({stage:a.stage, pos, artists:[a]});
+    else stops[stops.length-1].artists.push(a);
+  });
+
+  // SVG path between stops
+  let pathD = '';
+  stops.forEach((s,i)=>{
+    pathD += i===0 ? `M${s.pos.x},${s.pos.y}` : ` L${s.pos.x},${s.pos.y}`;
+  });
+
+  // Stage pins for all stages
+  const allStagePins = Object.entries(STAGE_POS).map(([name,pos])=>{
+    const isActive = stops.some(s=>s.stage===name);
+    const color = sc(name);
+    return `
+      <g>
+        <circle cx="${pos.x}" cy="${pos.y}" r="${isActive?14:8}" 
+          fill="${isActive?color+'22':'#1a1a2a'}" 
+          stroke="${isActive?color:'#333'}" 
+          stroke-width="${isActive?1.5:1}"/>
+        ${isActive?`<circle cx="${pos.x}" cy="${pos.y}" r="4" fill="${color}"/>` : ''}
+        <text x="${pos.x}" y="${pos.y+32}" text-anchor="middle" 
+          font-family="DM Mono,monospace" font-size="${isActive?22:18}" 
+          fill="${isActive?color:'#8884a8'}">${name.replace(/([A-Z])/g,' $1').trim()}</text>
+      </g>`;
+  }).join('');
+
+  // Step numbers on route
+  const stepMarkers = stops.map((s,i)=>`
+    <circle cx="${s.pos.x}" cy="${s.pos.y}" r="10" fill="${routeColor}" opacity="0.9"/>
+    <text x="${s.pos.x}" y="${s.pos.y+4}" text-anchor="middle" 
+      font-family="DM Mono,monospace" font-size="10" fill="#000" font-weight="700">${i+1}</text>
+  `).join('');
+
+  // Route summary list
+  const routeList = stops.map((s,i)=>{
+    const color = sc(s.stage);
+    const names = s.artists.map(a=>`<span style="color:${color};font-weight:700">${a.name}</span> <span style="color:var(--muted)">${fmt(a.start)}</span>`).join('<br>');
+    const nextStop = stops[i+1];
+    const wt = nextStop ? WALK[`${s.stage}-${nextStop.stage}`] : null;
+    return `
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
+        <div style="width:22px;height:22px;border-radius:50%;background:${routeColor};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+          <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${i+1}</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:11px;color:${color};font-family:DM Mono,monospace;margin-bottom:3px">${s.stage}</div>
+          <div style="font-size:13px;line-height:1.8">${names}</div>
+          ${wt?`<div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-top:6px">→ ~${wt} min walk to stop ${i+2}</div>`:''}
+        </div>
+      </div>`;
+  }).join('');
+
+  content.innerHTML = `
+    <div class="map-container" style="padding-top:32px">
+      <div class="map-svg-wrap">
+        <svg viewBox="0 0 680 780" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="${routeColor}" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <!-- venue oval -->
+          <ellipse cx="340" cy="400" rx="306" ry="362" fill="#0d0b1f" stroke="#1e1c35" stroke-width="2"/>
+          <!-- all stage pins -->
+          ${allStagePins}
+          <!-- route path -->
+          ${stops.length>1?`<path d="${pathD}" fill="none" stroke="${routeColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arr)" opacity="0.85"/>`:''}
+          <!-- step numbers -->
+          ${stepMarkers}
+        </svg>
+      </div>
+    </div>
+    <div style="padding:16px 12px 8px 12px">
+      <div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;padding:0 4px 12px">${dayLabels[mapDay].toUpperCase()} · YOUR ROUTE</div>
+      ${routeList}
+    </div>`;
+}
+
+function setMapDay(d) { mapDay=d; renderMap(); }
+
+// ── NAV ───────────────────────────────────────────────────
+function switchTab(tab, btn) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('screen-'+tab).classList.add('active');
+  btn.classList.add('active');
+  const fab = document.getElementById('fab');
+  if(tab==='schedule') { renderSchedule(); fab.classList.remove('visible'); }
+  else if(tab==='map')      { renderMap(); fab.classList.remove('visible'); }
+  else if(tab==='browse')   renderBrowse();
+}
+
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// ── SERVICE WORKER ────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+}
+
+// ── INIT ──────────────────────────────────────────────────
+renderBrowse();
+</script>
+</body>
+</html>

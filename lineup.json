@@ -1,0 +1,408 @@
+[
+  {
+    "day": "FRI",
+    "name": "1991",
+    "stage": "cosmicMeadow",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Adriatique",
+    "stage": "neonGarden",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Argy",
+    "stage": "kineticField",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Cold Blue",
+    "stage": "quantumValley",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Cosmic Gate",
+    "stage": "quantumValley",
+    "start": "00:00",
+    "end": "01:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Darren Porter",
+    "stage": "quantumValley",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Fisher",
+    "stage": "kineticField",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Gareth Emery",
+    "stage": "quantumValley",
+    "start": "01:00",
+    "end": "02:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Gorillaz",
+    "stage": "kineticField",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Ilan Bluestone",
+    "stage": "quantumValley",
+    "start": "02:00",
+    "end": "03:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Meduza",
+    "stage": "cosmicMeadow",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Nico Moreno",
+    "stage": "neonGarden",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Paul van Dyk",
+    "stage": "quantumValley",
+    "start": "03:00",
+    "end": "04:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Peggy Gou",
+    "stage": "neonGarden",
+    "start": "23:30",
+    "end": "01:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Porter Robinson",
+    "stage": "kineticField",
+    "start": "00:30",
+    "end": "02:00"
+  },
+  {
+    "day": "FRI",
+    "name": "San Pacho",
+    "stage": "cosmicMeadow",
+    "start": "04:02",
+    "end": "05:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Sofi Tukker",
+    "stage": "kineticField",
+    "start": "23:19",
+    "end": "00:28"
+  },
+  {
+    "day": "FRI",
+    "name": "Underworld",
+    "stage": "kineticField",
+    "start": "02:00",
+    "end": "03:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Wooli",
+    "stage": "bassPod",
+    "start": "02:00",
+    "end": "03:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Above & Beyond",
+    "stage": "kineticField",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Andrew Rayel",
+    "stage": "quantumValley",
+    "start": "23:30",
+    "end": "00:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Boys Noize",
+    "stage": "neonGarden",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Da Tweekaz",
+    "stage": "bassPod",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Dead X",
+    "stage": "bassPod",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Getter",
+    "stage": "bassPod",
+    "start": "22:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Hardwell",
+    "stage": "kineticField",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Hayla",
+    "stage": "kineticField",
+    "start": "20:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "John Summit",
+    "stage": "kineticField",
+    "start": "00:32",
+    "end": "01:40"
+  },
+  {
+    "day": "SAT",
+    "name": "Kaskade",
+    "stage": "cosmicMeadow",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Kettama",
+    "stage": "neonGarden",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Luciano",
+    "stage": "neonGarden",
+    "start": "00:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Maddix",
+    "stage": "quantumValley",
+    "start": "00:30",
+    "end": "01:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Paul Oakenfold",
+    "stage": "quantumValley",
+    "start": "22:30",
+    "end": "23:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Peggy Gou B2B Ki/Ki",
+    "stage": "circuitGrounds",
+    "start": "01:45",
+    "end": "03:15"
+  },
+  {
+    "day": "SAT",
+    "name": "The Prodigy",
+    "stage": "kineticField",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Tiësto",
+    "stage": "circuitGrounds",
+    "start": "00:15",
+    "end": "01:45"
+  },
+  {
+    "day": "SAT",
+    "name": "VTSS",
+    "stage": "neonGarden",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Wax Motif",
+    "stage": "cosmicMeadow",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "999999999",
+    "stage": "neonGarden",
+    "start": "02:00",
+    "end": "03:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Alison Wonderland",
+    "stage": "kineticField",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Armin van Buuren",
+    "stage": "kineticField",
+    "start": "04:14",
+    "end": "05:28"
+  },
+  {
+    "day": "SUN",
+    "name": "Chris Stussy",
+    "stage": "neonGarden",
+    "start": "23:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Cloonee",
+    "stage": "neonGarden",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Indira Paganotto",
+    "stage": "neonGarden",
+    "start": "01:00",
+    "end": "02:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Kevin de Vries",
+    "stage": "neonGarden",
+    "start": "00:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Kream",
+    "stage": "quantumValley",
+    "start": "04:30",
+    "end": "05:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Martin Garrix",
+    "stage": "kineticField",
+    "start": "01:47",
+    "end": "02:57"
+  },
+  {
+    "day": "SUN",
+    "name": "Massano",
+    "stage": "neonGarden",
+    "start": "03:30",
+    "end": "05:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Peekaboo",
+    "stage": "bassPod",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Rooler",
+    "stage": "wasteLand",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Seven Lions",
+    "stage": "cosmicMeadow",
+    "start": "01:05",
+    "end": "02:20"
+  },
+  {
+    "day": "SUN",
+    "name": "Shingo Nakamura",
+    "stage": "quantumValley",
+    "start": "23:00",
+    "end": "00:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Solomun",
+    "stage": "neonGarden",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Sub Zero Project",
+    "stage": "wasteLand",
+    "start": "00:30",
+    "end": "02:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Tinlicker",
+    "stage": "quantumValley",
+    "start": "00:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Vintage Culture",
+    "stage": "cosmicMeadow",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Virtual Riot",
+    "stage": "bassPod",
+    "start": "00:30",
+    "end": "02:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Zedd",
+    "stage": "kineticField",
+    "start": "23:30",
+    "end": "01:00"
+  }
+]
