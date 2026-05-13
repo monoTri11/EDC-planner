@@ -35,7 +35,7 @@
   nav {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 0 20px; height: var(--nav-h); background: var(--bg);
+    padding: env(safe-area-inset-top) 20px 0; height: calc(var(--nav-h) + env(safe-area-inset-top)); background: var(--bg);
   }
   .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 0.15em; color: var(--muted); }
   .nav-logo span { color: var(--accent); }
@@ -84,7 +84,7 @@
   .tab-badge.visible { display: flex; }
 
   /* SCREENS */
-  .screen { display: none; padding: var(--nav-h) 0 84px; min-height: 100dvh; overflow: visible; }
+  .screen { display: none; padding: calc(var(--nav-h) + env(safe-area-inset-top)) 0 84px; min-height: 100dvh; overflow: visible; }
   .screen.active { display: block; }
 
   /* HEADER */
@@ -94,7 +94,7 @@
 
   /* STICKY BAR */
   .sticky-bar {
-    position: sticky; top: var(--nav-h); z-index: 90;
+    position: sticky; top: calc(var(--nav-h) + env(safe-area-inset-top)); z-index: 90;
     background: var(--bg); overflow: visible;
   }
   .sticky-bar::after {
