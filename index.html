@@ -519,9 +519,8 @@
     flex-shrink: 0; padding: 6px 12px; border-radius: 999px;
     background: #1e1e2e; border: 1px solid var(--border);
     color: var(--muted); font-family: 'DM Mono', monospace; font-size: 10px;
-    cursor: pointer; white-space: nowrap; margin-top: 4px;
-    -webkit-tap-highlight-color: transparent;
-    transition: border-color 0.15s;
+    cursor: pointer; white-space: nowrap;
+    -webkit-tap-highlight-color: transparent; transition: border-color 0.15s;
   }
   .sq-add-btn:active { border-color: var(--accent); color: var(--accent); }
   #sq-sheet {
@@ -557,11 +556,49 @@
   }
   .sq-input::placeholder { color: var(--muted); }
   .sq-input:focus, .sq-select:focus { outline: none; border-color: var(--accent); }
+  .sq-day-row { display: flex; gap: 8px; }
+  .sq-day-btn {
+    flex: 1; padding: 10px 0; border-radius: 8px; border: 1px solid var(--border2);
+    background: var(--surface); color: var(--muted);
+    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 600;
+    cursor: pointer; -webkit-tap-highlight-color: transparent; transition: all 0.15s;
+  }
+  .sq-day-btn.active { background: #1e1e2e; border-color: var(--accent); color: var(--accent); }
+  .sq-loc-toggle { display: flex; border-radius: 8px; overflow: hidden; border: 1px solid var(--border2); }
+  .sq-mode-btn {
+    flex: 1; padding: 9px 0; background: var(--surface); border: none;
+    color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px;
+    cursor: pointer; -webkit-tap-highlight-color: transparent; transition: all 0.15s;
+  }
+  .sq-mode-btn.active { background: #1e1e2e; color: var(--accent); }
   .sq-submit {
     width: 100%; padding: 14px; border-radius: 10px; border: none; cursor: pointer;
     background: var(--accent); color: #0a0818;
     font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
     -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ABOUT MODAL */
+  #about-overlay {
+    position: fixed; inset: 0; z-index: 300; background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; box-sizing: border-box;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  #about-overlay.open { opacity: 1; pointer-events: all; }
+  #about-modal {
+    background: var(--surface2); border-radius: 16px; padding: 28px 24px;
+    max-width: 380px; width: 100%;
+    transform: scale(0.95); transition: transform 0.2s;
+  }
+  #about-overlay.open #about-modal { transform: scale(1); }
+  #about-modal h2 { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800; margin: 0 0 16px; }
+  #about-modal p { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); line-height: 1.7; margin: 0 0 12px; }
+  #about-modal p:last-of-type { margin-bottom: 20px; }
+  #about-close-btn {
+    width: 100%; padding: 13px; border-radius: 10px; border: none; cursor: pointer;
+    background: var(--surface); color: var(--text);
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700;
   }
 </style>
 </head>
@@ -603,6 +640,11 @@
     <span>Share App</span>
   </div>
   <div class="nav-dropdown-divider"></div>
+  <div class="nav-dropdown-item" onclick="menuAbout()">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span>About this App</span>
+  </div>
+  <div class="nav-dropdown-divider"></div>
   <div id="menu-version" style="padding:10px 20px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.1em;text-align:center;border-radius:0 0 14px 14px"></div>
 </div>
 
@@ -640,12 +682,9 @@
 
 <!-- MAP -->
 <div class="screen" id="screen-map">
-  <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-start">
-    <div>
-      <h1>Map</h1>
-      <p>YOUR ARTISTS · OPTIMIZED WALKING ROUTES</p>
-    </div>
-    <button class="sq-add-btn" onclick="openSqSheet()">+ side quest</button>
+  <div class="section-head">
+    <h1>Map</h1>
+    <p>YOUR ARTISTS · OPTIMIZED WALKING ROUTES</p>
   </div>
   <div class="sticky-bar" id="map-sticky">
     <div class="map-day-tabs" id="map-day-tabs"></div>
@@ -671,27 +710,83 @@
   <div id="sq-backdrop2" onclick="closeSqSheet()"></div>
   <div id="sq-panel2">
     <div id="sq-hdr">
-      <span>Add Side Quest</span>
+      <span id="sq-hdr-title">Add Side Quest</span>
       <button id="sq-close2" onclick="closeSqSheet()">✕</button>
     </div>
     <div class="sq-form">
-      <input class="sq-input" id="sq-name" type="text" placeholder="Name e.g. meet at fountain…">
+      <input class="sq-input" id="sq-name" type="text" placeholder="e.g. Meet friends at fountain…">
+      <div class="sq-day-row">
+        <button class="sq-day-btn" data-day="FRI" onclick="setSqDay('FRI')">Fri May 15</button>
+        <button class="sq-day-btn" data-day="SAT" onclick="setSqDay('SAT')">Sat May 16</button>
+        <button class="sq-day-btn" data-day="SUN" onclick="setSqDay('SUN')">Sun May 17</button>
+      </div>
       <input class="sq-input" id="sq-time" type="time">
-      <select class="sq-select" id="sq-loc">
-        <option value="">Select location…</option>
-        <option value="kineticField">Kinetic Field</option>
-        <option value="quantumValley">Quantum Valley</option>
-        <option value="bionicJungle">Bionic Jungle</option>
-        <option value="stereoBloom">Stereo Bloom</option>
-        <option value="cosmicMeadow">Cosmic Meadow</option>
-        <option value="neonGarden">Neon Garden</option>
-        <option value="forestHouse">Forest House</option>
-        <option value="wasteLand">Wasteland</option>
-        <option value="bassPod">Bass Pod</option>
-        <option value="circuitGrounds">Circuit Grounds</option>
-      </select>
-      <button class="sq-submit" onclick="saveSq()">Add to Route</button>
+      <div class="sq-loc-toggle">
+        <button class="sq-mode-btn active" id="sq-mode-list" onclick="setLocMode('list')">Stage / Area</button>
+        <button class="sq-mode-btn" id="sq-mode-w3w" onclick="setLocMode('w3w')">What3Words</button>
+      </div>
+      <div id="sq-loc-list">
+        <select class="sq-select" id="sq-loc">
+          <option value="">Select location…</option>
+          <optgroup label="── Stages ──">
+            <option value="kineticField">Kinetic Field</option>
+            <option value="quantumValley">Quantum Valley</option>
+            <option value="bionicJungle">Bionic Jungle</option>
+            <option value="stereoBloom">Stereo Bloom</option>
+            <option value="cosmicMeadow">Cosmic Meadow</option>
+            <option value="neonGarden">Neon Garden</option>
+            <option value="forestHouse">Forest House</option>
+            <option value="wasteLand">Wasteland</option>
+            <option value="bassPod">Bass Pod</option>
+            <option value="circuitGrounds">Circuit Grounds</option>
+          </optgroup>
+          <optgroup label="── Entrances ──">
+            <option value="mainEntrance">Main Entrance</option>
+            <option value="gaGate1">GA Gate 1</option>
+            <option value="gaGate2">GA Gate 2</option>
+            <option value="vipGate">VIP Gate</option>
+            <option value="shuttleDropoff">Shuttle Drop-off</option>
+          </optgroup>
+          <optgroup label="── VIP ──">
+            <option value="vipLounge">VIP Lounge</option>
+            <option value="vipBar">VIP Bar</option>
+            <option value="vipViewing">VIP Viewing Area</option>
+          </optgroup>
+          <optgroup label="── Medical ──">
+            <option value="medicalMain">Medical (Main)</option>
+            <option value="medicalNorth">Medical (North)</option>
+            <option value="medicalSouth">Medical (South)</option>
+          </optgroup>
+          <optgroup label="── Amenities ──">
+            <option value="infoCenter">Info Center</option>
+            <option value="lostFound">Lost & Found</option>
+            <option value="merch">Merch</option>
+            <option value="atm">ATM</option>
+            <option value="foodCourt1">Food Court (Central)</option>
+            <option value="foodCourt2">Food Court (South)</option>
+            <option value="restroom1">Restrooms (North)</option>
+            <option value="restroom2">Restrooms (Central)</option>
+            <option value="restroom3">Restrooms (South)</option>
+          </optgroup>
+        </select>
+      </div>
+      <div id="sq-loc-w3w" style="display:none">
+        <input class="sq-input" id="sq-w3w" type="text" placeholder="///word.word.word">
+      </div>
+      <button class="sq-submit" onclick="saveSq()" id="sq-submit-btn">Add to Route</button>
     </div>
+  </div>
+</div>
+
+<!-- ABOUT MODAL -->
+<div id="about-overlay" onclick="closeAboutModal()">
+  <div id="about-modal" onclick="event.stopPropagation()">
+    <h2>EDC LV 2026 Planner</h2>
+    <p>This is a personal fan-made project built to help headliners plan their EDC experience. It is <strong>not affiliated with, endorsed by, or sponsored by Insomniac Events, EDC Las Vegas</strong>, or any of their subsidiaries.</p>
+    <p>All artist names, stage names, and event information remain the property of their respective owners. Set times are sourced from publicly available information and may not be 100% accurate — always verify with the official EDC app.</p>
+    <p>Spotify previews are served through Spotify's official embed API. This app does not collect, store, or transmit any personal data.</p>
+    <p style="color:var(--muted);font-size:11px">Built with love for the headliners. See you under the electric sky. 🌟</p>
+    <button id="about-close-btn" onclick="closeAboutModal()">Got it</button>
   </div>
 </div>
 
@@ -765,7 +860,7 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.11';
+const APP_VERSION = '2.12';
 
 // ── SPOTIFY IDS ───────────────────────────────────────────
 const SPOTIFY_IDS = {
@@ -880,14 +975,68 @@ const STAGE_POS = {
   circuitGrounds: { x:521, y:598 },
 };
 
+// ── SIDE QUEST LOCATIONS ──────────────────────────────────
+const SQ_LOCATIONS = [
+  // Stages — exact positions from STAGE_POS
+  { key:'kineticField',   label:'Kinetic Field',        pos: {x:340,y:72}  },
+  { key:'quantumValley',  label:'Quantum Valley',        pos: {x:545,y:131} },
+  { key:'bionicJungle',   label:'Bionic Jungle',         pos: {x:126,y:143} },
+  { key:'stereoBloom',    label:'Stereo Bloom',          pos: {x:200,y:264} },
+  { key:'cosmicMeadow',   label:'Cosmic Meadow',         pos: {x:134,y:386} },
+  { key:'neonGarden',     label:'Neon Garden',           pos: {x:516,y:364} },
+  { key:'forestHouse',    label:'Forest House',          pos: {x:610,y:478} },
+  { key:'wasteLand',      label:'Wasteland',             pos: {x:128,y:598} },
+  { key:'bassPod',        label:'Bass Pod',              pos: {x:324,y:638} },
+  { key:'circuitGrounds', label:'Circuit Grounds',       pos: {x:521,y:598} },
+  // Entrances
+  { key:'mainEntrance',   label:'Main Entrance',         pos: {x:340,y:752} },
+  { key:'gaGate1',        label:'GA Gate 1',             pos: {x:220,y:748} },
+  { key:'gaGate2',        label:'GA Gate 2',             pos: {x:460,y:748} },
+  { key:'vipGate',        label:'VIP Gate',              pos: {x:555,y:722} },
+  { key:'shuttleDropoff', label:'Shuttle Drop-off',      pos: {x:165,y:738} },
+  // VIP
+  { key:'vipLounge',      label:'VIP Lounge',            pos: {x:432,y:96}  },
+  { key:'vipBar',         label:'VIP Bar',               pos: {x:455,y:148} },
+  { key:'vipViewing',     label:'VIP Viewing Area',      pos: {x:366,y:108} },
+  // Medical
+  { key:'medicalMain',    label:'Medical (Main)',         pos: {x:338,y:448} },
+  { key:'medicalNorth',   label:'Medical (North)',        pos: {x:240,y:198} },
+  { key:'medicalSouth',   label:'Medical (South)',        pos: {x:338,y:672} },
+  // Amenities
+  { key:'infoCenter',     label:'Info Center',           pos: {x:308,y:712} },
+  { key:'lostFound',      label:'Lost & Found',          pos: {x:372,y:712} },
+  { key:'merch',          label:'Merch',                 pos: {x:258,y:702} },
+  { key:'atm',            label:'ATM',                   pos: {x:412,y:702} },
+  { key:'foodCourt1',     label:'Food Court (Central)',  pos: {x:320,y:492} },
+  { key:'foodCourt2',     label:'Food Court (South)',    pos: {x:308,y:662} },
+  { key:'restroom1',      label:'Restrooms (North)',     pos: {x:300,y:180} },
+  { key:'restroom2',      label:'Restrooms (Central)',   pos: {x:340,y:480} },
+  { key:'restroom3',      label:'Restrooms (South)',     pos: {x:340,y:688} },
+];
+const SQ_LOC_MAP = Object.fromEntries(SQ_LOCATIONS.map(l=>[l.key,l]));
+
 // ── SIDE QUESTS ───────────────────────────────────────────
 let sideQuests = { FRI: [], SAT: [], SUN: [] };
 let sqId = 0;
 
-function openSqSheet() {
-  document.getElementById('sq-name').value = '';
-  document.getElementById('sq-time').value = '';
-  document.getElementById('sq-loc').value = '';
+let sqEditId = null;
+let sqSelectedDay = 'FRI';
+
+function openSqSheet(sq = null) {
+  sqEditId = sq ? sq.id : null;
+  sqSelectedDay = sq ? sq.day : mapDay;
+  document.getElementById('sq-hdr-title').textContent = sq ? 'Edit Side Quest' : 'Add Side Quest';
+  document.getElementById('sq-submit-btn').textContent = sq ? 'Save Changes' : 'Add to Route';
+  document.getElementById('sq-name').value = sq?.name || '';
+  document.getElementById('sq-time').value = sq?.time || '';
+  setSqDay(sqSelectedDay);
+  if (sq?.w3w) {
+    setLocMode('w3w');
+    document.getElementById('sq-w3w').value = sq.w3w;
+  } else {
+    setLocMode('list');
+    document.getElementById('sq-loc').value = sq?.location || '';
+  }
   document.getElementById('sq-sheet').classList.add('open');
   document.body.style.overflow = 'hidden';
   document.documentElement.style.overflow = 'hidden';
@@ -897,17 +1046,36 @@ function closeSqSheet() {
   document.body.style.overflow = '';
   document.documentElement.style.overflow = '';
 }
+function setSqDay(day) {
+  sqSelectedDay = day;
+  document.querySelectorAll('.sq-day-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.day === day));
+}
+function setLocMode(mode) {
+  const isList = mode === 'list';
+  document.getElementById('sq-loc-list').style.display = isList ? '' : 'none';
+  document.getElementById('sq-loc-w3w').style.display  = isList ? 'none' : '';
+  document.getElementById('sq-mode-list').classList.toggle('active', isList);
+  document.getElementById('sq-mode-w3w').classList.toggle('active', !isList);
+}
 function saveSq() {
   const name = document.getElementById('sq-name').value.trim();
   const time = document.getElementById('sq-time').value;
-  const loc  = document.getElementById('sq-loc').value;
-  if (!name || !time || !loc) return;
-  sideQuests[mapDay].push({ id: sqId++, name, time, location: loc });
+  const day  = sqSelectedDay;
+  const isW3W = document.getElementById('sq-mode-w3w').classList.contains('active');
+  const loc = isW3W ? '' : document.getElementById('sq-loc').value;
+  const w3w = isW3W ? document.getElementById('sq-w3w').value.trim().replace(/^\/\/\//, '') : '';
+  if (!name || !time || !day || (!loc && !w3w)) return;
+  const sq = { id: sqEditId ?? sqId++, name, time, day, location: loc, w3w };
+  // remove old version from any day (handles day change on edit)
+  if (sqEditId !== null)
+    ['FRI','SAT','SUN'].forEach(d => { sideQuests[d] = sideQuests[d].filter(q => q.id !== sqEditId); });
+  sideQuests[day].push(sq);
   closeSqSheet();
   renderMap();
 }
 function removeSq(id) {
-  sideQuests[mapDay] = sideQuests[mapDay].filter(q => q.id !== id);
+  ['FRI','SAT','SUN'].forEach(d => { sideQuests[d] = sideQuests[d].filter(q => q.id !== id); });
   renderMap();
 }
 
@@ -1300,86 +1468,126 @@ function renderMap() {
       stroke="#0d083a" stroke-width="6" paint-order="stroke">${stageName(name)}</text>`;
   }).join('');
 
-  // Step number markers, offset when same stage repeats
-  const stepMarkers = stops.map((s,i)=>`
-    <circle cx="${s.markerX}" cy="${s.markerY}" r="16" fill="${routeColor}" opacity="1"/>
-    <text x="${s.markerX}" y="${s.markerY+5}" text-anchor="middle"
-      font-family="DM Mono,monospace" font-size="14" fill="#000" font-weight="700">${i+1}</text>
-  `).join('');
+  // Build combined timeline: artist stops + side quests with map positions, sorted by time
+  const sqWithPos = sqForDay.filter(sq => sq.location && SQ_LOC_MAP[sq.location]);
+  const sqNoPos   = sqForDay.filter(sq => !sq.location || !SQ_LOC_MAP[sq.location]); // w3w only
 
-  // Side quest markers on map (gold diamond, tap to remove)
-  const sqMarkersHTML = sqForDay.map(sq => {
-    const pos = STAGE_POS[sq.location];
-    if (!pos) return '';
-    const mx = pos.x + 26, my = pos.y - 20;
-    const label = sq.name.length > 11 ? sq.name.slice(0,11)+'…' : sq.name;
-    return `<g onclick="removeSq(${sq.id})" style="cursor:pointer">
-      <polygon points="${mx},${my-14} ${mx+12},${my} ${mx},${my+14} ${mx-12},${my}" fill="#ffd700" stroke="#0d083a" stroke-width="2"/>
-      <text x="${mx}" y="${my+5}" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" fill="#0d083a" font-weight="900">★</text>
-      <text x="${mx}" y="${my-21}" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" fill="#ffd700" stroke="#0d083a" stroke-width="5" paint-order="stroke">${fmt(sq.time)}</text>
-      <text x="${mx}" y="${my-35}" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#ffd700" stroke="#0d083a" stroke-width="5" paint-order="stroke">${label}</text>
-    </g>`;
-  }).join('');
-
-  // Merge artist stops + side quests into a single timeline sorted by start time
-  let artistN = 0;
   const combined = [
-    ...stops.map(s => ({ type:'artist', t: toMins(s.artists[0].start), stop: s, n: ++artistN })),
-    ...sqForDay.map(sq => ({ type:'quest',  t: toMins(sq.time), sq }))
+    ...stops.map(s => ({ type:'artist', t: toMins(s.artists[0].start), stop: s })),
+    ...sqWithPos.map(sq => ({ type:'quest', t: toMins(sq.time), sq, pos: SQ_LOC_MAP[sq.location].pos }))
   ].sort((a,b)=>a.t-b.t);
 
+  // Assign unified step numbers
+  combined.forEach((item,i) => { item.stepNum = i + 1; });
+
+  // Build SVG markers for all combined stops
+  const allMarkers = combined.map(item => {
+    if (item.type === 'artist') {
+      const s = item.stop;
+      return `
+        <circle cx="${s.markerX}" cy="${s.markerY}" r="16" fill="${routeColor}" opacity="1"/>
+        <text x="${s.markerX}" y="${s.markerY+5}" text-anchor="middle"
+          font-family="DM Mono,monospace" font-size="14" fill="#000" font-weight="700">${item.stepNum}</text>`;
+    } else {
+      const {x,y} = item.pos;
+      const label = item.sq.name.length > 10 ? item.sq.name.slice(0,10)+'…' : item.sq.name;
+      return `
+        <text x="${x}" y="${y-26}" text-anchor="middle" font-family="DM Mono,monospace" font-size="12"
+          fill="#ffd700" stroke="#0d083a" stroke-width="4" paint-order="stroke">${label}</text>
+        <circle cx="${x}" cy="${y}" r="16" fill="#ffd700" opacity="1"/>
+        <text x="${x}" y="${y+5}" text-anchor="middle"
+          font-family="DM Mono,monospace" font-size="14" fill="#000" font-weight="700">${item.stepNum}</text>`;
+    }
+  }).join('');
+
+  // Route path through all combined stops
+  const routePath = combined.length > 1 ? combined.map((item,i) => {
+    const x = item.type==='artist' ? item.stop.markerX : item.pos.x;
+    const y = item.type==='artist' ? item.stop.markerY : item.pos.y;
+    return (i===0?'M':'L') + `${x},${y}`;
+  }).join(' ') : '';
+  const pathSvg = routePath
+    ? `<path d="${routePath}" fill="none" stroke="${routeColor}" stroke-width="3" stroke-linecap="round" opacity="0.85"/>`
+    : '';
+
+  // Route list
   const routeList = combined.map(item => {
     if (item.type === 'artist') {
-      const s = item.stop, i = item.n - 1;
+      const s = item.stop;
       const color = sc(s.stage);
       const names = s.artists.map(a=>`<span style="color:${color};font-weight:700">${a.name}</span> <span style="color:var(--muted)">${fmt(a.start)}–${fmt(a.end)}</span>`).join('<br>');
       const lastEnd = toMins(s.artists[s.artists.length-1].end);
       const stayMins = lastEnd - toMins(s.artists[0].start);
-      const nextArtist = stops[i+1];
-      const wt = nextArtist ? WALK[`${s.stage}-${nextArtist.stage}`] : null;
-      const gap = nextArtist ? toMins(nextArtist.artists[0].start) - lastEnd : null;
+      // find next combined item with a walk time
+      const nextItem = combined[item.stepNum]; // stepNum is 1-based so this is the next item
+      const nextStage = nextItem?.type==='artist' ? nextItem.stop.stage : null;
+      const wt = nextStage ? WALK[`${s.stage}-${nextStage}`] : null;
+      const gap = nextItem ? nextItem.t - lastEnd : null;
       const isEasy = wt != null && gap != null && gap >= wt;
       return `
         <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
           <div style="width:22px;height:22px;border-radius:50%;background:${routeColor};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
-            <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${item.n}</span>
+            <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${item.stepNum}</span>
           </div>
           <div style="flex:1;min-width:0">
             <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">~${stayMins} min at stage</div>
             <div style="font-size:11px;color:${color};font-family:DM Mono,monospace;margin-bottom:3px">${stageName(s.stage)}</div>
             <div style="font-size:13px;line-height:1.8">${names}</div>
-            ${wt?`<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:${isEasy?'var(--muted)':'var(--warn)'}">→ ${wt} min ${isEasy?'easy':'fast'} walk to step ${i+2}</div>`:''}
+            ${wt?`<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:${isEasy?'var(--muted)':'var(--warn)'}">→ ${wt} min ${isEasy?'easy':'fast'} walk to step ${item.stepNum+1}</div>`:''}
           </div>
         </div>`;
     } else {
       const sq = item.sq;
+      const loc = sq.w3w ? `///${sq.w3w}` : (SQ_LOC_MAP[sq.location]?.label || sq.location);
       return `
         <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
-          <div style="width:22px;height:22px;background:#ffd700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transform:rotate(45deg);border-radius:3px">
-            <span style="transform:rotate(-45deg);font-size:13px;line-height:1">★</span>
+          <div style="width:22px;height:22px;border-radius:50%;background:#ffd700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+            <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${item.stepNum}</span>
           </div>
           <div style="flex:1;min-width:0">
-            <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">${fmt(sq.time)}</div>
+            <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">${fmt(sq.time)} · side quest</div>
             <div style="font-size:13px;font-weight:700;margin-bottom:2px">${sq.name}</div>
-            <div style="font-size:11px;color:var(--muted);font-family:DM Mono,monospace">${stageName(sq.location)}</div>
+            <div style="font-size:11px;color:var(--muted);font-family:DM Mono,monospace">${loc}</div>
           </div>
-          <button onclick="removeSq(${sq.id})" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 6px;flex-shrink:0;-webkit-tap-highlight-color:transparent">✕</button>
+          <div style="display:flex;gap:4px;flex-shrink:0">
+            <button onclick="openSqSheet(sideQuests['${sq.day}'].find(q=>q.id===${sq.id}))" style="background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:4px 5px;-webkit-tap-highlight-color:transparent">✎</button>
+            <button onclick="removeSq(${sq.id})" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 5px;-webkit-tap-highlight-color:transparent">✕</button>
+          </div>
         </div>`;
     }
+  }).join('') + sqNoPos.map(sq => {
+    // w3w-only quests: show in list without step number
+    return `
+      <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
+        <div style="width:22px;height:22px;border-radius:50%;background:#ffd70044;border:1.5px solid #ffd700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+          <span style="font-size:12px;color:#ffd700">★</span>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">${fmt(sq.time)} · side quest</div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:2px">${sq.name}</div>
+          <div style="font-size:11px;color:var(--muted);font-family:DM Mono,monospace">///${sq.w3w}</div>
+        </div>
+        <div style="display:flex;gap:4px;flex-shrink:0">
+          <button onclick="openSqSheet(sideQuests['${sq.day}'].find(q=>q.id===${sq.id}))" style="background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:4px 5px;-webkit-tap-highlight-color:transparent">✎</button>
+          <button onclick="removeSq(${sq.id})" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 5px;-webkit-tap-highlight-color:transparent">✕</button>
+        </div>
+      </div>`;
   }).join('');
 
   // Update only SVG content — image element is persistent in HTML, never reloaded
   mapSvg.innerHTML = `
     <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.45"/>
     ${allStagePinCircles}
-    ${pathSegs}
-    ${stepMarkers}
-    ${sqMarkersHTML}
+    ${pathSvg}
+    ${allMarkers}
     ${allStageLabels}`;
 
   mapRouteInfo.innerHTML = `
-    <div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;padding:0 4px 10px">${dayLabels[mapDay].toUpperCase()} · YOUR ROUTE</div>
-    ${stops.length ? `<div style="display:flex;gap:20px;align-items:center;padding:0 4px 14px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px">
+      <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800">${dayLabels[mapDay]}</div>
+      <button class="sq-add-btn" onclick="openSqSheet()">+ side quest</button>
+    </div>
+    ${stops.length ? `<div style="display:flex;gap:20px;align-items:center;padding:0 20px 14px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
       <div style="display:flex;align-items:center;gap:7px">
         <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round"/></svg>
         <span>walk fast</span>
@@ -1439,7 +1647,7 @@ function menuLoad()    { closeMenu(); openLoadSheet(); }
 function menuShareSelection() {
   closeMenu();
   if (!selected.size) { showToast('No artists selected'); return; }
-  const data = { name: 'my-edc-selection', savedAt: new Date().toISOString(), artists: [...selected] };
+  const data = { name: 'my-edc-selection', savedAt: new Date().toISOString(), artists: [...selected], sideQuests };
   const json = JSON.stringify(data, null, 2);
   const file = new File([json], 'edc-selection.json', { type: 'application/json' });
   if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -1450,6 +1658,14 @@ function menuShareSelection() {
     navigator.clipboard.writeText(json).then(() => showToast('Selection copied to clipboard'));
   }
 }
+function menuAbout() {
+  closeMenu();
+  document.getElementById('about-overlay').classList.add('open');
+}
+function closeAboutModal() {
+  document.getElementById('about-overlay').classList.remove('open');
+}
+
 function menuShare() {
   closeMenu();
   if (navigator.share) {
@@ -1485,7 +1701,7 @@ function closeSheets() {
 function confirmSave() {
   const name = document.getElementById('sheet-save-input').value.trim();
   if (!name) return;
-  const data = { name, savedAt: new Date().toISOString(), artists: [...selected] };
+  const data = { name, savedAt: new Date().toISOString(), artists: [...selected], sideQuests };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -1507,6 +1723,10 @@ function handleLoadFile(e) {
       const artists = Array.isArray(data) ? data : data.artists;
       if (!Array.isArray(artists)) throw new Error();
       selected = new Set(artists.filter(n => lineup.find(a => a.name === n)));
+      if (data.sideQuests && typeof data.sideQuests === 'object') {
+        sideQuests = { FRI: data.sideQuests.FRI || [], SAT: data.sideQuests.SAT || [], SUN: data.sideQuests.SUN || [] };
+        sqId = Math.max(0, ...Object.values(sideQuests).flat().map(q=>q.id+1));
+      }
       saveSelected();
       closeSheets();
       renderBrowse();
