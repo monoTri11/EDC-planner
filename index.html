@@ -881,7 +881,7 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.14.1';
+const APP_VERSION = '2.15';
 
 // ── SPOTIFY IDS ───────────────────────────────────────────
 const SPOTIFY_IDS = {
@@ -1553,9 +1553,9 @@ function renderMap() {
       return `
         <text x="${x}" y="${y-26}" text-anchor="middle" font-family="DM Mono,monospace" font-size="12"
           fill="#ffd700" stroke="#0d083a" stroke-width="4" paint-order="stroke">${label}</text>
-        <circle cx="${x}" cy="${y}" r="16" fill="#ffd700" opacity="1"/>
+        <polygon points="${x},${y-18} ${x+18},${y} ${x},${y+18} ${x-18},${y}" fill="#ffd700" opacity="1"/>
         <text x="${x}" y="${y+5}" text-anchor="middle"
-          font-family="DM Mono,monospace" font-size="14" fill="#000" font-weight="700">${item.stepNum}</text>`;
+          font-family="DM Mono,monospace" font-size="13" fill="#000" font-weight="700">${item.stepNum}</text>`;
     }
     return '';
   }).join('');
@@ -1611,8 +1611,8 @@ function renderMap() {
       const iconTrash = `<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>`;
       return `
         <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
-          <div style="width:22px;height:22px;border-radius:50%;background:#ffd700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
-            <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${item.stepNum}</span>
+          <div style="width:16px;height:16px;background:#ffd700;transform:rotate(45deg);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px">
+            <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000;transform:rotate(-45deg);display:block">${item.stepNum}</span>
           </div>
           <div style="flex:1;min-width:0">
             <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">side quest</div>
@@ -1638,7 +1638,7 @@ function renderMap() {
 
   mapRouteInfo.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px">
-      <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--text)">${dayLabels[mapDay]}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:600;color:var(--text)">${dayLabels[mapDay]}</div>
       <button class="sq-add-btn" onclick="openSqSheet()">+ side quest</button>
     </div>
     ${stops.length ? `<div style="display:flex;gap:20px;align-items:center;padding:0 20px 14px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
