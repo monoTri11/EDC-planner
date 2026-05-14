@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#080810">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>EDC LV 2026</title>
+<title>Line Up · EDC LV 2026</title>
 <link rel="manifest" href="manifest.json">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap');
@@ -71,6 +71,27 @@
   .nav-dropdown-item:active { background: var(--surface); }
   .nav-dropdown-item svg { width: 17px; height: 17px; stroke: var(--accent); stroke-width: 1.8; fill: none; flex-shrink: 0; }
   .nav-dropdown-item span { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); }
+  .nav-dropdown-item .update-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: var(--accent);
+    margin-left: auto; flex-shrink: 0; display: none;
+  }
+  .nav-dropdown-item .update-dot.visible { display: block; }
+
+  /* UPDATE BANNER */
+  #update-banner {
+    position: fixed; top: calc(var(--nav-h) + env(safe-area-inset-top)); left: 0; right: 0; z-index: 95;
+    background: var(--accent); color: #0a0818;
+    font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 16px; gap: 12px;
+    transform: translateY(-100%); transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+  }
+  #update-banner.visible { transform: translateY(0); }
+  #update-banner button {
+    background: #0a081888; color: #0a0818; border: none; border-radius: 8px;
+    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 700;
+    padding: 6px 12px; cursor: pointer; white-space: nowrap;
+  }
 
   @keyframes spin { to { transform: rotate(360deg); } }
 
@@ -356,7 +377,7 @@
   .conflict-banner.visible { display: block; }
 
   /* MAP SCREEN */
-  #screen-map { padding: var(--nav-h) 0 84px; }
+  #screen-map { padding: calc(var(--nav-h) + env(safe-area-inset-top)) 0 84px; }
   .map-container { padding: 0 16px; }
   .map-svg-wrap { width: 100%; border-radius: 12px; overflow: hidden; background: var(--surface); }
   .map-svg-wrap svg { width: 100%; display: block; }
@@ -452,9 +473,10 @@
     <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
     <span>Refresh Lineup</span>
   </div>
-  <div class="nav-dropdown-item" onclick="closeMenu();window.location.reload()">
+  <div class="nav-dropdown-item" id="menu-refresh-app" onclick="closeMenu();window.location.reload()">
     <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
     <span>Refresh App</span>
+    <span class="update-dot" id="update-dot"></span>
   </div>
   <div class="nav-dropdown-divider"></div>
   <div class="nav-dropdown-item" onclick="menuSave()">
@@ -476,6 +498,11 @@
   </div>
 </div>
 
+<div id="update-banner">
+  <span>New version available</span>
+  <button onclick="window.location.reload()">Update Now</button>
+</div>
+
 <!-- BROWSE -->
 <div class="screen active" id="screen-browse">
   <div class="section-head">
@@ -495,7 +522,7 @@
 <!-- SCHEDULE -->
 <div class="screen" id="screen-schedule">
   <div class="section-head">
-    <h1>My Schedule</h1>
+    <h1>Schedule</h1>
     <p id="sched-count">0 artists selected</p>
   </div>
   <div class="sticky-bar sticky-bar--fade-only"></div>
@@ -506,7 +533,7 @@
 <!-- MAP -->
 <div class="screen" id="screen-map">
   <div class="section-head">
-    <h1>Route Map</h1>
+    <h1>Map</h1>
     <p>YOUR ARTISTS · OPTIMIZED WALKING ROUTES</p>
   </div>
   <div class="sticky-bar" id="map-sticky">
@@ -521,7 +548,7 @@
   <button class="tab-btn active" onclick="switchTab('browse',this)" id="tab-browse">
     <div class="tab-pill">
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 3.5 3.5"/></svg>
-      BROWSE
+      LINEUP
     </div>
   </button>
   <button class="tab-btn" onclick="switchTab('schedule',this)" id="tab-schedule">
@@ -797,7 +824,7 @@ function renderBrowse() {
   }).join('');
 
   const fab = document.getElementById('fab');
-  fab.textContent = `View My Schedule (${selected.size})`;
+  fab.textContent = `View Schedule (${selected.size})`;
   fab.classList.toggle('visible', selected.size > 0);
   updateBadge();
 }
@@ -851,7 +878,7 @@ function renderSchedule() {
           const tight=gap<wt;
           html+=`<div class="walk-row">
             <div class="walk-line"></div>
-            <div class="walk-label" style="color:${tight?'var(--warn)':'var(--muted)'}">~${wt} min walk${tight?' ⚠':''}</div>
+            <div class="walk-label" style="color:${tight?'var(--warn)':'var(--muted)'}">${wt} min ${tight?'fast ⚠':'easy'} walk</div>
             <div class="walk-line"></div>
           </div>`;
         }
@@ -935,7 +962,7 @@ function renderMap() {
   stops.forEach(s => {
     const idx = (stageStopIdx[s.stage] = (stageStopIdx[s.stage] ?? -1) + 1);
     const count = stageStopCounts[s.stage];
-    s.markerX = s.pos.x + (idx - (count - 1) / 2) * 26;
+    s.markerX = s.pos.x + (idx - (count - 1) / 2) * 36;
     s.markerY = s.pos.y;
   });
 
@@ -969,7 +996,7 @@ function renderMap() {
 
   // Step number markers, offset when same stage repeats
   const stepMarkers = stops.map((s,i)=>`
-    <circle cx="${s.markerX}" cy="${s.markerY}" r="16" fill="${routeColor}" opacity="0.9"/>
+    <circle cx="${s.markerX}" cy="${s.markerY}" r="16" fill="${routeColor}" opacity="1"/>
     <text x="${s.markerX}" y="${s.markerY+5}" text-anchor="middle"
       font-family="DM Mono,monospace" font-size="14" fill="#000" font-weight="700">${i+1}</text>
   `).join('');
@@ -977,18 +1004,23 @@ function renderMap() {
   // Route summary list
   const routeList = stops.map((s,i)=>{
     const color = sc(s.stage);
-    const names = s.artists.map(a=>`<span style="color:${color};font-weight:700">${a.name}</span> <span style="color:var(--muted)">${fmt(a.start)}</span>`).join('<br>');
+    const names = s.artists.map(a=>`<span style="color:${color};font-weight:700">${a.name}</span> <span style="color:var(--muted)">${fmt(a.start)}–${fmt(a.end)}</span>`).join('<br>');
+    const lastEnd = toMins(s.artists[s.artists.length-1].end);
+    const stayMins = lastEnd - toMins(s.artists[0].start);
     const nextStop = stops[i+1];
     const wt = nextStop ? WALK[`${s.stage}-${nextStop.stage}`] : null;
+    const gap = nextStop ? toMins(nextStop.artists[0].start) - lastEnd : null;
+    const isEasy = wt != null && gap != null && gap >= wt;
     return `
       <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
         <div style="width:22px;height:22px;border-radius:50%;background:${routeColor};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
           <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${i+1}</span>
         </div>
         <div style="flex:1;min-width:0">
+          <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">~${stayMins} min at stage</div>
           <div style="font-size:11px;color:${color};font-family:DM Mono,monospace;margin-bottom:3px">${stageName(s.stage)}</div>
           <div style="font-size:13px;line-height:1.8">${names}</div>
-          ${wt?`<div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-top:6px">→ ~${wt} min walk to stop ${i+2}</div>`:''}
+          ${wt?`<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:${isEasy?'var(--muted)':'var(--warn)'}">→ ${wt} min ${isEasy?'easy':'fast'} walk to step ${i+2}</div>`:''}
         </div>
       </div>`;
   }).join('');
@@ -1149,7 +1181,18 @@ document.getElementById('sheet-save-input').addEventListener('keydown', e => {
 
 // ── SERVICE WORKER ────────────────────────────────────────
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    reg.update();
+    reg.addEventListener('updatefound', () => {
+      const newSW = reg.installing;
+      newSW.addEventListener('statechange', () => {
+        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+          document.getElementById('update-dot').classList.add('visible');
+          document.getElementById('update-banner').classList.add('visible');
+        }
+      });
+    });
+  }).catch(()=>{});
 }
 
 // ── INIT ──────────────────────────────────────────────────
