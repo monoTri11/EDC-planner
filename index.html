@@ -160,12 +160,13 @@
     position: absolute; top: 0; right: 8px;
     min-width: 16px; height: 16px; border-radius: 8px;
     background: var(--accent); color: var(--bg2);
+    border: 2px solid var(--bg2);
     font-family: 'DM Mono', monospace; font-size: 9px; font-weight: 700;
     display: none; align-items: center; justify-content: center;
     padding: 0 4px; line-height: 1;
   }
   .tab-badge.visible { display: flex; }
-  .tab-btn.active .tab-pill .tab-badge { background: var(--bg2); color: var(--accent); }
+  .tab-btn.active .tab-pill .tab-badge { background: var(--bg2); color: var(--accent); border-color: var(--accent); }
 
   /* SCREENS */
   .screen { display: none; padding: calc(var(--nav-h) + env(safe-area-inset-top)) 0 84px; min-height: 100dvh; overflow: visible; }
@@ -994,13 +995,13 @@ function renderMap() {
 
   content.innerHTML = `
     <div class="map-container" style="padding-top:32px">
-      <div class="map-svg-wrap">
-        <svg viewBox="0 0 680 780" xmlns="http://www.w3.org/2000/svg">
-          <!-- venue oval -->
-          <ellipse cx="340" cy="400" rx="306" ry="362" fill="#0d0b1f" stroke="#1e1c35" stroke-width="2"/>
+      <div class="map-svg-wrap" style="position:relative;overflow:hidden">
+        <img src="map.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.28) saturate(0.5) hue-rotate(230deg);z-index:0">
+        <svg viewBox="0 0 680 780" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1">
+          <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.45"/>
           <!-- all stage pins -->
           ${allStagePins}
-          <!-- route path: solid = comfortable walk, dashed = tight walk -->
+          <!-- route path: solid = fast walk, dashed = easy walk -->
           ${pathSegs}
           <!-- step numbers -->
           ${stepMarkers}
