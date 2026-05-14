@@ -63,11 +63,10 @@
   .nav-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
   .nav-dropdown-item {
     display: flex; align-items: center; gap: 14px;
-    padding: 18px 20px; cursor: pointer;
-    border-bottom: 1px solid var(--border); transition: background 0.1s;
+    padding: 18px 20px; cursor: pointer; transition: background 0.1s;
   }
   .nav-dropdown-item:first-child { border-radius: 14px 14px 0 0; }
-  .nav-dropdown-item:last-child { border-bottom: none; border-radius: 0 0 14px 14px; }
+  .nav-dropdown-item:last-child { border-radius: 0 0 14px 14px; }
   .nav-dropdown-divider { height: 1px; background: var(--border2); margin: 0; }
   .nav-dropdown-item:active { background: var(--surface); }
   .nav-dropdown-item svg { width: 17px; height: 17px; stroke: var(--accent); stroke-width: 1.8; fill: none; flex-shrink: 0; }
@@ -465,7 +464,7 @@
     <span>Load Selection</span>
   </div>
   <div class="nav-dropdown-item" onclick="menuShareSelection()">
-    <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
     <span>Share Selection</span>
   </div>
   <div class="nav-dropdown-divider"></div>
