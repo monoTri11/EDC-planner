@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#080810">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -39,17 +39,101 @@
   }
   .nav-logo { font-size: 13px; font-weight: 700; letter-spacing: 0.15em; color: var(--muted); }
   .nav-logo span { color: var(--accent); }
-  .nav-refresh {
-    display: flex; align-items: center; gap: 6px;
-    padding: 7px 14px; border-radius: 20px;
+  .nav-dots-btn {
+    width: 40px; height: 40px; border-radius: 50%;
     border: 1px solid var(--border2); background: none;
-    color: var(--muted); font-family: 'DM Mono', monospace;
-    font-size: 10px; letter-spacing: 0.06em; cursor: pointer; transition: all 0.2s;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--muted); transition: all 0.2s; flex-shrink: 0;
   }
-  .nav-refresh:active { color: var(--accent); border-color: var(--accent); }
-  .nav-refresh svg { width: 13px; height: 13px; stroke-width: 2; stroke: currentColor; fill: none; flex-shrink: 0; }
-  .nav-refresh.spinning svg { animation: spin 0.7s linear infinite; }
+  .nav-dots-btn:active { border-color: var(--accent); color: var(--accent); }
+  .nav-dots-btn svg { width: 18px; height: 18px; stroke: none; fill: currentColor; }
+
+  .menu-overlay { position: fixed; inset: 0; z-index: 150; display: none; }
+  .menu-overlay.open { display: block; }
+
+  .nav-dropdown {
+    position: fixed; top: calc(var(--nav-h) + env(safe-area-inset-top) - 2px); right: 16px;
+    background: var(--surface2); border: 1px solid var(--border2);
+    border-radius: 14px; z-index: 200; min-width: 220px;
+    box-shadow: 0 8px 32px #00000070;
+    opacity: 0; pointer-events: none;
+    transform: translateY(-6px) scale(0.96); transform-origin: top right;
+    transition: opacity 0.18s, transform 0.18s;
+  }
+  .nav-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+  .nav-dropdown-item {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 20px; cursor: pointer;
+    border-bottom: 1px solid var(--border); transition: background 0.1s;
+  }
+  .nav-dropdown-item:first-child { border-radius: 14px 14px 0 0; }
+  .nav-dropdown-item:last-child { border-bottom: none; border-radius: 0 0 14px 14px; }
+  .nav-dropdown-item:active { background: var(--surface); }
+  .nav-dropdown-item svg { width: 17px; height: 17px; stroke: var(--accent); stroke-width: 1.8; fill: none; flex-shrink: 0; }
+  .nav-dropdown-item span { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); }
+
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* SHEETS */
+  .sheet-overlay {
+    position: fixed; inset: 0; background: #00000078; z-index: 300;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s;
+  }
+  .sheet-overlay.open { opacity: 1; pointer-events: all; }
+  .sheet {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 301;
+    background: var(--surface); border: 1px solid var(--border2);
+    border-radius: 20px 20px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    transform: translateY(100%); transition: transform 0.32s cubic-bezier(0.32,0.72,0,1);
+  }
+  .sheet.open { transform: translateY(0); }
+  .sheet-handle { width: 36px; height: 4px; border-radius: 2px; background: var(--border2); margin: 14px auto 0; }
+  .sheet-title { font-size: 17px; font-weight: 800; padding: 18px 24px 4px; color: var(--text); }
+  .sheet-sub { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); padding: 0 24px 18px; }
+  .sheet-input-wrap { padding: 0 20px 16px; }
+  .sheet-input {
+    width: 100%; padding: 16px; background: var(--surface2);
+    border: 1px solid var(--border); border-radius: 12px; color: var(--text);
+    font-family: 'DM Mono', monospace; font-size: 15px; outline: none;
+    transition: border-color 0.2s; -webkit-appearance: none;
+  }
+  .sheet-input:focus { border-color: var(--accent); }
+  .sheet-input::placeholder { color: var(--muted); }
+  .sheet-actions { padding: 0 20px 8px; display: flex; flex-direction: column; gap: 10px; }
+  .sheet-btn-primary {
+    width: 100%; padding: 18px; border-radius: 14px;
+    background: var(--accent); color: #0a0818;
+    font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800;
+    border: none; cursor: pointer; transition: opacity 0.15s;
+  }
+  .sheet-btn-primary:active { opacity: 0.8; }
+  .sheet-btn-cancel {
+    width: 100%; padding: 16px; border-radius: 14px;
+    background: none; color: var(--muted);
+    font-family: 'DM Mono', monospace; font-size: 13px;
+    border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
+  }
+  .sheet-btn-cancel:active { border-color: var(--border2); color: var(--text); }
+  .sheet-list { max-height: 52vh; overflow-y: auto; padding: 4px 20px 0; }
+  .load-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px; border-radius: 12px; margin-bottom: 10px;
+    background: var(--surface2); border: 1px solid var(--border); cursor: pointer; transition: border-color 0.15s;
+  }
+  .load-item:active { border-color: var(--accent); }
+  .load-item-info { flex: 1; min-width: 0; }
+  .load-item-name { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--text); }
+  .load-item-count { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 3px; }
+  .load-item-del {
+    width: 34px; height: 34px; border-radius: 50%;
+    border: 1px solid var(--border); background: none;
+    color: var(--muted); display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; transition: all 0.15s;
+  }
+  .load-item-del svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2.5; }
+  .load-item-del:active { border-color: #ff6060; color: #ff6060; }
+  .load-empty { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); text-align: center; padding: 36px 0 28px; line-height: 2.2; }
 
   /* TABS */
   .tab-bar {
@@ -349,25 +433,31 @@
 
 <nav>
   <div class="nav-logo">EDC <span>LV</span> 2026</div>
-  <button class="nav-refresh" id="refresh-btn" onclick="refreshLineup()">
-    <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-    REFRESH
+  <button class="nav-dots-btn" onclick="openMenu()">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg>
   </button>
 </nav>
+<div class="menu-overlay" id="menu-overlay" onclick="closeMenu()"></div>
+<div class="nav-dropdown" id="nav-dropdown">
+  <div class="nav-dropdown-item" onclick="menuRefresh()">
+    <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    <span>Refresh Lineup</span>
+  </div>
+  <div class="nav-dropdown-item" onclick="menuSave()">
+    <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+    <span>Save Selection</span>
+  </div>
+  <div class="nav-dropdown-item" onclick="menuLoad()">
+    <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+    <span>Load Selection</span>
+  </div>
+</div>
 
 <!-- BROWSE -->
 <div class="screen active" id="screen-browse">
   <div class="section-head">
     <h1>Lineup</h1>
     <p>MAY 15 + 16 + 17 · LAS VEGAS MOTOR SPEEDWAY</p>
-  </div>
-  <div class="saves-wrap">
-    <div class="saves-row" id="saves-row"></div>
-    <div class="save-input-row" id="save-input-row">
-      <input id="save-name-input" placeholder="name this save…" autocomplete="off" autocorrect="off" spellcheck="false">
-      <button class="save-confirm-btn" onclick="confirmSave()">SAVE</button>
-      <button class="save-cancel-btn" onclick="cancelSave()">×</button>
-    </div>
   </div>
   <div class="sticky-bar">
     <div class="browse-controls" id="browse-controls"></div>
@@ -421,6 +511,33 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- SHEET OVERLAY -->
+<div class="sheet-overlay" id="sheet-overlay" onclick="closeSheets()"></div>
+
+<!-- SAVE SHEET -->
+<div class="sheet" id="save-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Save Selection</div>
+  <div class="sheet-sub" id="save-sheet-sub"></div>
+  <div class="sheet-input-wrap">
+    <input class="sheet-input" id="sheet-save-input" placeholder="Name this save…" autocomplete="off" autocorrect="off" spellcheck="false">
+  </div>
+  <div class="sheet-actions">
+    <button class="sheet-btn-primary" onclick="confirmSave()">Save</button>
+    <button class="sheet-btn-cancel" onclick="closeSheets()">Cancel</button>
+  </div>
+</div>
+
+<!-- LOAD SHEET -->
+<div class="sheet" id="load-sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">Load Selection</div>
+  <div class="sheet-list" id="load-sheet-list"></div>
+  <div class="sheet-actions" style="padding-top:8px">
+    <button class="sheet-btn-cancel" onclick="closeSheets()">Cancel</button>
+  </div>
+</div>
 
 <script>
 // ── STAGE COLORS ──────────────────────────────────────────
@@ -577,8 +694,7 @@ function updateBadge() {
 
 // ── REFRESH ───────────────────────────────────────────────
 async function refreshLineup() {
-  const btn = document.getElementById('refresh-btn');
-  btn.classList.add('spinning');
+  showToast('Refreshing…');
   try {
     const res = await fetch('./lineup.json?nocache=' + Date.now());
     if (!res.ok) throw new Error('fetch failed');
@@ -588,8 +704,6 @@ async function refreshLineup() {
     showToast('Lineup refreshed ✓');
   } catch(e) {
     showToast('Refresh failed — check connection');
-  } finally {
-    btn.classList.remove('spinning');
   }
 }
 
@@ -892,45 +1006,73 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'),2200);
 }
 
-// ── SAVES ─────────────────────────────────────────────────
+// ── SAVES (localStorage) ──────────────────────────────────
 function getSaves() { return JSON.parse(localStorage.getItem('edc_saves') || '{}'); }
 function setSaves(s) { localStorage.setItem('edc_saves', JSON.stringify(s)); }
 
-function renderSavesBar() {
-  const row = document.getElementById('saves-row');
-  if (!row) return;
+// ── 3-DOT MENU ────────────────────────────────────────────
+function openMenu() {
+  document.getElementById('nav-dropdown').classList.add('open');
+  document.getElementById('menu-overlay').classList.add('open');
+}
+function closeMenu() {
+  document.getElementById('nav-dropdown').classList.remove('open');
+  document.getElementById('menu-overlay').classList.remove('open');
+}
+function menuRefresh() { closeMenu(); refreshLineup(); }
+function menuSave()    { closeMenu(); openSaveSheet(); }
+function menuLoad()    { closeMenu(); openLoadSheet(); }
+
+// ── SHEETS ────────────────────────────────────────────────
+function openSaveSheet() {
+  const n = selected.size;
+  document.getElementById('save-sheet-sub').textContent =
+    `${n} artist${n !== 1 ? 's' : ''} currently selected`;
+  document.getElementById('sheet-save-input').value = '';
+  document.getElementById('sheet-overlay').classList.add('open');
+  document.getElementById('save-sheet').classList.add('open');
+  setTimeout(() => document.getElementById('sheet-save-input').focus(), 350);
+}
+
+function openLoadSheet() {
   const saves = getSaves();
   const names = Object.keys(saves);
-  row.innerHTML =
-    `<span class="saves-label">SAVES</span>` +
-    names.map(n =>
-      `<div class="saves-pill" onclick="loadSave('${n.replace(/'/g,"\\'")}')">
-        ${n}
-        <button class="saves-pill-del" onclick="event.stopPropagation();deleteSave('${n.replace(/'/g,"\\'")}')">×</button>
-      </div>`
-    ).join('') +
-    `<button class="saves-new-btn" onclick="startSave()">+ SAVE</button>`;
+  const list = document.getElementById('load-sheet-list');
+  if (!names.length) {
+    list.innerHTML = `<div class="load-empty">No saves yet.<br>Use Save Selection to create one.</div>`;
+  } else {
+    list.innerHTML = names.map(n => {
+      const count = saves[n].length;
+      const safe = n.replace(/'/g, "\\'");
+      return `
+        <div class="load-item" onclick="loadSave('${safe}')">
+          <div class="load-item-info">
+            <div class="load-item-name">${n}</div>
+            <div class="load-item-count">${count} artist${count !== 1 ? 's' : ''}</div>
+          </div>
+          <button class="load-item-del" onclick="event.stopPropagation();deleteSave('${safe}')">
+            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>`;
+    }).join('');
+  }
+  document.getElementById('sheet-overlay').classList.add('open');
+  document.getElementById('load-sheet').classList.add('open');
 }
 
-function startSave() {
-  const row = document.getElementById('save-input-row');
-  row.classList.add('open');
-  document.getElementById('save-name-input').focus();
-}
-
-function cancelSave() {
-  document.getElementById('save-input-row').classList.remove('open');
-  document.getElementById('save-name-input').value = '';
+function closeSheets() {
+  document.getElementById('sheet-overlay').classList.remove('open');
+  document.getElementById('save-sheet').classList.remove('open');
+  document.getElementById('load-sheet').classList.remove('open');
 }
 
 function confirmSave() {
-  const name = document.getElementById('save-name-input').value.trim();
+  const name = document.getElementById('sheet-save-input').value.trim();
   if (!name) return;
   const saves = getSaves();
   saves[name] = [...selected];
   setSaves(saves);
-  cancelSave();
-  renderSavesBar();
+  closeSheets();
   showToast(`Saved "${name}"`);
 }
 
@@ -939,6 +1081,7 @@ function loadSave(name) {
   if (!saves[name]) return;
   selected = new Set(saves[name]);
   saveSelected();
+  closeSheets();
   renderBrowse();
   showToast(`Loaded "${name}"`);
 }
@@ -947,12 +1090,12 @@ function deleteSave(name) {
   const saves = getSaves();
   delete saves[name];
   setSaves(saves);
-  renderSavesBar();
+  openLoadSheet();
 }
 
-document.getElementById('save-name-input').addEventListener('keydown', e => {
+document.getElementById('sheet-save-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') confirmSave();
-  if (e.key === 'Escape') cancelSave();
+  if (e.key === 'Escape') closeSheets();
 });
 
 // ── SERVICE WORKER ────────────────────────────────────────
@@ -961,7 +1104,6 @@ if ('serviceWorker' in navigator) {
 }
 
 // ── INIT ──────────────────────────────────────────────────
-renderSavesBar();
 renderBrowse();
 </script>
 </body>
