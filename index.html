@@ -1204,6 +1204,17 @@ if ('serviceWorker' in navigator) {
   }).catch(()=>{});
 }
 
+// ── PREVENT PINCH/DOUBLE-TAP ZOOM (iOS ignores viewport meta) ─
+document.addEventListener('touchstart', e => {
+  if (e.touches.length > 1) e.preventDefault();
+}, { passive: false });
+let _lastTap = 0;
+document.addEventListener('touchend', e => {
+  const now = Date.now();
+  if (now - _lastTap < 300) e.preventDefault();
+  _lastTap = now;
+}, { passive: false });
+
 // ── INIT ──────────────────────────────────────────────────
 renderBrowse();
 </script>
