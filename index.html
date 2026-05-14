@@ -933,7 +933,7 @@ function renderMap() {
           stroke-width="${isActive?1.5:1}"/>
         ${isActive?`<circle cx="${pos.x}" cy="${pos.y}" r="4" fill="${color}"/>` : ''}
         <text x="${pos.x}" y="${pos.y+32}" text-anchor="middle"
-          font-family="DM Mono,monospace" font-size="${isActive?22:18}"
+          font-family="DM Mono,monospace" font-size="20"
           fill="${isActive?color:'#8884a8'}">${name.replace(/([A-Z])/g,' $1').trim()}</text>
       </g>`;
   }).join('');
