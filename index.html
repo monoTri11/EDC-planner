@@ -511,7 +511,8 @@
     opacity: 0; transition: all 0.25s; pointer-events: none; white-space: nowrap; z-index: 200;
   }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  ::-webkit-scrollbar { width: 0; }
+  * { scrollbar-width: none; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
 </style>
 </head>
 <body>
@@ -682,7 +683,7 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.9';
+const APP_VERSION = '2.10';
 
 // ── SPOTIFY IDS ───────────────────────────────────────────
 const SPOTIFY_IDS = {
