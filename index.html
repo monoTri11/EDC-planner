@@ -740,33 +740,48 @@
             <option value="bassPod">Bass Pod</option>
             <option value="circuitGrounds">Circuit Grounds</option>
           </optgroup>
-          <optgroup label="── Entrances ──">
-            <option value="mainEntrance">Main Entrance</option>
-            <option value="gaGate1">GA Gate 1</option>
-            <option value="gaGate2">GA Gate 2</option>
-            <option value="vipGate">VIP Gate</option>
-            <option value="shuttleDropoff">Shuttle Drop-off</option>
+          <optgroup label="── Entrances & Gates ──">
+            <option value="gateS">Entrance Gate S</option>
+            <option value="gateCD">Entrance Gates C/D</option>
+            <option value="gateP">Entrance Gate P</option>
+            <option value="campEDC">Camp EDC Entrance</option>
+            <option value="accessCenter">Access Center</option>
+          </optgroup>
+          <optgroup label="── Named Areas ──">
+            <option value="daisyFields">Daisy Fields</option>
+            <option value="flowerTunnel">Flower Tunnel</option>
+            <option value="daisyLane">Daisy Lane</option>
+            <option value="rainbowBazaar">Rainbow Bazaar</option>
+            <option value="memoryLane">Memory Lane</option>
+            <option value="downtownEDC">Downtown EDC</option>
+            <option value="electricAve">Electric Avenue</option>
+            <option value="powerPath">Power Path</option>
+            <option value="pixelForest">Pixel Forest</option>
+            <option value="nomadsLand">Nomads Land</option>
+            <option value="bambooVillage">Bamboo Village</option>
+            <option value="verizonDeck">Verizon Viewing Deck</option>
           </optgroup>
           <optgroup label="── VIP ──">
-            <option value="vipLounge">VIP Lounge</option>
-            <option value="vipBar">VIP Bar</option>
-            <option value="vipViewing">VIP Viewing Area</option>
+            <option value="vip">VIP Area</option>
+            <option value="vipConcierge">VIP Concierge</option>
+            <option value="vipViewingDeck">VIP Viewing Deck</option>
           </optgroup>
-          <optgroup label="── Medical ──">
-            <option value="medicalMain">Medical (Main)</option>
-            <option value="medicalNorth">Medical (North)</option>
-            <option value="medicalSouth">Medical (South)</option>
+          <optgroup label="── First Aid ──">
+            <option value="firstAidN">First Aid (North)</option>
+            <option value="firstAidC">First Aid (Central)</option>
+            <option value="firstAidS">First Aid (South)</option>
+            <option value="firstAidSE">First Aid (SE)</option>
           </optgroup>
           <optgroup label="── Amenities ──">
-            <option value="infoCenter">Info Center</option>
-            <option value="lostFound">Lost & Found</option>
-            <option value="merch">Merch</option>
-            <option value="atm">ATM</option>
-            <option value="foodCourt1">Food Court (Central)</option>
-            <option value="foodCourt2">Food Court (South)</option>
-            <option value="restroom1">Restrooms (North)</option>
-            <option value="restroom2">Restrooms (Central)</option>
-            <option value="restroom3">Restrooms (South)</option>
+            <option value="restrooms">Restrooms</option>
+            <option value="waterStation">Water Station</option>
+            <option value="merch">Merchandise</option>
+            <option value="lockers">Lockers</option>
+            <option value="info">Info Booth</option>
+            <option value="charging">Charging Station</option>
+            <option value="cashExchange">Cash Exchange</option>
+            <option value="lostFound">Lost &amp; Found</option>
+            <option value="kandiStation">Kandi Station</option>
           </optgroup>
         </select>
       </div>
@@ -782,10 +797,10 @@
 <div id="about-overlay" onclick="closeAboutModal()">
   <div id="about-modal" onclick="event.stopPropagation()">
     <h2>EDC LV 2026 Planner</h2>
-    <p>This is a personal fan-made project built to help headliners plan their EDC experience. It is <strong>not affiliated with, endorsed by, or sponsored by Insomniac Events, EDC Las Vegas</strong>, or any of their subsidiaries.</p>
+    <p>This is a personal fan-made project built to help festival guests plan their EDC experience. It is <strong>not affiliated with, endorsed by, or sponsored by Insomniac Events, EDC Las Vegas</strong>, or any of their subsidiaries.</p>
     <p>All artist names, stage names, and event information remain the property of their respective owners. Set times are sourced from publicly available information and may not be 100% accurate — always verify with the official EDC app.</p>
     <p>Spotify previews are served through Spotify's official embed API. This app does not collect, store, or transmit any personal data.</p>
-    <p style="color:var(--muted);font-size:11px">Built with love for the headliners. See you under the electric sky. 🌟</p>
+    <p style="color:var(--muted);font-size:11px">Built with love for the fans. See you under the electric sky. 🌟</p>
     <button id="about-close-btn" onclick="closeAboutModal()">Got it</button>
   </div>
 </div>
@@ -860,7 +875,7 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.12';
+const APP_VERSION = '2.13';
 
 // ── SPOTIFY IDS ───────────────────────────────────────────
 const SPOTIFY_IDS = {
@@ -977,41 +992,55 @@ const STAGE_POS = {
 
 // ── SIDE QUEST LOCATIONS ──────────────────────────────────
 const SQ_LOCATIONS = [
-  // Stages — exact positions from STAGE_POS
-  { key:'kineticField',   label:'Kinetic Field',        pos: {x:340,y:72}  },
-  { key:'quantumValley',  label:'Quantum Valley',        pos: {x:545,y:131} },
-  { key:'bionicJungle',   label:'Bionic Jungle',         pos: {x:126,y:143} },
-  { key:'stereoBloom',    label:'Stereo Bloom',          pos: {x:200,y:264} },
-  { key:'cosmicMeadow',   label:'Cosmic Meadow',         pos: {x:134,y:386} },
-  { key:'neonGarden',     label:'Neon Garden',           pos: {x:516,y:364} },
-  { key:'forestHouse',    label:'Forest House',          pos: {x:610,y:478} },
-  { key:'wasteLand',      label:'Wasteland',             pos: {x:128,y:598} },
-  { key:'bassPod',        label:'Bass Pod',              pos: {x:324,y:638} },
-  { key:'circuitGrounds', label:'Circuit Grounds',       pos: {x:521,y:598} },
-  // Entrances
-  { key:'mainEntrance',   label:'Main Entrance',         pos: {x:340,y:752} },
-  { key:'gaGate1',        label:'GA Gate 1',             pos: {x:220,y:748} },
-  { key:'gaGate2',        label:'GA Gate 2',             pos: {x:460,y:748} },
-  { key:'vipGate',        label:'VIP Gate',              pos: {x:555,y:722} },
-  { key:'shuttleDropoff', label:'Shuttle Drop-off',      pos: {x:165,y:738} },
+  // Stages (exact from STAGE_POS)
+  { key:'kineticField',   label:'Kinetic Field',         pos:{x:340,y:72}  },
+  { key:'quantumValley',  label:'Quantum Valley',         pos:{x:545,y:131} },
+  { key:'bionicJungle',   label:'Bionic Jungle',          pos:{x:126,y:143} },
+  { key:'stereoBloom',    label:'Stereo Bloom',           pos:{x:200,y:264} },
+  { key:'cosmicMeadow',   label:'Cosmic Meadow',          pos:{x:134,y:386} },
+  { key:'neonGarden',     label:'Neon Garden',            pos:{x:516,y:364} },
+  { key:'forestHouse',    label:'Forest House',           pos:{x:610,y:478} },
+  { key:'wasteLand',      label:'Wasteland',              pos:{x:128,y:598} },
+  { key:'bassPod',        label:'Bass Pod',               pos:{x:324,y:638} },
+  { key:'circuitGrounds', label:'Circuit Grounds',        pos:{x:521,y:598} },
+  // Entrances & Gates
+  { key:'gateS',          label:'Entrance Gate S',        pos:{x:618,y:92}  },
+  { key:'gateCD',         label:'Entrance Gates C/D',     pos:{x:32,y:435}  },
+  { key:'gateP',          label:'Entrance Gate P',        pos:{x:92,y:702}  },
+  { key:'campEDC',        label:'Camp EDC Entrance',      pos:{x:22,y:558}  },
+  { key:'accessCenter',   label:'Access Center',          pos:{x:588,y:108} },
+  // Named Areas
+  { key:'daisyFields',    label:'Daisy Fields',           pos:{x:178,y:196} },
+  { key:'flowerTunnel',   label:'Flower Tunnel',          pos:{x:292,y:242} },
+  { key:'daisyLane',      label:'Daisy Lane',             pos:{x:272,y:308} },
+  { key:'rainbowBazaar',  label:'Rainbow Bazaar',         pos:{x:258,y:444} },
+  { key:'memoryLane',     label:'Memory Lane',            pos:{x:182,y:482} },
+  { key:'downtownEDC',    label:'Downtown EDC',           pos:{x:234,y:548} },
+  { key:'electricAve',    label:'Electric Avenue',        pos:{x:306,y:574} },
+  { key:'powerPath',      label:'Power Path',             pos:{x:430,y:438} },
+  { key:'pixelForest',    label:'Pixel Forest',           pos:{x:452,y:532} },
+  { key:'nomadsLand',     label:'Nomads Land',            pos:{x:178,y:642} },
+  { key:'bambooVillage',  label:'Bamboo Village',         pos:{x:54,y:658}  },
+  { key:'verizonDeck',    label:'Verizon Viewing Deck',   pos:{x:514,y:650} },
   // VIP
-  { key:'vipLounge',      label:'VIP Lounge',            pos: {x:432,y:96}  },
-  { key:'vipBar',         label:'VIP Bar',               pos: {x:455,y:148} },
-  { key:'vipViewing',     label:'VIP Viewing Area',      pos: {x:366,y:108} },
-  // Medical
-  { key:'medicalMain',    label:'Medical (Main)',         pos: {x:338,y:448} },
-  { key:'medicalNorth',   label:'Medical (North)',        pos: {x:240,y:198} },
-  { key:'medicalSouth',   label:'Medical (South)',        pos: {x:338,y:672} },
+  { key:'vip',            label:'VIP Area',               pos:{x:432,y:100} },
+  { key:'vipConcierge',   label:'VIP Concierge',          pos:{x:490,y:94}  },
+  { key:'vipViewingDeck', label:'VIP Viewing Deck',       pos:{x:365,y:110} },
+  // First Aid
+  { key:'firstAidN',      label:'First Aid (North)',      pos:{x:98,y:172}  },
+  { key:'firstAidC',      label:'First Aid (Central)',    pos:{x:212,y:390} },
+  { key:'firstAidS',      label:'First Aid (South)',      pos:{x:258,y:592} },
+  { key:'firstAidSE',     label:'First Aid (SE)',         pos:{x:464,y:662} },
   // Amenities
-  { key:'infoCenter',     label:'Info Center',           pos: {x:308,y:712} },
-  { key:'lostFound',      label:'Lost & Found',          pos: {x:372,y:712} },
-  { key:'merch',          label:'Merch',                 pos: {x:258,y:702} },
-  { key:'atm',            label:'ATM',                   pos: {x:412,y:702} },
-  { key:'foodCourt1',     label:'Food Court (Central)',  pos: {x:320,y:492} },
-  { key:'foodCourt2',     label:'Food Court (South)',    pos: {x:308,y:662} },
-  { key:'restroom1',      label:'Restrooms (North)',     pos: {x:300,y:180} },
-  { key:'restroom2',      label:'Restrooms (Central)',   pos: {x:340,y:480} },
-  { key:'restroom3',      label:'Restrooms (South)',     pos: {x:340,y:688} },
+  { key:'restrooms',      label:'Restrooms',              pos:{x:305,y:480} },
+  { key:'waterStation',   label:'Water Station',          pos:{x:340,y:360} },
+  { key:'merch',          label:'Merchandise',            pos:{x:252,y:700} },
+  { key:'lockers',        label:'Lockers',                pos:{x:390,y:698} },
+  { key:'info',           label:'Info Booth',             pos:{x:312,y:710} },
+  { key:'charging',       label:'Charging Station',       pos:{x:350,y:710} },
+  { key:'cashExchange',   label:'Cash Exchange',          pos:{x:410,y:706} },
+  { key:'lostFound',      label:'Lost & Found',           pos:{x:370,y:718} },
+  { key:'kandiStation',   label:'Kandi Station',          pos:{x:280,y:490} },
 ];
 const SQ_LOC_MAP = Object.fromEntries(SQ_LOCATIONS.map(l=>[l.key,l]));
 
@@ -1412,14 +1441,30 @@ function renderMap() {
   // Build route path through selected stages in time order
   const routeColor = {FRI:'#9b8dff',SAT:'#ff7eb3',SUN:'#4dffc4'}[mapDay];
 
-  // Dedupe consecutive same-stage stops
-  const stops = [];
+  // Group consecutive same-stage artists, then split where a side quest falls mid-gap
+  const rawStops = [];
   dayArtists.forEach(a=>{
     const pos = STAGE_POS[a.stage];
     if(!pos) return;
-    if(!stops.length || stops[stops.length-1].stage!==a.stage)
-      stops.push({stage:a.stage, pos, artists:[a]});
-    else stops[stops.length-1].artists.push(a);
+    if(!rawStops.length || rawStops[rawStops.length-1].stage!==a.stage)
+      rawStops.push({stage:a.stage, pos, artists:[a]});
+    else rawStops[rawStops.length-1].artists.push(a);
+  });
+  const sqTimes = (sideQuests[mapDay]||[]).map(sq=>toMins(sq.time));
+  const stops = [];
+  rawStops.forEach(s=>{
+    let cur=[];
+    s.artists.forEach((a,i)=>{
+      cur.push(a);
+      if(i<s.artists.length-1){
+        const endT=toMins(a.end), nextT=toMins(s.artists[i+1].start);
+        if(sqTimes.some(t=>t>endT && t<=nextT)){
+          stops.push({stage:s.stage,pos:s.pos,artists:cur});
+          cur=[];
+        }
+      }
+    });
+    if(cur.length) stops.push({stage:s.stage,pos:s.pos,artists:cur});
   });
 
   // Offset step markers when multiple stops share the same stage
@@ -1468,19 +1513,19 @@ function renderMap() {
       stroke="#0d083a" stroke-width="6" paint-order="stroke">${stageName(name)}</text>`;
   }).join('');
 
-  // Build combined timeline: artist stops + side quests with map positions, sorted by time
-  const sqWithPos = sqForDay.filter(sq => sq.location && SQ_LOC_MAP[sq.location]);
-  const sqNoPos   = sqForDay.filter(sq => !sq.location || !SQ_LOC_MAP[sq.location]); // w3w only
-
+  // Build combined timeline: artist stops + ALL side quests, sorted by time
   const combined = [
     ...stops.map(s => ({ type:'artist', t: toMins(s.artists[0].start), stop: s })),
-    ...sqWithPos.map(sq => ({ type:'quest', t: toMins(sq.time), sq, pos: SQ_LOC_MAP[sq.location].pos }))
+    ...sqForDay.map(sq => {
+      const pos = (sq.location && SQ_LOC_MAP[sq.location]) ? SQ_LOC_MAP[sq.location].pos : null;
+      return { type:'quest', t: toMins(sq.time), sq, pos };
+    })
   ].sort((a,b)=>a.t-b.t);
 
   // Assign unified step numbers
   combined.forEach((item,i) => { item.stepNum = i + 1; });
 
-  // Build SVG markers for all combined stops
+  // Build SVG markers — skip w3w-only quests (no pos)
   const allMarkers = combined.map(item => {
     if (item.type === 'artist') {
       const s = item.stop;
@@ -1488,7 +1533,7 @@ function renderMap() {
         <circle cx="${s.markerX}" cy="${s.markerY}" r="16" fill="${routeColor}" opacity="1"/>
         <text x="${s.markerX}" y="${s.markerY+5}" text-anchor="middle"
           font-family="DM Mono,monospace" font-size="14" fill="#000" font-weight="700">${item.stepNum}</text>`;
-    } else {
+    } else if (item.pos) {
       const {x,y} = item.pos;
       const label = item.sq.name.length > 10 ? item.sq.name.slice(0,10)+'…' : item.sq.name;
       return `
@@ -1498,10 +1543,12 @@ function renderMap() {
         <text x="${x}" y="${y+5}" text-anchor="middle"
           font-family="DM Mono,monospace" font-size="14" fill="#000" font-weight="700">${item.stepNum}</text>`;
     }
+    return '';
   }).join('');
 
-  // Route path through all combined stops
-  const routePath = combined.length > 1 ? combined.map((item,i) => {
+  // Route path — only through items that have a map position
+  const posItems = combined.filter(item => item.type==='artist' || item.pos);
+  const routePath = posItems.length > 1 ? posItems.map((item,i) => {
     const x = item.type==='artist' ? item.stop.markerX : item.pos.x;
     const y = item.type==='artist' ? item.stop.markerY : item.pos.y;
     return (i===0?'M':'L') + `${x},${y}`;
@@ -1518,12 +1565,14 @@ function renderMap() {
       const names = s.artists.map(a=>`<span style="color:${color};font-weight:700">${a.name}</span> <span style="color:var(--muted)">${fmt(a.start)}–${fmt(a.end)}</span>`).join('<br>');
       const lastEnd = toMins(s.artists[s.artists.length-1].end);
       const stayMins = lastEnd - toMins(s.artists[0].start);
-      // find next combined item with a walk time
-      const nextItem = combined[item.stepNum]; // stepNum is 1-based so this is the next item
+      const nextItem = combined[item.stepNum]; // stepNum is 1-based so index of next item
       const nextStage = nextItem?.type==='artist' ? nextItem.stop.stage : null;
       const wt = nextStage ? WALK[`${s.stage}-${nextStage}`] : null;
       const gap = nextItem ? nextItem.t - lastEnd : null;
       const isEasy = wt != null && gap != null && gap >= wt;
+      const walkLine = wt
+        ? `<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:${isEasy?'var(--muted)':'var(--warn)'}">→ ${wt} min ${isEasy?'easy':'fast'} walk to step ${item.stepNum+1}</div>`
+        : (gap !== null ? `<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:var(--muted)">→ ${gap} min until step ${item.stepNum+1}</div>` : '');
       return `
         <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
           <div style="width:22px;height:22px;border-radius:50%;background:${routeColor};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
@@ -1533,45 +1582,36 @@ function renderMap() {
             <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">~${stayMins} min at stage</div>
             <div style="font-size:11px;color:${color};font-family:DM Mono,monospace;margin-bottom:3px">${stageName(s.stage)}</div>
             <div style="font-size:13px;line-height:1.8">${names}</div>
-            ${wt?`<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:${isEasy?'var(--muted)':'var(--warn)'}">→ ${wt} min ${isEasy?'easy':'fast'} walk to step ${item.stepNum+1}</div>`:''}
+            ${walkLine}
           </div>
         </div>`;
     } else {
       const sq = item.sq;
       const loc = sq.w3w ? `///${sq.w3w}` : (SQ_LOC_MAP[sq.location]?.label || sq.location);
+      const nextItem = combined[item.stepNum];
+      const gap = nextItem ? nextItem.t - toMins(sq.time) : null;
+      const walkLine = gap !== null
+        ? `<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:var(--muted)">→ ${gap} min until step ${item.stepNum+1}</div>`
+        : '';
+      const iconEdit = `<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>`;
+      const iconTrash = `<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>`;
       return `
         <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
           <div style="width:22px;height:22px;border-radius:50%;background:#ffd700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
             <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${item.stepNum}</span>
           </div>
           <div style="flex:1;min-width:0">
-            <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">${fmt(sq.time)} · side quest</div>
-            <div style="font-size:13px;font-weight:700;margin-bottom:2px">${sq.name}</div>
-            <div style="font-size:11px;color:var(--muted);font-family:DM Mono,monospace">${loc}</div>
+            <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">side quest</div>
+            <div style="font-size:11px;color:#ffd700;font-family:DM Mono,monospace;margin-bottom:3px">${loc}</div>
+            <div style="font-size:13px;line-height:1.8;font-weight:700">${sq.name} <span style="color:var(--muted);font-weight:400">${fmt(sq.time)}</span></div>
+            ${walkLine}
           </div>
-          <div style="display:flex;gap:4px;flex-shrink:0">
-            <button onclick="openSqSheet(sideQuests['${sq.day}'].find(q=>q.id===${sq.id}))" style="background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:4px 5px;-webkit-tap-highlight-color:transparent">✎</button>
-            <button onclick="removeSq(${sq.id})" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 5px;-webkit-tap-highlight-color:transparent">✕</button>
+          <div style="display:flex;gap:2px;flex-shrink:0;align-items:flex-start;margin-top:0">
+            <button onclick="openSqSheet(sideQuests['${sq.day}'].find(q=>q.id===${sq.id}))" style="background:rgba(255,255,255,0.06);border:none;color:var(--muted);cursor:pointer;min-width:36px;min-height:36px;border-radius:8px;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">${iconEdit}</button>
+            <button onclick="removeSq(${sq.id})" style="background:rgba(255,255,255,0.06);border:none;color:var(--muted);cursor:pointer;min-width:36px;min-height:36px;border-radius:8px;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">${iconTrash}</button>
           </div>
         </div>`;
     }
-  }).join('') + sqNoPos.map(sq => {
-    // w3w-only quests: show in list without step number
-    return `
-      <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
-        <div style="width:22px;height:22px;border-radius:50%;background:#ffd70044;border:1.5px solid #ffd700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
-          <span style="font-size:12px;color:#ffd700">★</span>
-        </div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">${fmt(sq.time)} · side quest</div>
-          <div style="font-size:13px;font-weight:700;margin-bottom:2px">${sq.name}</div>
-          <div style="font-size:11px;color:var(--muted);font-family:DM Mono,monospace">///${sq.w3w}</div>
-        </div>
-        <div style="display:flex;gap:4px;flex-shrink:0">
-          <button onclick="openSqSheet(sideQuests['${sq.day}'].find(q=>q.id===${sq.id}))" style="background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;padding:4px 5px;-webkit-tap-highlight-color:transparent">✎</button>
-          <button onclick="removeSq(${sq.id})" style="background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;padding:4px 5px;-webkit-tap-highlight-color:transparent">✕</button>
-        </div>
-      </div>`;
   }).join('');
 
   // Update only SVG content — image element is persistent in HTML, never reloaded
