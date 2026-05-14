@@ -68,6 +68,7 @@
   }
   .nav-dropdown-item:first-child { border-radius: 14px 14px 0 0; }
   .nav-dropdown-item:last-child { border-bottom: none; border-radius: 0 0 14px 14px; }
+  .nav-dropdown-divider { height: 1px; background: var(--border2); margin: 0; }
   .nav-dropdown-item:active { background: var(--surface); }
   .nav-dropdown-item svg { width: 17px; height: 17px; stroke: var(--accent); stroke-width: 1.8; fill: none; flex-shrink: 0; }
   .nav-dropdown-item span { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); }
@@ -447,6 +448,7 @@
     <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
     <span>Refresh App</span>
   </div>
+  <div class="nav-dropdown-divider"></div>
   <div class="nav-dropdown-item" onclick="menuSave()">
     <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
     <span>Save Selection</span>
@@ -454,6 +456,11 @@
   <div class="nav-dropdown-item" onclick="menuLoad()">
     <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
     <span>Load Selection</span>
+  </div>
+  <div class="nav-dropdown-divider"></div>
+  <div class="nav-dropdown-item" onclick="menuShare()">
+    <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    <span>Share App</span>
   </div>
 </div>
 
@@ -1031,6 +1038,14 @@ function closeMenu() {
 function menuRefresh() { closeMenu(); refreshLineup(); }
 function menuSave()    { closeMenu(); openSaveSheet(); }
 function menuLoad()    { closeMenu(); openLoadSheet(); }
+function menuShare() {
+  closeMenu();
+  if (navigator.share) {
+    navigator.share({ title: 'EDC LV 2026 Planner', url: window.location.href });
+  } else {
+    navigator.clipboard.writeText(window.location.href).then(() => showToast('Link copied'));
+  }
+}
 
 // ── SHEETS ────────────────────────────────────────────────
 function openSaveSheet() {
