@@ -153,8 +153,8 @@
     transition: background 0.2s, color 0.2s; position: relative;
   }
   .tab-btn svg { width: 20px; height: 20px; stroke-width: 1.5; stroke: currentColor; fill: none; transition: stroke 0.2s; flex-shrink: 0; }
-  .tab-btn.active .tab-pill { background: var(--accent); color: var(--bg2); }
-  .tab-btn.active .tab-pill svg { stroke: var(--bg2); }
+  .tab-btn.active .tab-pill { background: #c8b4ff22; color: var(--accent); }
+  .tab-btn.active .tab-pill svg { stroke: var(--accent); }
   /* badge on schedule tab */
   .tab-badge {
     position: absolute; top: 0; right: 8px;
@@ -166,7 +166,7 @@
     padding: 0 4px; line-height: 1;
   }
   .tab-badge.visible { display: flex; }
-  .tab-btn.active .tab-pill .tab-badge { background: var(--bg2); color: var(--accent); border-color: var(--accent); }
+  .tab-btn.active .tab-pill .tab-badge { background: var(--accent); color: var(--bg2); border-color: var(--bg2); }
 
   /* SCREENS */
   .screen { display: none; padding: calc(var(--nav-h) + env(safe-area-inset-top)) 0 84px; min-height: 100dvh; overflow: visible; }
