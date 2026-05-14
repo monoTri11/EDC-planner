@@ -539,6 +539,7 @@
     border-radius: 16px 16px 0 0;
     padding-bottom: env(safe-area-inset-bottom);
     transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+    max-height: 88dvh; overflow-y: auto;
   }
   #sq-sheet.open #sq-panel2 { transform: translateY(0); }
   #sq-hdr {
@@ -575,8 +576,10 @@
     width: 100%; padding: 14px; border-radius: 10px; border: none; cursor: pointer;
     background: var(--accent); color: #0a0818;
     font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
-    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: transparent; touch-action: manipulation;
   }
+  .sq-field-error { border-color: #ff6b6b !important; }
+  @keyframes sq-shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
 
   /* ABOUT MODAL */
   #about-overlay {
@@ -720,7 +723,10 @@
         <button class="sq-day-btn" data-day="SAT" onclick="setSqDay('SAT')">Sat May 16</button>
         <button class="sq-day-btn" data-day="SUN" onclick="setSqDay('SUN')">Sun May 17</button>
       </div>
-      <input class="sq-input" id="sq-time" type="time">
+      <div style="position:relative">
+        <input class="sq-input" id="sq-time" type="time" style="padding-top:20px;padding-bottom:8px">
+        <span style="position:absolute;top:8px;left:14px;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);pointer-events:none;letter-spacing:0.05em">TIME</span>
+      </div>
       <div class="sq-loc-toggle">
         <button class="sq-mode-btn active" id="sq-mode-list" onclick="setLocMode('list')">Stage / Area</button>
         <button class="sq-mode-btn" id="sq-mode-w3w" onclick="setLocMode('w3w')">What3Words</button>
@@ -788,7 +794,7 @@
       <div id="sq-loc-w3w" style="display:none">
         <input class="sq-input" id="sq-w3w" type="text" placeholder="///word.word.word">
       </div>
-      <button class="sq-submit" onclick="saveSq()" id="sq-submit-btn">Add to Route</button>
+      <button type="button" class="sq-submit" onclick="saveSq()" id="sq-submit-btn">Add to Route</button>
     </div>
   </div>
 </div>
@@ -875,7 +881,7 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.13';
+const APP_VERSION = '2.14';
 
 // ── SPOTIFY IDS ───────────────────────────────────────────
 const SPOTIFY_IDS = {
@@ -1094,7 +1100,10 @@ function saveSq() {
   const isW3W = document.getElementById('sq-mode-w3w').classList.contains('active');
   const loc = isW3W ? '' : document.getElementById('sq-loc').value;
   const w3w = isW3W ? document.getElementById('sq-w3w').value.trim().replace(/^\/\/\//, '') : '';
-  if (!name || !time || !day || (!loc && !w3w)) return;
+  const shake = el => { el.classList.add('sq-field-error'); el.style.animation='sq-shake 0.3s ease'; setTimeout(()=>{ el.classList.remove('sq-field-error'); el.style.animation=''; },400); };
+  if (!name) { shake(document.getElementById('sq-name')); return; }
+  if (!time) { shake(document.getElementById('sq-time').parentElement); return; }
+  if (!loc && !w3w) { shake(isW3W ? document.getElementById('sq-w3w') : document.getElementById('sq-loc')); return; }
   const sq = { id: sqEditId ?? sqId++, name, time, day, location: loc, w3w };
   // remove old version from any day (handles day change on edit)
   if (sqEditId !== null)
@@ -1607,8 +1616,8 @@ function renderMap() {
             ${walkLine}
           </div>
           <div style="display:flex;gap:2px;flex-shrink:0;align-items:flex-start;margin-top:0">
-            <button onclick="openSqSheet(sideQuests['${sq.day}'].find(q=>q.id===${sq.id}))" style="background:rgba(255,255,255,0.06);border:none;color:var(--muted);cursor:pointer;min-width:36px;min-height:36px;border-radius:8px;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">${iconEdit}</button>
-            <button onclick="removeSq(${sq.id})" style="background:rgba(255,255,255,0.06);border:none;color:var(--muted);cursor:pointer;min-width:36px;min-height:36px;border-radius:8px;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">${iconTrash}</button>
+            <button onclick="openSqSheet(sideQuests['${sq.day}'].find(q=>q.id===${sq.id}))" style="background:rgba(255,255,255,0.06);border:none;color:var(--muted);cursor:pointer;min-width:36px;min-height:36px;border-radius:50%;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">${iconEdit}</button>
+            <button onclick="removeSq(${sq.id})" style="background:rgba(255,255,255,0.06);border:none;color:var(--muted);cursor:pointer;min-width:36px;min-height:36px;border-radius:50%;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">${iconTrash}</button>
           </div>
         </div>`;
     }
@@ -1624,7 +1633,7 @@ function renderMap() {
 
   mapRouteInfo.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px">
-      <div style="font-family:'Syne',sans-serif;font-size:17px;font-weight:800">${dayLabels[mapDay]}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--text)">${dayLabels[mapDay]}</div>
       <button class="sq-add-btn" onclick="openSqSheet()">+ side quest</button>
     </div>
     ${stops.length ? `<div style="display:flex;gap:20px;align-items:center;padding:0 20px 14px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
