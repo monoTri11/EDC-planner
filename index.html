@@ -541,7 +541,18 @@
   <div class="sticky-bar" id="map-sticky">
     <div class="map-day-tabs" id="map-day-tabs"></div>
   </div>
-  <div id="map-content"></div>
+  <div id="map-content">
+    <div id="map-empty" class="map-no-sel" style="display:none"></div>
+    <div id="map-visual" style="display:none">
+      <div class="map-container" style="padding-top:32px">
+        <div class="map-svg-wrap" style="position:relative;overflow:hidden">
+          <img src="map.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.28) saturate(0.5) hue-rotate(230deg);z-index:0">
+          <svg id="map-svg" viewBox="0 0 680 780" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1"></svg>
+        </div>
+      </div>
+    </div>
+    <div id="map-route-info" style="padding:16px 12px 8px 12px;display:none"></div>
+  </div>
 </div>
 
 <button class="fab" id="fab" onclick="goToSchedule()"></button>
@@ -925,7 +936,11 @@ function goToSchedule() {
 function renderMap() {
   const days = ['FRI','SAT','SUN'];
   const dayLabels = {FRI:'Fri May 15',SAT:'Sat May 16',SUN:'Sun May 17'};
-  const content = document.getElementById('map-content');
+
+  const mapEmpty     = document.getElementById('map-empty');
+  const mapVisual    = document.getElementById('map-visual');
+  const mapSvg       = document.getElementById('map-svg');
+  const mapRouteInfo = document.getElementById('map-route-info');
 
   // render day tabs into sticky bar
   document.getElementById('map-day-tabs').innerHTML =
@@ -938,14 +953,24 @@ function renderMap() {
     .sort((a,b)=>toMins(a.start)-toMins(b.start));
 
   if (selected.size===0) {
-    content.innerHTML = `<div class="map-no-sel">select artists in Browse<br>to see your route</div>`;
+    mapEmpty.innerHTML = 'select artists in Browse<br>to see your route';
+    mapEmpty.style.display = 'block';
+    mapVisual.style.display = 'none';
+    mapRouteInfo.style.display = 'none';
     return;
   }
 
   if (!dayArtists.length) {
-    content.innerHTML = `<div class="map-no-sel">no artists selected for ${dayLabels[mapDay]}</div>`;
+    mapEmpty.textContent = `no artists selected for ${dayLabels[mapDay]}`;
+    mapEmpty.style.display = 'block';
+    mapVisual.style.display = 'none';
+    mapRouteInfo.style.display = 'none';
     return;
   }
+
+  mapEmpty.style.display = 'none';
+  mapVisual.style.display = 'block';
+  mapRouteInfo.style.display = 'block';
 
   // Build route path through selected stages in time order
   const routeColor = {FRI:'#9b8dff',SAT:'#ff7eb3',SUN:'#4dffc4'}[mapDay];
@@ -1037,37 +1062,27 @@ function renderMap() {
       </div>`;
   }).join('');
 
-  content.innerHTML = `
-    <div class="map-container" style="padding-top:32px">
-      <div class="map-svg-wrap" style="position:relative;overflow:hidden">
-        <img src="map.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.28) saturate(0.5) hue-rotate(230deg);z-index:0">
-        <svg viewBox="0 0 680 780" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1">
-          <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.45"/>
-          <!-- stage circles -->
-          ${allStagePinCircles}
-          <!-- route path: solid = fast walk, dashed = easy walk -->
-          ${pathSegs}
-          <!-- step numbers -->
-          ${stepMarkers}
-          <!-- stage labels on top -->
-          ${allStageLabels}
-        </svg>
+  // Update only SVG content — image element is persistent in HTML, never reloaded
+  mapSvg.innerHTML = `
+    <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.45"/>
+    ${allStagePinCircles}
+    ${pathSegs}
+    ${stepMarkers}
+    ${allStageLabels}`;
+
+  mapRouteInfo.innerHTML = `
+    <div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;padding:0 4px 10px">${dayLabels[mapDay].toUpperCase()} · YOUR ROUTE</div>
+    <div style="display:flex;gap:20px;align-items:center;padding:0 4px 14px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
+      <div style="display:flex;align-items:center;gap:7px">
+        <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round"/></svg>
+        <span>walk fast</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:7px">
+        <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4"/></svg>
+        <span>easy walk</span>
       </div>
     </div>
-    <div style="padding:16px 12px 8px 12px">
-      <div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;padding:0 4px 10px">${dayLabels[mapDay].toUpperCase()} · YOUR ROUTE</div>
-      <div style="display:flex;gap:20px;align-items:center;padding:0 4px 14px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
-        <div style="display:flex;align-items:center;gap:7px">
-          <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round"/></svg>
-          <span>walk fast</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:7px">
-          <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4"/></svg>
-          <span>easy walk</span>
-        </div>
-      </div>
-      ${routeList}
-    </div>`;
+    ${routeList}`;
 }
 
 function setMapDay(d) { mapDay=d; renderMap(); }
