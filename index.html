@@ -465,6 +465,10 @@
     <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
     <span>Load Selection</span>
   </div>
+  <div class="nav-dropdown-item" onclick="menuShareSelection()">
+    <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    <span>Share Selection</span>
+  </div>
   <div class="nav-dropdown-divider"></div>
   <div class="nav-dropdown-item" onclick="menuShare()">
     <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
@@ -1049,6 +1053,20 @@ function closeMenu() {
 function menuRefresh() { closeMenu(); refreshLineup(); }
 function menuSave()    { closeMenu(); openSaveSheet(); }
 function menuLoad()    { closeMenu(); openLoadSheet(); }
+function menuShareSelection() {
+  closeMenu();
+  if (!selected.size) { showToast('No artists selected'); return; }
+  const data = { name: 'my-edc-selection', savedAt: new Date().toISOString(), artists: [...selected] };
+  const json = JSON.stringify(data, null, 2);
+  const file = new File([json], 'edc-selection.json', { type: 'application/json' });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    navigator.share({ files: [file], title: 'EDC LV 2026 Selection' });
+  } else if (navigator.share) {
+    navigator.share({ title: 'EDC LV 2026 Selection', text: [...selected].join(', ') });
+  } else {
+    navigator.clipboard.writeText(json).then(() => showToast('Selection copied to clipboard'));
+  }
+}
 function menuShare() {
   closeMenu();
   if (navigator.share) {
