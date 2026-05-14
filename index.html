@@ -581,6 +581,7 @@ const STAGE_CFG = {
   bionicJungle:   '#a0ff70',
 };
 const sc = s => STAGE_CFG[s] || '#888';
+const stageName = s => s.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase());
 
 // ── WALK TIMES ────────────────────────────────────────────
 const WALK = {
@@ -762,7 +763,7 @@ function renderBrowse() {
 
   const usedStages = [...new Set(lineup.map(a=>a.stage))].sort();
   document.getElementById('stage-legend').innerHTML = usedStages.map(s=>
-    `<div class="s-leg"><span class="s-leg-dot" style="background:${sc(s)}"></span><span style="color:${sc(s)}">${s}</span></div>`
+    `<div class="s-leg"><span class="s-leg-dot" style="background:${sc(s)}"></span><span style="color:${sc(s)}">${stageName(s)}</span></div>`
   ).join('');
 
   let filtered = lineup.filter(a=>(browseDay==='ALL'||a.day===browseDay) && a.name.toLowerCase().includes(q));
@@ -783,7 +784,7 @@ function renderBrowse() {
         </div>
         <div class="chip-row">
           <span class="chip-dot" style="background:${color}"></span>
-          <span class="chip-stage" style="color:${color}">${a.stage}</span>
+          <span class="chip-stage" style="color:${color}">${stageName(a.stage)}</span>
         </div>
         <div class="chip-time">${fmt(a.start)} – ${fmt(a.end)}</div>
       </div>`;
@@ -859,7 +860,7 @@ function renderSchedule() {
             <div class="sched-name">${a.name}</div>
             <div class="sched-stage-row">
               <span class="sched-dot" style="background:${color}"></span>
-              <span class="sched-stage" style="color:${color}">${a.stage}</span>
+              <span class="sched-stage" style="color:${color}">${stageName(a.stage)}</span>
             </div>
           </div>
           <button class="sched-remove" onclick="removeArtist('${a.name.replace(/'/g,"\\'")}')">
@@ -956,7 +957,7 @@ function renderMap() {
         ${isActive?`<circle cx="${pos.x}" cy="${pos.y}" r="4" fill="${color}"/>` : ''}
         <text x="${pos.x}" y="${pos.y+32}" text-anchor="middle"
           font-family="DM Mono,monospace" font-size="20"
-          fill="${isActive?color:'#8884a8'}">${name.replace(/([A-Z])/g,' $1').trim()}</text>
+          fill="${isActive?color:'#8884a8'}">${stageName(name)}</text>
       </g>`;
   }).join('');
 
@@ -979,7 +980,7 @@ function renderMap() {
           <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${i+1}</span>
         </div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:11px;color:${color};font-family:DM Mono,monospace;margin-bottom:3px">${s.stage}</div>
+          <div style="font-size:11px;color:${color};font-family:DM Mono,monospace;margin-bottom:3px">${stageName(s.stage)}</div>
           <div style="font-size:13px;line-height:1.8">${names}</div>
           ${wt?`<div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-top:6px">→ ~${wt} min walk to stop ${i+2}</div>`:''}
         </div>
