@@ -496,6 +496,8 @@
     <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
     <span>Share App</span>
   </div>
+  <div class="nav-dropdown-divider"></div>
+  <div id="menu-version" style="padding:10px 20px;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);letter-spacing:0.1em;text-align:center;border-radius:0 0 14px 14px"></div>
 </div>
 
 <div id="update-banner">
@@ -601,6 +603,9 @@
 </div>
 
 <script>
+// ── VERSION ───────────────────────────────────────────────
+const APP_VERSION = '2.1';
+
 // ── STAGE COLORS ──────────────────────────────────────────
 const STAGE_CFG = {
   kineticField:   '#e8c840',
@@ -1216,6 +1221,7 @@ document.addEventListener('touchend', e => {
 }, { passive: false });
 
 // ── INIT ──────────────────────────────────────────────────
+document.getElementById('menu-version').textContent = `EDC LV 2026 · v${APP_VERSION}`;
 renderBrowse();
 </script>
 </body>
