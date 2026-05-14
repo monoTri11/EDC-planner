@@ -533,8 +533,13 @@
 <div class="sheet" id="load-sheet">
   <div class="sheet-handle"></div>
   <div class="sheet-title">Load Selection</div>
-  <div class="sheet-list" id="load-sheet-list"></div>
-  <div class="sheet-actions" style="padding-top:8px">
+  <div class="sheet-sub">Choose a JSON file saved from this app.</div>
+  <div class="sheet-actions">
+    <label class="sheet-btn-primary" for="load-file-input" style="display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer">
+      <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.5;flex-shrink:0"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      Choose JSON File
+    </label>
+    <input type="file" id="load-file-input" accept=".json,application/json" style="display:none" onchange="handleLoadFile(event)">
     <button class="sheet-btn-cancel" onclick="closeSheets()">Cancel</button>
   </div>
 </div>
@@ -1035,27 +1040,7 @@ function openSaveSheet() {
 }
 
 function openLoadSheet() {
-  const saves = getSaves();
-  const names = Object.keys(saves);
-  const list = document.getElementById('load-sheet-list');
-  if (!names.length) {
-    list.innerHTML = `<div class="load-empty">No saves yet.<br>Use Save Selection to create one.</div>`;
-  } else {
-    list.innerHTML = names.map(n => {
-      const count = saves[n].length;
-      const safe = n.replace(/'/g, "\\'");
-      return `
-        <div class="load-item" onclick="loadSave('${safe}')">
-          <div class="load-item-info">
-            <div class="load-item-name">${n}</div>
-            <div class="load-item-count">${count} artist${count !== 1 ? 's' : ''}</div>
-          </div>
-          <button class="load-item-del" onclick="event.stopPropagation();deleteSave('${safe}')">
-            <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          </button>
-        </div>`;
-    }).join('');
-  }
+  document.getElementById('load-file-input').value = '';
   document.getElementById('sheet-overlay').classList.add('open');
   document.getElementById('load-sheet').classList.add('open');
 }
@@ -1069,28 +1054,37 @@ function closeSheets() {
 function confirmSave() {
   const name = document.getElementById('sheet-save-input').value.trim();
   if (!name) return;
-  const saves = getSaves();
-  saves[name] = [...selected];
-  setSaves(saves);
+  const data = { name, savedAt: new Date().toISOString(), artists: [...selected] };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name.replace(/[^a-z0-9]/gi, '-') + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
   closeSheets();
-  showToast(`Saved "${name}"`);
+  showToast(`Downloaded "${a.download}"`);
 }
 
-function loadSave(name) {
-  const saves = getSaves();
-  if (!saves[name]) return;
-  selected = new Set(saves[name]);
-  saveSelected();
-  closeSheets();
-  renderBrowse();
-  showToast(`Loaded "${name}"`);
-}
-
-function deleteSave(name) {
-  const saves = getSaves();
-  delete saves[name];
-  setSaves(saves);
-  openLoadSheet();
+function handleLoadFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      const artists = Array.isArray(data) ? data : data.artists;
+      if (!Array.isArray(artists)) throw new Error();
+      selected = new Set(artists.filter(n => lineup.find(a => a.name === n)));
+      saveSelected();
+      closeSheets();
+      renderBrowse();
+      showToast(`Loaded ${selected.size} artist${selected.size !== 1 ? 's' : ''}`);
+    } catch {
+      showToast('Invalid file — expected EDC selection JSON');
+    }
+  };
+  reader.readAsText(file);
 }
 
 document.getElementById('sheet-save-input').addEventListener('keydown', e => {
