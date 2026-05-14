@@ -306,6 +306,59 @@
   .chip-day.sat { color: var(--sat); background: #ff7eb318; }
   .chip-day.sun { color: var(--sun); background: #4dffc418; }
 
+  /* SPOTIFY BUTTON ON CHIP */
+  .chip-spotify {
+    position: absolute; top: 34px; right: 8px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: #1DB954; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.85; transition: opacity 0.15s, transform 0.15s;
+    z-index: 2;
+  }
+  .chip-spotify:active { opacity: 1; transform: scale(0.9); }
+  .chip-spotify svg { width: 13px; height: 13px; fill: #000; }
+
+  /* SPOTIFY BOTTOM SHEET */
+  #spotify-sheet {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    pointer-events: none;
+  }
+  #spotify-sheet.open { pointer-events: all; }
+  #spotify-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.7);
+    opacity: 0; transition: opacity 0.25s;
+  }
+  #spotify-sheet.open #spotify-backdrop { opacity: 1; }
+  #spotify-panel {
+    position: relative;
+    background: #121212; border-radius: 16px 16px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+  }
+  #spotify-sheet.open #spotify-panel { transform: translateY(0); }
+  #spotify-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px 10px;
+  }
+  #spotify-title {
+    font-size: 14px; font-weight: 700; color: #fff;
+    font-family: 'Syne', sans-serif; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; max-width: calc(100% - 80px);
+  }
+  #spotify-close {
+    background: #333; border: none; border-radius: 50%;
+    width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #fff; font-size: 16px; line-height: 1; flex-shrink: 0;
+  }
+  #spotify-embed-wrap {
+    width: 100%; height: 352px;
+  }
+  #spotify-embed-wrap iframe {
+    width: 100%; height: 100%; border: none;
+  }
+
   /* FAB */
   .fab {
     position: fixed; bottom: calc(68px + env(safe-area-inset-bottom));
@@ -557,6 +610,18 @@
 
 <button class="fab" id="fab" onclick="goToSchedule()"></button>
 
+<!-- SPOTIFY BOTTOM SHEET -->
+<div id="spotify-sheet">
+  <div id="spotify-backdrop" onclick="closeSpotify()"></div>
+  <div id="spotify-panel">
+    <div id="spotify-header">
+      <div id="spotify-title"></div>
+      <button id="spotify-close" onclick="closeSpotify()">✕</button>
+    </div>
+    <div id="spotify-embed-wrap"></div>
+  </div>
+</div>
+
 <div class="tab-bar">
   <button class="tab-btn active" onclick="switchTab('browse',this)" id="tab-browse">
     <div class="tab-pill">
@@ -615,7 +680,66 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.3';
+const APP_VERSION = '2.4';
+
+// ── SPOTIFY IDS ───────────────────────────────────────────
+const SPOTIFY_IDS = {
+  "1991":              "2IP71LH7CbwddhsEXBI0fy",
+  "999999999":         "6uD2LjPHUjxrpax0se17Nc",
+  "Above & Beyond":    "10gzBoINW3cLJfZUka8Zoe",
+  "Adriatique":        "02DWGcShQivFepRvGJ7xhB",
+  "Alison Wonderland": "11gWrKZMBsGQWmobv3oNfW",
+  "Andrew Rayel":      "1UtBjqMZBAmqIPlDrKu7Tr",
+  "Argy":              "1NaQOKgddaJipUtmptb7GI",
+  "Armin van Buuren":  "0SfsnGyD8FpIN4U4WCkBZ5",
+  "Boys Noize":        "62k5LKMhymqlDNo2DWOvvv",
+  "Chris Stussy":      "3BxjasMelf9pKaE4f7Y0So",
+  "Cloonee":           "7MdlXmq2HViAJWo9cf30sR",
+  "Cold Blue":         "3mbjJqO86kx786znlhmTrF",
+  "Cosmic Gate":       "6ySxYu68zTsO5ghsThpGtS",
+  "Da Tweekaz":        "6UOk7DmvqlzWmo6gjhZvn6",
+  "Darren Porter":     "04b2pmUXaBL8wHacSaOplA",
+  "Dead X":            "1viO40zvthKBg0VNEnJoma",
+  "Fisher":            "1VJ0briNOlXRtJUAzoUJdt",
+  "Gareth Emery":      "0hprEC0nsWuQPSHag1O2Vi",
+  "Getter":            "3QryVD03gGZOLQQXjy3EoA",
+  "Gorillaz":          "3AA28KZvwAUcZuOKwyblJQ",
+  "Hayla":             "4yX6mpMyBGf9UfvBB8JJrc",
+  "Ilan Bluestone":    "1yoZuH2j43vVSWsOwYuQyn",
+  "Indira Paganotto":  "0JXc5G7ZImFTwPg3y8MTfR",
+  "John Summit":       "7kNqXtgeIwFtelmRjWv205",
+  "Kaskade":           "6TQj5BFPooTa08A7pk8AQ1",
+  "Kettama":           "3an9rnsXKPCAMlZgH4A0n4",
+  "Kevin de Vries":    "11aPF3sc8lDWNqPVInm4Zx",
+  "Kream":             "0DdDnziut7wOo6cAYWVZC5",
+  "Luciano":           "7pb926owWkly4sZus8Esnk",
+  "Maddix":            "0RMeG9M8QFzss9bAbq99KA",
+  "Martin Garrix":     "60d24wfXkVzDSfLS6hyCjZ",
+  "Massano":           "6htWLP8aiuf19FYMA4VQAZ",
+  "Meduza":            "0xRXCcSX89eobfrshSVdyu",
+  "Nico Moreno":       "6fjhNhp9IoeiZpEXq9AT2S",
+  "Paul Oakenfold":    "5MO2kbaGGA2a8kL4c9qqHq",
+  "Peekaboo":          "21YXLTgTWROuALUjRQMreX",
+  "Peggy Gou":         "2mLA48B366zkELXYx7hcDN",
+  "Peggy Gou B2B Ki/Ki": "2mLA48B366zkELXYx7hcDN",
+  "Porter Robinson":   "3dz0NnIZhtKKeXZxLOxCam",
+  "Rooler":            "2lpFs8QJyIeVDb2Sq4vZYi",
+  "San Pacho":         "5jBerZvTAajwYvdxt3UhgU",
+  "Seven Lions":       "6fcTRFpz0yH79qSKfof7lp",
+  "Shingo Nakamura":   "58zz0VTpGNHn7MGTlW2cxQ",
+  "Sofi Tukker":       "586uxXMyD5ObPuzjtrzO1Q",
+  "Solomun":           "5wJK4kQAkVGjqM9x46KQOC",
+  "Sub Zero Project":  "4f0OXMMSxr0r8Ztx6CdpAl",
+  "The Prodigy":       "4k1ELeJKT1ISyDv8JivPpB",
+  "Tiësto":            "2o5jDhtHVPhrJdv3cEQ99Z",
+  "Tinlicker":         "5EmEZjq8eHEC6qFnT63Lza",
+  "Vintage Culture":   "28uJnu5EsrGml2tBd7y8ts",
+  "Virtual Riot":      "4FXGRMSHh2JjHxVwS8dhH1",
+  "VTSS":              "0zo109NM3S7CqHpvlXwqEN",
+  "Wax Motif":         "7zm3aSdmGiOkTt0aZFSO8R",
+  "Wooli":             "7DJsK6yeX7vhS1Sqg8be8W",
+  "Zedd":              "2qxJFvFYMEDqd7ui6kSAcq"
+};
 
 // ── STAGE COLORS ──────────────────────────────────────────
 const STAGE_CFG = {
@@ -824,9 +948,16 @@ function renderBrowse() {
   document.getElementById('artist-grid').innerHTML = filtered.map(a=>{
     const sel = selected.has(a.name);
     const color = sc(a.stage);
+    const sid = SPOTIFY_IDS[a.name];
+    const spotifyBtn = sid
+      ? `<button class="chip-spotify" onclick="event.stopPropagation();openSpotify('${a.name.replace(/'/g,"\\'")}','${sid}')" title="Preview on Spotify">
+           <svg viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424a.623.623 0 0 1-.857.207c-2.348-1.435-5.304-1.76-8.785-.964a.623.623 0 1 1-.277-1.215c3.809-.87 7.077-.496 9.712 1.115a.623.623 0 0 1 .207.857zm1.223-2.722a.78.78 0 0 1-1.072.257c-2.687-1.652-6.785-2.131-9.965-1.166a.78.78 0 0 1-.973-.519.781.781 0 0 1 .52-.973c3.632-1.102 8.147-.568 11.234 1.329a.78.78 0 0 1 .256 1.072zm.105-2.835C14.692 8.95 9.375 8.775 6.297 9.71a.937.937 0 1 1-.543-1.794c3.541-1.073 9.431-.866 13.152 1.337a.937.937 0 0 1-.992 1.614z"/></svg>
+         </button>`
+      : '';
     return `
       <div class="artist-chip ${sel?'s-'+dc(a.day):''}" onclick="toggleArtist('${a.name.replace(/'/g,"\\'")}')">
         <div class="chip-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        ${spotifyBtn}
         <div class="chip-top">
           ${browseDay==='ALL'?`<span class="chip-day ${dc(a.day)}">${a.day}</span>`:''}
           <div class="chip-name">${a.name}</div>
@@ -854,6 +985,21 @@ function toggleArtist(name) {
 }
 
 document.getElementById('search').addEventListener('input', renderBrowse);
+
+// ── SPOTIFY SHEET ─────────────────────────────────────────
+function openSpotify(name, id) {
+  document.getElementById('spotify-title').textContent = name;
+  const wrap = document.getElementById('spotify-embed-wrap');
+  wrap.innerHTML = `<iframe src="https://open.spotify.com/embed/artist/${id}?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+  document.getElementById('spotify-sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSpotify() {
+  const sheet = document.getElementById('spotify-sheet');
+  sheet.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => { document.getElementById('spotify-embed-wrap').innerHTML = ''; }, 300);
+}
 
 // ── SCHEDULE ──────────────────────────────────────────────
 function renderSchedule() {
