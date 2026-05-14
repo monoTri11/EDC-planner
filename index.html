@@ -473,7 +473,7 @@
     <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
     <span>Refresh Lineup</span>
   </div>
-  <div class="nav-dropdown-item" id="menu-refresh-app" onclick="closeMenu();window.location.reload()">
+  <div class="nav-dropdown-item" id="menu-refresh-app" onclick="menuRefreshApp()">
     <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
     <span>Refresh App</span>
     <span class="update-dot" id="update-dot"></span>
@@ -1104,6 +1104,14 @@ function closeMenu() {
   document.getElementById('menu-overlay').classList.remove('open');
 }
 function menuRefresh() { closeMenu(); refreshLineup(); }
+async function menuRefreshApp() {
+  closeMenu();
+  if ('caches' in window) {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+  }
+  window.location.reload();
+}
 function menuSave()    { closeMenu(); openSaveSheet(); }
 function menuLoad()    { closeMenu(); openLoadSheet(); }
 function menuShareSelection() {
@@ -1195,15 +1203,29 @@ document.getElementById('sheet-save-input').addEventListener('keydown', e => {
 
 // ── SERVICE WORKER ────────────────────────────────────────
 if ('serviceWorker' in navigator) {
+  function showUpdateUI() {
+    document.getElementById('update-dot').classList.add('visible');
+    document.getElementById('update-banner').classList.add('visible');
+  }
+
+  // controllerchange is the definitive signal the new SW has taken over
+  // (skipWaiting in sw.js means it never sits in 'waiting' long)
+  let hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadController) showUpdateUI();
+    hadController = true;
+  });
+
   navigator.serviceWorker.register('sw.js').then(reg => {
+    // A SW may already be waiting from a previous update check
+    if (reg.waiting && navigator.serviceWorker.controller) showUpdateUI();
+
     reg.update();
+
     reg.addEventListener('updatefound', () => {
       const newSW = reg.installing;
       newSW.addEventListener('statechange', () => {
-        if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
-          document.getElementById('update-dot').classList.add('visible');
-          document.getElementById('update-banner').classList.add('visible');
-        }
+        if (newSW.state === 'installed' && navigator.serviceWorker.controller) showUpdateUI();
       });
     });
   }).catch(()=>{});
