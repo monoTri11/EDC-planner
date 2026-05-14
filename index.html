@@ -881,7 +881,7 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.14';
+const APP_VERSION = '2.14.1';
 
 // ── SPOTIFY IDS ───────────────────────────────────────────
 const SPOTIFY_IDS = {
@@ -1193,6 +1193,11 @@ function toMins(t) {
   const [h,m] = t.split(':').map(Number);
   return h < 8 ? (h+24)*60+m : h*60+m;
 }
+// Side quests sort on raw 24-hour time — 1am = 60, 9pm = 1260.
+function sqToMins(t) {
+  const [h,m] = t.split(':').map(Number);
+  return h*60+m;
+}
 function fmt(t) {
   let [h,m] = t.split(':').map(Number);
   const ap = (h%24)<12?'am':'pm'; const h12=(h%12)||12;
@@ -1459,7 +1464,7 @@ function renderMap() {
       rawStops.push({stage:a.stage, pos, artists:[a]});
     else rawStops[rawStops.length-1].artists.push(a);
   });
-  const sqTimes = (sideQuests[mapDay]||[]).map(sq=>toMins(sq.time));
+  const sqTimes = (sideQuests[mapDay]||[]).map(sq=>sqToMins(sq.time));
   const stops = [];
   rawStops.forEach(s=>{
     let cur=[];
@@ -1527,7 +1532,7 @@ function renderMap() {
     ...stops.map(s => ({ type:'artist', t: toMins(s.artists[0].start), stop: s })),
     ...sqForDay.map(sq => {
       const pos = (sq.location && SQ_LOC_MAP[sq.location]) ? SQ_LOC_MAP[sq.location].pos : null;
-      return { type:'quest', t: toMins(sq.time), sq, pos };
+      return { type:'quest', t: sqToMins(sq.time), sq, pos };
     })
   ].sort((a,b)=>a.t-b.t);
 
@@ -1598,7 +1603,7 @@ function renderMap() {
       const sq = item.sq;
       const loc = sq.w3w ? `///${sq.w3w}` : (SQ_LOC_MAP[sq.location]?.label || sq.location);
       const nextItem = combined[item.stepNum];
-      const gap = nextItem ? nextItem.t - toMins(sq.time) : null;
+      const gap = nextItem ? nextItem.t - sqToMins(sq.time) : null;
       const walkLine = gap !== null
         ? `<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:var(--muted)">→ ${gap} min until step ${item.stepNum+1}</div>`
         : '';
