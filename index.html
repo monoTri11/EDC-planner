@@ -513,6 +513,56 @@
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   * { scrollbar-width: none; }
   ::-webkit-scrollbar { width: 0; height: 0; }
+
+  /* SIDE QUEST */
+  .sq-add-btn {
+    flex-shrink: 0; padding: 6px 12px; border-radius: 999px;
+    background: #1e1e2e; border: 1px solid var(--border);
+    color: var(--muted); font-family: 'DM Mono', monospace; font-size: 10px;
+    cursor: pointer; white-space: nowrap; margin-top: 4px;
+    -webkit-tap-highlight-color: transparent;
+    transition: border-color 0.15s;
+  }
+  .sq-add-btn:active { border-color: var(--accent); color: var(--accent); }
+  #sq-sheet {
+    position: fixed; inset: 0; z-index: 200;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    pointer-events: none;
+  }
+  #sq-sheet.open { pointer-events: all; }
+  #sq-backdrop2 {
+    position: absolute; inset: 0; background: rgba(0,0,0,0.7);
+    opacity: 0; transition: opacity 0.25s;
+  }
+  #sq-sheet.open #sq-backdrop2 { opacity: 1; }
+  #sq-panel2 {
+    position: relative; background: var(--surface2);
+    border-radius: 16px 16px 0 0;
+    padding-bottom: env(safe-area-inset-bottom);
+    transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.32,0.72,0,1);
+  }
+  #sq-sheet.open #sq-panel2 { transform: translateY(0); }
+  #sq-hdr {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 20px 10px;
+  }
+  #sq-hdr span { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
+  #sq-close2 { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 4px 8px; }
+  .sq-form { padding: 4px 20px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .sq-input, .sq-select {
+    width: 100%; padding: 12px 14px; border-radius: 10px; box-sizing: border-box;
+    background: var(--surface); border: 1px solid var(--border2);
+    color: var(--text); font-family: 'DM Mono', monospace; font-size: 13px;
+    -webkit-appearance: none; appearance: none;
+  }
+  .sq-input::placeholder { color: var(--muted); }
+  .sq-input:focus, .sq-select:focus { outline: none; border-color: var(--accent); }
+  .sq-submit {
+    width: 100%; padding: 14px; border-radius: 10px; border: none; cursor: pointer;
+    background: var(--accent); color: #0a0818;
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800;
+    -webkit-tap-highlight-color: transparent;
+  }
 </style>
 </head>
 <body>
@@ -590,9 +640,12 @@
 
 <!-- MAP -->
 <div class="screen" id="screen-map">
-  <div class="section-head">
-    <h1>Map</h1>
-    <p>YOUR ARTISTS · OPTIMIZED WALKING ROUTES</p>
+  <div class="section-head" style="display:flex;justify-content:space-between;align-items:flex-start">
+    <div>
+      <h1>Map</h1>
+      <p>YOUR ARTISTS · OPTIMIZED WALKING ROUTES</p>
+    </div>
+    <button class="sq-add-btn" onclick="openSqSheet()">+ side quest</button>
   </div>
   <div class="sticky-bar" id="map-sticky">
     <div class="map-day-tabs" id="map-day-tabs"></div>
@@ -612,6 +665,35 @@
 </div>
 
 <button class="fab" id="fab" onclick="goToSchedule()"></button>
+
+<!-- SIDE QUEST SHEET -->
+<div id="sq-sheet">
+  <div id="sq-backdrop2" onclick="closeSqSheet()"></div>
+  <div id="sq-panel2">
+    <div id="sq-hdr">
+      <span>Add Side Quest</span>
+      <button id="sq-close2" onclick="closeSqSheet()">✕</button>
+    </div>
+    <div class="sq-form">
+      <input class="sq-input" id="sq-name" type="text" placeholder="Name e.g. meet at fountain…">
+      <input class="sq-input" id="sq-time" type="time">
+      <select class="sq-select" id="sq-loc">
+        <option value="">Select location…</option>
+        <option value="kineticField">Kinetic Field</option>
+        <option value="quantumValley">Quantum Valley</option>
+        <option value="bionicJungle">Bionic Jungle</option>
+        <option value="stereoBloom">Stereo Bloom</option>
+        <option value="cosmicMeadow">Cosmic Meadow</option>
+        <option value="neonGarden">Neon Garden</option>
+        <option value="forestHouse">Forest House</option>
+        <option value="wasteLand">Wasteland</option>
+        <option value="bassPod">Bass Pod</option>
+        <option value="circuitGrounds">Circuit Grounds</option>
+      </select>
+      <button class="sq-submit" onclick="saveSq()">Add to Route</button>
+    </div>
+  </div>
+</div>
 
 <!-- SPOTIFY BOTTOM SHEET -->
 <div id="spotify-sheet">
@@ -683,7 +765,7 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.10';
+const APP_VERSION = '2.11';
 
 // ── SPOTIFY IDS ───────────────────────────────────────────
 const SPOTIFY_IDS = {
@@ -797,6 +879,37 @@ const STAGE_POS = {
   bassPod:        { x:324, y:638 },
   circuitGrounds: { x:521, y:598 },
 };
+
+// ── SIDE QUESTS ───────────────────────────────────────────
+let sideQuests = { FRI: [], SAT: [], SUN: [] };
+let sqId = 0;
+
+function openSqSheet() {
+  document.getElementById('sq-name').value = '';
+  document.getElementById('sq-time').value = '';
+  document.getElementById('sq-loc').value = '';
+  document.getElementById('sq-sheet').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
+}
+function closeSqSheet() {
+  document.getElementById('sq-sheet').classList.remove('open');
+  document.body.style.overflow = '';
+  document.documentElement.style.overflow = '';
+}
+function saveSq() {
+  const name = document.getElementById('sq-name').value.trim();
+  const time = document.getElementById('sq-time').value;
+  const loc  = document.getElementById('sq-loc').value;
+  if (!name || !time || !loc) return;
+  sideQuests[mapDay].push({ id: sqId++, name, time, location: loc });
+  closeSqSheet();
+  renderMap();
+}
+function removeSq(id) {
+  sideQuests[mapDay] = sideQuests[mapDay].filter(q => q.id !== id);
+  renderMap();
+}
 
 // ── LINEUP DATA ───────────────────────────────────────────
 const DEFAULT_LINEUP = [
@@ -1106,7 +1219,9 @@ function renderMap() {
     .filter(a=>a && a.day===mapDay)
     .sort((a,b)=>toMins(a.start)-toMins(b.start));
 
-  if (selected.size===0) {
+  const sqForDay = sideQuests[mapDay] || [];
+
+  if (selected.size===0 && !sqForDay.length) {
     mapEmpty.innerHTML = 'select artists in Browse<br>to see your route';
     mapEmpty.style.display = 'block';
     mapVisual.style.display = 'none';
@@ -1114,7 +1229,7 @@ function renderMap() {
     return;
   }
 
-  if (!dayArtists.length) {
+  if (!dayArtists.length && !sqForDay.length) {
     mapEmpty.textContent = `no artists selected for ${dayLabels[mapDay]}`;
     mapEmpty.style.display = 'block';
     mapVisual.style.display = 'none';
@@ -1192,28 +1307,65 @@ function renderMap() {
       font-family="DM Mono,monospace" font-size="14" fill="#000" font-weight="700">${i+1}</text>
   `).join('');
 
-  // Route summary list
-  const routeList = stops.map((s,i)=>{
-    const color = sc(s.stage);
-    const names = s.artists.map(a=>`<span style="color:${color};font-weight:700">${a.name}</span> <span style="color:var(--muted)">${fmt(a.start)}–${fmt(a.end)}</span>`).join('<br>');
-    const lastEnd = toMins(s.artists[s.artists.length-1].end);
-    const stayMins = lastEnd - toMins(s.artists[0].start);
-    const nextStop = stops[i+1];
-    const wt = nextStop ? WALK[`${s.stage}-${nextStop.stage}`] : null;
-    const gap = nextStop ? toMins(nextStop.artists[0].start) - lastEnd : null;
-    const isEasy = wt != null && gap != null && gap >= wt;
-    return `
-      <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
-        <div style="width:22px;height:22px;border-radius:50%;background:${routeColor};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
-          <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${i+1}</span>
-        </div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">~${stayMins} min at stage</div>
-          <div style="font-size:11px;color:${color};font-family:DM Mono,monospace;margin-bottom:3px">${stageName(s.stage)}</div>
-          <div style="font-size:13px;line-height:1.8">${names}</div>
-          ${wt?`<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:${isEasy?'var(--muted)':'var(--warn)'}">→ ${wt} min ${isEasy?'easy':'fast'} walk to step ${i+2}</div>`:''}
-        </div>
-      </div>`;
+  // Side quest markers on map (gold diamond, tap to remove)
+  const sqMarkersHTML = sqForDay.map(sq => {
+    const pos = STAGE_POS[sq.location];
+    if (!pos) return '';
+    const mx = pos.x + 26, my = pos.y - 20;
+    const label = sq.name.length > 11 ? sq.name.slice(0,11)+'…' : sq.name;
+    return `<g onclick="removeSq(${sq.id})" style="cursor:pointer">
+      <polygon points="${mx},${my-14} ${mx+12},${my} ${mx},${my+14} ${mx-12},${my}" fill="#ffd700" stroke="#0d083a" stroke-width="2"/>
+      <text x="${mx}" y="${my+5}" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" fill="#0d083a" font-weight="900">★</text>
+      <text x="${mx}" y="${my-21}" text-anchor="middle" font-family="DM Mono,monospace" font-size="13" fill="#ffd700" stroke="#0d083a" stroke-width="5" paint-order="stroke">${fmt(sq.time)}</text>
+      <text x="${mx}" y="${my-35}" text-anchor="middle" font-family="DM Mono,monospace" font-size="12" fill="#ffd700" stroke="#0d083a" stroke-width="5" paint-order="stroke">${label}</text>
+    </g>`;
+  }).join('');
+
+  // Merge artist stops + side quests into a single timeline sorted by start time
+  let artistN = 0;
+  const combined = [
+    ...stops.map(s => ({ type:'artist', t: toMins(s.artists[0].start), stop: s, n: ++artistN })),
+    ...sqForDay.map(sq => ({ type:'quest',  t: toMins(sq.time), sq }))
+  ].sort((a,b)=>a.t-b.t);
+
+  const routeList = combined.map(item => {
+    if (item.type === 'artist') {
+      const s = item.stop, i = item.n - 1;
+      const color = sc(s.stage);
+      const names = s.artists.map(a=>`<span style="color:${color};font-weight:700">${a.name}</span> <span style="color:var(--muted)">${fmt(a.start)}–${fmt(a.end)}</span>`).join('<br>');
+      const lastEnd = toMins(s.artists[s.artists.length-1].end);
+      const stayMins = lastEnd - toMins(s.artists[0].start);
+      const nextArtist = stops[i+1];
+      const wt = nextArtist ? WALK[`${s.stage}-${nextArtist.stage}`] : null;
+      const gap = nextArtist ? toMins(nextArtist.artists[0].start) - lastEnd : null;
+      const isEasy = wt != null && gap != null && gap >= wt;
+      return `
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
+          <div style="width:22px;height:22px;border-radius:50%;background:${routeColor};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
+            <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${item.n}</span>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">~${stayMins} min at stage</div>
+            <div style="font-size:11px;color:${color};font-family:DM Mono,monospace;margin-bottom:3px">${stageName(s.stage)}</div>
+            <div style="font-size:13px;line-height:1.8">${names}</div>
+            ${wt?`<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:${isEasy?'var(--muted)':'var(--warn)'}">→ ${wt} min ${isEasy?'easy':'fast'} walk to step ${i+2}</div>`:''}
+          </div>
+        </div>`;
+    } else {
+      const sq = item.sq;
+      return `
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
+          <div style="width:22px;height:22px;background:#ffd700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transform:rotate(45deg);border-radius:3px">
+            <span style="transform:rotate(-45deg);font-size:13px;line-height:1">★</span>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">${fmt(sq.time)}</div>
+            <div style="font-size:13px;font-weight:700;margin-bottom:2px">${sq.name}</div>
+            <div style="font-size:11px;color:var(--muted);font-family:DM Mono,monospace">${stageName(sq.location)}</div>
+          </div>
+          <button onclick="removeSq(${sq.id})" style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 6px;flex-shrink:0;-webkit-tap-highlight-color:transparent">✕</button>
+        </div>`;
+    }
   }).join('');
 
   // Update only SVG content — image element is persistent in HTML, never reloaded
@@ -1222,11 +1374,12 @@ function renderMap() {
     ${allStagePinCircles}
     ${pathSegs}
     ${stepMarkers}
+    ${sqMarkersHTML}
     ${allStageLabels}`;
 
   mapRouteInfo.innerHTML = `
     <div style="font-family:DM Mono,monospace;font-size:10px;color:var(--muted);letter-spacing:0.12em;padding:0 4px 10px">${dayLabels[mapDay].toUpperCase()} · YOUR ROUTE</div>
-    <div style="display:flex;gap:20px;align-items:center;padding:0 4px 14px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
+    ${stops.length ? `<div style="display:flex;gap:20px;align-items:center;padding:0 4px 14px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
       <div style="display:flex;align-items:center;gap:7px">
         <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round"/></svg>
         <span>walk fast</span>
@@ -1235,7 +1388,7 @@ function renderMap() {
         <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4"/></svg>
         <span>easy walk</span>
       </div>
-    </div>
+    </div>` : ''}
     ${routeList}`;
 }
 
