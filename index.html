@@ -263,7 +263,7 @@
   /* ARTIST GRID */
   .artist-grid {
     display: grid; grid-template-columns: repeat(2,1fr);
-    gap: 8px; padding: 0 20px 48px;
+    gap: 8px; padding: 0 20px 68px;
   }
   .artist-chip {
     padding: 8px 12px 10px; border-radius: 8px;
@@ -998,11 +998,13 @@ function openSpotify(name, id) {
   wrap.innerHTML = `<iframe src="https://open.spotify.com/embed/artist/${id}?utm_source=generator&theme=0" allowfullscreen allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
   document.getElementById('spotify-sheet').classList.add('open');
   document.body.style.overflow = 'hidden';
+  document.documentElement.style.overflow = 'hidden';
 }
 function closeSpotify() {
   const sheet = document.getElementById('spotify-sheet');
   sheet.classList.remove('open');
   document.body.style.overflow = '';
+  document.documentElement.style.overflow = '';
   setTimeout(() => { document.getElementById('spotify-embed-wrap').innerHTML = ''; }, 300);
 }
 
