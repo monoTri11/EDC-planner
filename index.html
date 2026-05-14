@@ -241,7 +241,7 @@
   /* ARTIST GRID */
   .artist-grid {
     display: grid; grid-template-columns: repeat(2,1fr);
-    gap: 8px; padding: 0 20px 8px; align-items: start;
+    gap: 8px; padding: 0 20px 8px;
   }
   .artist-chip {
     padding: 12px 12px 10px; border-radius: 8px;
@@ -442,6 +442,10 @@
   <div class="nav-dropdown-item" onclick="menuRefresh()">
     <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
     <span>Refresh Lineup</span>
+  </div>
+  <div class="nav-dropdown-item" onclick="closeMenu();window.location.reload()">
+    <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+    <span>Refresh App</span>
   </div>
   <div class="nav-dropdown-item" onclick="menuSave()">
     <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
