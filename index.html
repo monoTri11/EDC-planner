@@ -276,6 +276,14 @@
   .chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
   .chip-stage { font-size: 13px; font-family: 'DM Mono', monospace; }
   .chip-time { font-size: 12px; color: var(--muted); font-family: 'DM Mono', monospace; }
+  .chip-day {
+    display: inline-block; font-family: 'DM Mono', monospace; font-size: 10px;
+    font-weight: 700; letter-spacing: 0.08em;
+    padding: 2px 7px; border-radius: 10px; margin-bottom: 4px;
+  }
+  .chip-day.fri { color: var(--fri); background: #9b8dff18; }
+  .chip-day.sat { color: var(--sat); background: #ff7eb318; }
+  .chip-day.sun { color: var(--sun); background: #4dffc418; }
 
   /* FAB */
   .fab {
@@ -765,7 +773,10 @@ function renderBrowse() {
     return `
       <div class="artist-chip ${sel?'s-'+dc(a.day):''}" onclick="toggleArtist('${a.name.replace(/'/g,"\\'")}')">
         <div class="chip-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="chip-top"><div class="chip-name">${a.name}</div></div>
+        <div class="chip-top">
+          ${browseDay==='ALL'?`<span class="chip-day ${dc(a.day)}">${a.day}</span>`:''}
+          <div class="chip-name">${a.name}</div>
+        </div>
         <div class="chip-row">
           <span class="chip-dot" style="background:${color}"></span>
           <span class="chip-stage" style="color:${color}">${a.stage}</span>
