@@ -977,8 +977,8 @@ function renderMap() {
       ${tight ? '' : 'stroke-dasharray="7 5"'} opacity="0.85"/>`;
   }).join('');
 
-  // Stage pins for all stages
-  const allStagePins = Object.entries(STAGE_POS).map(([name,pos])=>{
+  // Stage pin circles (rendered before route lines)
+  const allStagePinCircles = Object.entries(STAGE_POS).map(([name,pos])=>{
     const isActive = stops.some(s=>s.stage===name);
     const color = sc(name);
     return `
@@ -988,10 +988,17 @@ function renderMap() {
           stroke="${isActive?color:'#333'}"
           stroke-width="${isActive?1.5:1}"/>
         ${isActive?`<circle cx="${pos.x}" cy="${pos.y}" r="4" fill="${color}"/>` : ''}
-        <text x="${pos.x}" y="${pos.y+32}" text-anchor="middle"
-          font-family="DM Mono,monospace" font-size="20"
-          fill="${isActive?color:'#8884a8'}">${stageName(name)}</text>
       </g>`;
+  }).join('');
+
+  // Stage name labels (rendered last — above route lines and step markers)
+  const allStageLabels = Object.entries(STAGE_POS).map(([name,pos])=>{
+    const isActive = stops.some(s=>s.stage===name);
+    const color = sc(name);
+    return `<text x="${pos.x}" y="${pos.y+48}" text-anchor="middle"
+      font-family="DM Mono,monospace" font-size="20"
+      fill="${isActive?color:'#8884a8'}"
+      stroke="#0d083a" stroke-width="6" paint-order="stroke">${stageName(name)}</text>`;
   }).join('');
 
   // Step number markers, offset when same stage repeats
@@ -1031,12 +1038,14 @@ function renderMap() {
         <img src="map.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.28) saturate(0.5) hue-rotate(230deg);z-index:0">
         <svg viewBox="0 0 680 780" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1">
           <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.45"/>
-          <!-- all stage pins -->
-          ${allStagePins}
+          <!-- stage circles -->
+          ${allStagePinCircles}
           <!-- route path: solid = fast walk, dashed = easy walk -->
           ${pathSegs}
           <!-- step numbers -->
           ${stepMarkers}
+          <!-- stage labels on top -->
+          ${allStageLabels}
         </svg>
       </div>
     </div>
