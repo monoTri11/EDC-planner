@@ -737,16 +737,24 @@
           <optgroup label="── Stages ──">
             <option value="kineticField">Kinetic Field</option>
             <option value="quantumValley">Quantum Valley</option>
-            <option value="bionicJungle">Bionic Jungle</option>
-            <option value="stereoBloom">Stereo Bloom</option>
             <option value="cosmicMeadow">Cosmic Meadow</option>
             <option value="neonGarden">Neon Garden</option>
-            <option value="forestHouse">Forest House</option>
-            <option value="wasteLand">Wasteland</option>
-            <option value="bassPod">Bass Pod</option>
             <option value="circuitGrounds">Circuit Grounds</option>
+            <option value="bassPod">Bass Pod</option>
+            <option value="wasteLand">Wasteland</option>
+            <option value="stereoBloom">Stereo Bloom</option>
+            <option value="bionicJungle">Bionic Jungle</option>
+            <option value="forestHouse">Forest House</option>
+            <option value="beatboxArtCar">Beatbox Art Car</option>
+            <option value="casaBacara">Casa Bacardi</option>
+            <option value="electricolit">Electrolit Hydration House</option>
+            <option value="insomniacFridays">Insomniac Fridays</option>
+            <option value="picnicPlayti">Picnic Playtime Art Car</option>
+            <option value="takisRave">Takis Rave Hangar</option>
+            <option value="ubuntu">Ubuntu</option>
+            <option value="yeeC">YeeDC</option>
           </optgroup>
-          <optgroup label="── Entrances & Gates ──">
+          <optgroup label="── Entrances &amp; Gates ──">
             <option value="gateS">Entrance Gate S</option>
             <option value="gateCD">Entrance Gates C/D</option>
             <option value="gateP">Entrance Gate P</option>
@@ -881,7 +889,7 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.16';
+const APP_VERSION = '2.17';
 
 // ── SPOTIFY IDS ───────────────────────────────────────────
 const SPOTIFY_IDS = {
@@ -946,15 +954,24 @@ const SPOTIFY_IDS = {
 
 // ── STAGE COLORS ──────────────────────────────────────────
 const STAGE_CFG = {
-  kineticField:   '#e8c840',
-  quantumValley:  '#7eb8ff',
-  cosmicMeadow:   '#5dffa0',
-  neonGarden:     '#e070ff',
-  circuitGrounds: '#ff6e6e',
-  bassPod:        '#ff9c42',
-  wasteLand:      '#ff4fa0',
-  stereoBloom:    '#42d4ff',
-  bionicJungle:   '#a0ff70',
+  kineticField:     '#e8c840',
+  quantumValley:    '#7eb8ff',
+  cosmicMeadow:     '#5dffa0',
+  neonGarden:       '#e070ff',
+  circuitGrounds:   '#ff6e6e',
+  bassPod:          '#ff9c42',
+  wasteLand:        '#ff4fa0',
+  stereoBloom:      '#42d4ff',
+  bionicJungle:     '#a0ff70',
+  forestHouse:      '#ffd580',
+  beatboxArtCar:    '#ff85c2',
+  casaBacara:       '#80ffe8',
+  electricolit:     '#c8ff80',
+  insomniacFridays: '#ffb347',
+  picnicPlayti:     '#ff9de2',
+  takisRave:        '#80cfff',
+  ubuntu:           '#b8a0ff',
+  yeeC:             '#a8ff80',
 };
 const sc = s => STAGE_CFG[s] || '#888';
 const stageName = s => s.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase());
@@ -984,31 +1001,48 @@ const WALK = {
 
 // ── STAGE POSITIONS on SVG map (x,y center) ──────────────
 const STAGE_POS = {
-  kineticField:   { x:340, y:72  },
-  quantumValley:  { x:545, y:131 },
-  bionicJungle:   { x:126, y:143 },
-  stereoBloom:    { x:200, y:264 },
-  cosmicMeadow:   { x:134, y:386 },
-  neonGarden:     { x:516, y:364 },
-  forestHouse:    { x:610, y:478 },
-  wasteLand:      { x:128, y:598 },
-  bassPod:        { x:324, y:638 },
-  circuitGrounds: { x:521, y:598 },
+  kineticField:     { x:340, y:72  },
+  quantumValley:    { x:545, y:131 },
+  bionicJungle:     { x:126, y:143 },
+  stereoBloom:      { x:200, y:264 },
+  cosmicMeadow:     { x:134, y:386 },
+  neonGarden:       { x:516, y:364 },
+  forestHouse:      { x:610, y:478 },
+  wasteLand:        { x:128, y:598 },
+  bassPod:          { x:324, y:638 },
+  circuitGrounds:   { x:521, y:598 },
+  // Art cars & sponsored stages
+  beatboxArtCar:    { x:420, y:480 },
+  casaBacara:       { x:460, y:520 },
+  electricolit:     { x:400, y:560 },
+  insomniacFridays: { x:340, y:520 },
+  picnicPlayti:     { x:280, y:560 },
+  takisRave:        { x:260, y:480 },
+  ubuntu:           { x:300, y:440 },
+  yeeC:             { x:380, y:440 },
 };
 
 // ── SIDE QUEST LOCATIONS ──────────────────────────────────
 const SQ_LOCATIONS = [
   // Stages (exact from STAGE_POS)
-  { key:'kineticField',   label:'Kinetic Field',         pos:{x:340,y:72}  },
-  { key:'quantumValley',  label:'Quantum Valley',         pos:{x:545,y:131} },
-  { key:'bionicJungle',   label:'Bionic Jungle',          pos:{x:126,y:143} },
-  { key:'stereoBloom',    label:'Stereo Bloom',           pos:{x:200,y:264} },
-  { key:'cosmicMeadow',   label:'Cosmic Meadow',          pos:{x:134,y:386} },
-  { key:'neonGarden',     label:'Neon Garden',            pos:{x:516,y:364} },
-  { key:'forestHouse',    label:'Forest House',           pos:{x:610,y:478} },
-  { key:'wasteLand',      label:'Wasteland',              pos:{x:128,y:598} },
-  { key:'bassPod',        label:'Bass Pod',               pos:{x:324,y:638} },
-  { key:'circuitGrounds', label:'Circuit Grounds',        pos:{x:521,y:598} },
+  { key:'kineticField',     label:'Kinetic Field',              pos:{x:340,y:72}  },
+  { key:'quantumValley',    label:'Quantum Valley',             pos:{x:545,y:131} },
+  { key:'bionicJungle',     label:'Bionic Jungle',              pos:{x:126,y:143} },
+  { key:'stereoBloom',      label:'Stereo Bloom',               pos:{x:200,y:264} },
+  { key:'cosmicMeadow',     label:'Cosmic Meadow',              pos:{x:134,y:386} },
+  { key:'neonGarden',       label:'Neon Garden',                pos:{x:516,y:364} },
+  { key:'forestHouse',      label:'Forest House',               pos:{x:610,y:478} },
+  { key:'wasteLand',        label:'Wasteland',                  pos:{x:128,y:598} },
+  { key:'bassPod',          label:'Bass Pod',                   pos:{x:324,y:638} },
+  { key:'circuitGrounds',   label:'Circuit Grounds',            pos:{x:521,y:598} },
+  { key:'beatboxArtCar',    label:'Beatbox Art Car',            pos:{x:420,y:480} },
+  { key:'casaBacara',       label:'Casa Bacardi',               pos:{x:460,y:520} },
+  { key:'electricolit',     label:'Electrolit Hydration House', pos:{x:400,y:560} },
+  { key:'insomniacFridays', label:'Insomniac Fridays',          pos:{x:340,y:520} },
+  { key:'picnicPlayti',     label:'Picnic Playtime Art Car',    pos:{x:280,y:560} },
+  { key:'takisRave',        label:'Takis Rave Hangar',          pos:{x:260,y:480} },
+  { key:'ubuntu',           label:'Ubuntu',                     pos:{x:300,y:440} },
+  { key:'yeeC',             label:'YeeDC',                      pos:{x:380,y:440} },
   // Entrances & Gates
   { key:'gateS',          label:'Entrance Gate S',        pos:{x:618,y:92}  },
   { key:'gateCD',         label:'Entrance Gates C/D',     pos:{x:32,y:435}  },
@@ -1105,7 +1139,6 @@ function saveSq() {
   if (!time) { shake(document.getElementById('sq-time').parentElement); return; }
   if (!loc && !w3w) { shake(isW3W ? document.getElementById('sq-w3w') : document.getElementById('sq-loc')); return; }
   const sq = { id: sqEditId ?? sqId++, name, time, day, location: loc, w3w };
-  // remove old version from any day (handles day change on edit)
   if (sqEditId !== null)
     ['FRI','SAT','SUN'].forEach(d => { sideQuests[d] = sideQuests[d].filter(q => q.id !== sqEditId); });
   sideQuests[day].push(sq);
@@ -1153,37 +1186,37 @@ const DEFAULT_LINEUP = [
   {day:'SAT',name:'Maddix',             stage:'quantumValley', start:'00:30',end:'01:30'},
   {day:'SAT',name:'Paul Oakenfold',     stage:'quantumValley', start:'22:30',end:'23:30'},
   {day:'SAT',name:'Peggy Gou B2B Ki/Ki',stage:'circuitGrounds',start:'01:45',end:'03:15'},
-  {day:'SAT',name:'The Prodigy',        stage:'kineticField',  start:'21:30',end:'23:00'},
+  {day:'SAT',name:'The Prodigy',        stage:'cosmicMeadow',  start:'23:35',end:'00:35'},
   {day:'SAT',name:'Tiësto',             stage:'circuitGrounds',start:'00:15',end:'01:45'},
-  {day:'SAT',name:'VTSS',               stage:'neonGarden',    start:'21:30',end:'23:00'},
-  {day:'SAT',name:'Wax Motif',          stage:'cosmicMeadow',  start:'21:00',end:'22:30'},
-  {day:'SUN',name:'999999999',          stage:'neonGarden',    start:'02:00',end:'03:30'},
-  {day:'SUN',name:'Alison Wonderland',  stage:'kineticField',  start:'21:00',end:'22:30'},
+  {day:'SAT',name:'VTSS',               stage:'cosmicMeadow',  start:'22:15',end:'23:30'},
+  {day:'SAT',name:'Wax Motif',          stage:'stereoBloom',   start:'00:30',end:'01:45'},
+  {day:'SUN',name:'999999999',          stage:'neonGarden',    start:'00:10',end:'01:30'},
+  {day:'SUN',name:'Alison Wonderland',  stage:'cosmicMeadow',  start:'00:05',end:'01:05'},
   {day:'SUN',name:'Armin van Buuren',   stage:'kineticField',  start:'04:14',end:'05:28'},
-  {day:'SUN',name:'Chris Stussy',       stage:'neonGarden',    start:'23:30',end:'01:00'},
-  {day:'SUN',name:'Cloonee',            stage:'neonGarden',    start:'22:00',end:'23:30'},
-  {day:'SUN',name:'Indira Paganotto',   stage:'neonGarden',    start:'01:00',end:'02:00'},
-  {day:'SUN',name:'Kevin de Vries',     stage:'neonGarden',    start:'00:00',end:'01:00'},
+  {day:'SUN',name:'Chris Stussy',       stage:'circuitGrounds',start:'23:30',end:'01:00'},
+  {day:'SUN',name:'Cloonee',            stage:'kineticField',  start:'03:01',end:'04:10'},
+  {day:'SUN',name:'Indira Paganotto',   stage:'neonGarden',    start:'01:30',end:'02:50'},
+  {day:'SUN',name:'Kevin de Vries',     stage:'circuitGrounds',start:'04:00',end:'05:30'},
   {day:'SUN',name:'Kream',              stage:'quantumValley', start:'04:30',end:'05:30'},
   {day:'SUN',name:'Martin Garrix',      stage:'kineticField',  start:'01:47',end:'02:57'},
-  {day:'SUN',name:'Massano',            stage:'neonGarden',    start:'03:30',end:'05:00'},
-  {day:'SUN',name:'Peekaboo',           stage:'bassPod',       start:'23:00',end:'00:30'},
-  {day:'SUN',name:'Rooler',             stage:'wasteLand',     start:'23:00',end:'00:30'},
+  {day:'SUN',name:'Massano',            stage:'quantumValley', start:'02:15',end:'03:30'},
+  {day:'SUN',name:'Peekaboo',           stage:'bassPod',       start:'00:30',end:'01:30'},
+  {day:'SUN',name:'Rooler',             stage:'wasteLand',     start:'02:30',end:'03:30'},
   {day:'SUN',name:'Seven Lions',        stage:'cosmicMeadow',  start:'01:05',end:'02:20'},
-  {day:'SUN',name:'Shingo Nakamura',    stage:'quantumValley', start:'23:00',end:'00:00'},
-  {day:'SUN',name:'Solomun',            stage:'neonGarden',    start:'21:00',end:'22:00'},
-  {day:'SUN',name:'Sub Zero Project',   stage:'wasteLand',     start:'00:30',end:'02:00'},
+  {day:'SUN',name:'Shingo Nakamura',    stage:'quantumValley', start:'20:00',end:'21:00'},
+  {day:'SUN',name:'Solomun',            stage:'circuitGrounds',start:'01:00',end:'02:30'},
+  {day:'SUN',name:'Sub Zero Project',   stage:'wasteLand',     start:'01:30',end:'02:30'},
   {day:'SUN',name:'Tinlicker',          stage:'quantumValley', start:'00:00',end:'01:00'},
-  {day:'SUN',name:'Vintage Culture',    stage:'cosmicMeadow',  start:'23:00',end:'00:30'},
-  {day:'SUN',name:'Virtual Riot',       stage:'bassPod',       start:'00:30',end:'02:00'},
-  {day:'SUN',name:'Zedd',               stage:'kineticField',  start:'23:30',end:'01:00'},
+  {day:'SUN',name:'Vintage Culture',    stage:'circuitGrounds',start:'02:30',end:'04:00'},
+  {day:'SUN',name:'Virtual Riot',       stage:'bassPod',       start:'23:30',end:'00:30'},
+  {day:'SUN',name:'Zedd',               stage:'kineticField',  start:'00:32',end:'01:40'},
 ];
 
 // ── STATE ─────────────────────────────────────────────────
 let lineup   = JSON.parse(localStorage.getItem('edc_lineup') || 'null') || DEFAULT_LINEUP;
 let selected = new Set(JSON.parse(localStorage.getItem('edc_sel') || '[]'));
 let browseDay = 'ALL';
-let sortMode  = 'name'; // 'name' | 'time' | 'stage'
+let sortMode  = 'name';
 let mapDay    = 'FRI';
 
 function saveSelected() { localStorage.setItem('edc_sel', JSON.stringify([...selected])); }
@@ -1193,7 +1226,6 @@ function toMins(t) {
   const [h,m] = t.split(':').map(Number);
   return h < 8 ? (h+24)*60+m : h*60+m;
 }
-// Side quests sort on raw 24-hour time — 1am = 60, 9pm = 1260.
 function sqToMins(t) {
   const [h,m] = t.split(':').map(Number);
   return h*60+m;
@@ -1420,11 +1452,9 @@ function renderMap() {
   const mapSvg       = document.getElementById('map-svg');
   const mapRouteInfo = document.getElementById('map-route-info');
 
-  // render day tabs into sticky bar
   document.getElementById('map-day-tabs').innerHTML =
     days.map(d=>`<button class="map-day-tab ${mapDay===d?'a-'+dc(d):''}" onclick="setMapDay('${d}')">${dayLabels[d]}</button>`).join('');
 
-  // get selected artists for current mapDay
   const dayArtists = [...selected]
     .map(n=>lineup.find(x=>x.name===n))
     .filter(a=>a && a.day===mapDay)
@@ -1452,10 +1482,8 @@ function renderMap() {
   mapVisual.style.display = 'block';
   mapRouteInfo.style.display = 'block';
 
-  // Build route path through selected stages in time order
   const routeColor = {FRI:'#9b8dff',SAT:'#ff7eb3',SUN:'#4dffc4'}[mapDay];
 
-  // Group consecutive same-stage artists, then split where a side quest falls mid-gap
   const rawStops = [];
   dayArtists.forEach(a=>{
     const pos = STAGE_POS[a.stage];
@@ -1481,7 +1509,6 @@ function renderMap() {
     if(cur.length) stops.push({stage:s.stage,pos:s.pos,artists:cur});
   });
 
-  // Offset step markers when multiple stops share the same stage
   const stageStopCounts = {};
   stops.forEach(s => { stageStopCounts[s.stage] = (stageStopCounts[s.stage] || 0) + 1; });
   const stageStopIdx = {};
@@ -1492,18 +1519,26 @@ function renderMap() {
     s.markerY = s.pos.y;
   });
 
-  // Per-segment paths: solid = fast/tight walk, dashed = easy walk
-  const pathSegs = stops.slice(0,-1).map((s,i)=>{
-    const next = stops[i+1];
-    const wt = WALK[`${s.stage}-${next.stage}`];
-    const gap = toMins(next.artists[0].start) - toMins(s.artists[s.artists.length-1].end);
-    const tight = wt != null && gap < wt;
-    return `<path d="M${s.markerX},${s.markerY} L${next.markerX},${next.markerY}"
-      fill="none" stroke="${routeColor}" stroke-width="3" stroke-linecap="round"
-      ${tight ? '' : 'stroke-dasharray="7 5"'} opacity="0.85"/>`;
-  }).join('');
+  const combined = [
+    ...stops.map(s => ({ type:'artist', t: toMins(s.artists[0].start), stop: s })),
+    ...sqForDay.map(sq => {
+      const pos = (sq.location && SQ_LOC_MAP[sq.location]) ? SQ_LOC_MAP[sq.location].pos : null;
+      return { type:'quest', t: sqToMins(sq.time), sq, pos };
+    })
+  ].sort((a,b)=>a.t-b.t);
 
-  // Stage pin circles (rendered before route lines)
+  combined.forEach((item,i) => { item.stepNum = i + 1; });
+
+  const posItems = combined.filter(item => item.type==='artist' || item.pos);
+  const routePath = posItems.length > 1 ? posItems.map((item,i) => {
+    const x = item.type==='artist' ? item.stop.markerX : item.pos.x;
+    const y = item.type==='artist' ? item.stop.markerY : item.pos.y;
+    return (i===0?'M':'L') + `${x},${y}`;
+  }).join(' ') : '';
+  const pathSvg = routePath
+    ? `<path d="${routePath}" fill="none" stroke="${routeColor}" stroke-width="3" stroke-linecap="round" opacity="0.85"/>`
+    : '';
+
   const allStagePinCircles = Object.entries(STAGE_POS).map(([name,pos])=>{
     const isActive = stops.some(s=>s.stage===name);
     const color = sc(name);
@@ -1517,7 +1552,6 @@ function renderMap() {
       </g>`;
   }).join('');
 
-  // Stage name labels (rendered last — above route lines and step markers)
   const allStageLabels = Object.entries(STAGE_POS).map(([name,pos])=>{
     const isActive = stops.some(s=>s.stage===name);
     const color = sc(name);
@@ -1527,19 +1561,6 @@ function renderMap() {
       stroke="#0d083a" stroke-width="6" paint-order="stroke">${stageName(name)}</text>`;
   }).join('');
 
-  // Build combined timeline: artist stops + ALL side quests, sorted by time
-  const combined = [
-    ...stops.map(s => ({ type:'artist', t: toMins(s.artists[0].start), stop: s })),
-    ...sqForDay.map(sq => {
-      const pos = (sq.location && SQ_LOC_MAP[sq.location]) ? SQ_LOC_MAP[sq.location].pos : null;
-      return { type:'quest', t: sqToMins(sq.time), sq, pos };
-    })
-  ].sort((a,b)=>a.t-b.t);
-
-  // Assign unified step numbers
-  combined.forEach((item,i) => { item.stepNum = i + 1; });
-
-  // Build SVG markers — skip w3w-only quests (no pos)
   const allMarkers = combined.map(item => {
     if (item.type === 'artist') {
       const s = item.stop;
@@ -1560,18 +1581,13 @@ function renderMap() {
     return '';
   }).join('');
 
-  // Route path — only through items that have a map position
-  const posItems = combined.filter(item => item.type==='artist' || item.pos);
-  const routePath = posItems.length > 1 ? posItems.map((item,i) => {
-    const x = item.type==='artist' ? item.stop.markerX : item.pos.x;
-    const y = item.type==='artist' ? item.stop.markerY : item.pos.y;
-    return (i===0?'M':'L') + `${x},${y}`;
-  }).join(' ') : '';
-  const pathSvg = routePath
-    ? `<path d="${routePath}" fill="none" stroke="${routeColor}" stroke-width="3" stroke-linecap="round" opacity="0.85"/>`
-    : '';
+  mapSvg.innerHTML = `
+    <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.45"/>
+    ${allStagePinCircles}
+    ${pathSvg}
+    ${allMarkers}
+    ${allStageLabels}`;
 
-  // Route list
   const routeList = combined.map(item => {
     if (item.type === 'artist') {
       const s = item.stop;
@@ -1579,7 +1595,7 @@ function renderMap() {
       const names = s.artists.map(a=>`<span style="color:${color};font-weight:700">${a.name}</span> <span style="color:var(--muted)">${fmt(a.start)}–${fmt(a.end)}</span>`).join('<br>');
       const lastEnd = toMins(s.artists[s.artists.length-1].end);
       const stayMins = lastEnd - toMins(s.artists[0].start);
-      const nextItem = combined[item.stepNum]; // stepNum is 1-based so index of next item
+      const nextItem = combined[item.stepNum];
       const nextStage = nextItem?.type==='artist' ? nextItem.stop.stage : null;
       const wt = nextStage ? WALK[`${s.stage}-${nextStage}`] : null;
       const gap = nextItem ? nextItem.t - lastEnd : null;
@@ -1627,14 +1643,6 @@ function renderMap() {
         </div>`;
     }
   }).join('');
-
-  // Update only SVG content — image element is persistent in HTML, never reloaded
-  mapSvg.innerHTML = `
-    <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.45"/>
-    ${allStagePinCircles}
-    ${pathSvg}
-    ${allMarkers}
-    ${allStageLabels}`;
 
   mapRouteInfo.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px">
@@ -1719,7 +1727,6 @@ function menuAbout() {
 function closeAboutModal() {
   document.getElementById('about-overlay').classList.remove('open');
 }
-
 function menuShare() {
   closeMenu();
   if (navigator.share) {
@@ -1739,19 +1746,16 @@ function openSaveSheet() {
   document.getElementById('save-sheet').classList.add('open');
   setTimeout(() => document.getElementById('sheet-save-input').focus(), 350);
 }
-
 function openLoadSheet() {
   document.getElementById('load-file-input').value = '';
   document.getElementById('sheet-overlay').classList.add('open');
   document.getElementById('load-sheet').classList.add('open');
 }
-
 function closeSheets() {
   document.getElementById('sheet-overlay').classList.remove('open');
   document.getElementById('save-sheet').classList.remove('open');
   document.getElementById('load-sheet').classList.remove('open');
 }
-
 function confirmSave() {
   const name = document.getElementById('sheet-save-input').value.trim();
   if (!name) return;
@@ -1766,7 +1770,6 @@ function confirmSave() {
   closeSheets();
   showToast(`Downloaded "${a.download}"`);
 }
-
 function handleLoadFile(e) {
   const file = e.target.files[0];
   if (!file) return;
@@ -1803,21 +1806,14 @@ if ('serviceWorker' in navigator) {
     document.getElementById('update-dot').classList.add('visible');
     document.getElementById('update-banner').classList.add('visible');
   }
-
-  // controllerchange is the definitive signal the new SW has taken over
-  // (skipWaiting in sw.js means it never sits in 'waiting' long)
   let hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (hadController) showUpdateUI();
     hadController = true;
   });
-
   navigator.serviceWorker.register('sw.js').then(reg => {
-    // A SW may already be waiting from a previous update check
     if (reg.waiting && navigator.serviceWorker.controller) showUpdateUI();
-
     reg.update();
-
     reg.addEventListener('updatefound', () => {
       const newSW = reg.installing;
       newSW.addEventListener('statechange', () => {
@@ -1827,7 +1823,7 @@ if ('serviceWorker' in navigator) {
   }).catch(()=>{});
 }
 
-// ── PREVENT PINCH/DOUBLE-TAP ZOOM (iOS ignores viewport meta) ─
+// ── PREVENT PINCH/DOUBLE-TAP ZOOM ────────────────────────
 document.addEventListener('touchstart', e => {
   if (e.touches.length > 1) e.preventDefault();
 }, { passive: false });
