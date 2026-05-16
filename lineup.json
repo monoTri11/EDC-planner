@@ -121,7 +121,7 @@
   {
     "day": "FRI",
     "name": "Dono",
-    "stage": "forest1",
+    "stage": "forestHouse",
     "start": "21:15",
     "end": "22:15"
   },
@@ -142,7 +142,7 @@
   {
     "day": "FRI",
     "name": "Erosb",
-    "stage": "forest1",
+    "stage": "forestHouse",
     "start": "01:00",
     "end": "02:00"
   },
@@ -163,7 +163,7 @@
   {
     "day": "FRI",
     "name": "GLO0M13",
-    "stage": "insomniacs",
+    "stage": "insomniacFridays",
     "start": "19:00",
     "end": "20:00"
   },
@@ -275,7 +275,7 @@
   {
     "day": "FRI",
     "name": "Jem",
-    "stage": "insomniacs",
+    "stage": "insomniacFridays",
     "start": "19:00",
     "end": "20:00"
   },
@@ -289,7 +289,7 @@
   {
     "day": "FRI",
     "name": "Joey G",
-    "stage": "forest1",
+    "stage": "forestHouse",
     "start": "23:00",
     "end": "00:30"
   },
@@ -331,7 +331,7 @@
   {
     "day": "FRI",
     "name": "Lady Sinclair",
-    "stage": "forest1",
+    "stage": "forestHouse",
     "start": "22:00",
     "end": "23:00"
   },
@@ -415,7 +415,7 @@
   {
     "day": "FRI",
     "name": "Max Low",
-    "stage": "forest1",
+    "stage": "forestHouse",
     "start": "22:00",
     "end": "23:30"
   },
@@ -506,7 +506,7 @@
   {
     "day": "FRI",
     "name": "Param IDA",
-    "stage": "forest1",
+    "stage": "forestHouse",
     "start": "23:00",
     "end": "01:00"
   },
@@ -541,7 +541,7 @@
   {
     "day": "FRI",
     "name": "PL5&T",
-    "stage": "beatboxArt",
+    "stage": "beatboxArtCar",
     "start": "04:00",
     "end": "05:00"
   },
@@ -555,7 +555,7 @@
   {
     "day": "FRI",
     "name": "Punky Brewstar",
-    "stage": "insomniacs",
+    "stage": "insomniacFridays",
     "start": "21:00",
     "end": "22:30"
   },
@@ -702,28 +702,28 @@
   {
     "day": "FRI",
     "name": "Sussy Baka",
-    "stage": "forest1",
+    "stage": "forestHouse",
     "start": "20:00",
     "end": "21:00"
   },
   {
     "day": "FRI",
     "name": "Tavat Li",
-    "stage": "beatboxArt",
+    "stage": "beatboxArtCar",
     "start": "03:00",
     "end": "04:15"
   },
   {
     "day": "FRI",
     "name": "Taylor Kade",
-    "stage": "forest1",
+    "stage": "forestHouse",
     "start": "01:00",
     "end": "02:00"
   },
   {
     "day": "FRI",
     "name": "The Carry Nation",
-    "stage": "forest1",
+    "stage": "forestHouse",
     "start": "20:00",
     "end": "21:00"
   },
@@ -779,7 +779,7 @@
   {
     "day": "FRI",
     "name": "Tsumani",
-    "stage": "forest1",
+    "stage": "forestHouse",
     "start": "22:00",
     "end": "23:30"
   },
