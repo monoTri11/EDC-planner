@@ -3,8 +3,8 @@
     "day": "FRI",
     "name": "1991",
     "stage": "cosmicMeadow",
-    "start": "21:00",
-    "end": "22:00"
+    "start": "19:00",
+    "end": "20:00"
   },
   {
     "day": "FRI",
@@ -15,10 +15,52 @@
   },
   {
     "day": "FRI",
+    "name": "Adventure Club (Throwback Set)",
+    "stage": "kineticField",
+    "start": "18:00",
+    "end": "19:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Atliens",
+    "stage": "cosmicMeadow",
+    "start": "00:00",
+    "end": "01:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Abana B2B Juliet Mendoza",
+    "stage": "kineticField",
+    "start": "18:00",
+    "end": "19:00"
+  },
+  {
+    "day": "FRI",
     "name": "Argy",
     "stage": "kineticField",
     "start": "21:00",
     "end": "22:00"
+  },
+  {
+    "day": "FRI",
+    "name": "BOU",
+    "stage": "cosmicMeadow",
+    "start": "20:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Charlotte de Witte",
+    "stage": "kineticField",
+    "start": "04:00",
+    "end": "05:14"
+  },
+  {
+    "day": "FRI",
+    "name": "Chris Lorenz",
+    "stage": "kineticField",
+    "start": "22:00",
+    "end": "23:00"
   },
   {
     "day": "FRI",
@@ -36,6 +78,34 @@
   },
   {
     "day": "FRI",
+    "name": "Culture Shock",
+    "stage": "cosmicMeadow",
+    "start": "03:00",
+    "end": "04:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Cyclops",
+    "stage": "cosmicMeadow",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "FRI",
+    "name": "DJ Exile",
+    "stage": "casaBacara",
+    "start": "04:00",
+    "end": "05:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Danni G",
+    "stage": "ubuntu",
+    "start": "18:00",
+    "end": "19:00"
+  },
+  {
+    "day": "FRI",
     "name": "Darren Porter",
     "stage": "quantumValley",
     "start": "04:00",
@@ -43,10 +113,45 @@
   },
   {
     "day": "FRI",
+    "name": "Dip Vertigo",
+    "stage": "ubuntu",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Dono",
+    "stage": "forest1",
+    "start": "21:15",
+    "end": "22:15"
+  },
+  {
+    "day": "FRI",
+    "name": "Dyen",
+    "stage": "quantumValley",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Eli Brown",
+    "stage": "neonGarden",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Erosb",
+    "stage": "forest1",
+    "start": "01:00",
+    "end": "02:00"
+  },
+  {
+    "day": "FRI",
     "name": "Fisher",
     "stage": "kineticField",
-    "start": "23:00",
-    "end": "00:30"
+    "start": "01:35",
+    "end": "02:47"
   },
   {
     "day": "FRI",
@@ -57,9 +162,72 @@
   },
   {
     "day": "FRI",
-    "name": "Gorillaz",
-    "stage": "kineticField",
-    "start": "21:30",
+    "name": "GLO0M13",
+    "stage": "insomniacs",
+    "start": "19:00",
+    "end": "20:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Goril Lat",
+    "stage": "cosmicMeadow",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Grant Fisher",
+    "stage": "yeeC",
+    "start": "00:00",
+    "end": "01:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Guari",
+    "stage": "casaBacara",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Harts Horn",
+    "stage": "picnicPlayti",
+    "start": "04:00",
+    "end": "05:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Heidi Lawden B2B Masha Mar",
+    "stage": "stereoBloom",
+    "start": "18:00",
+    "end": "19:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Heyz",
+    "stage": "cosmicMeadow",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Hixxy",
+    "stage": "electricolit",
+    "start": "01:00",
+    "end": "02:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Holy Priest",
+    "stage": "cosmicMeadow",
+    "start": "03:00",
+    "end": "04:00"
+  },
+  {
+    "day": "FRI",
+    "name": "I Hate Models B2B VNS3A",
+    "stage": "cosmicMeadow",
+    "start": "22:00",
     "end": "23:00"
   },
   {
@@ -71,17 +239,276 @@
   },
   {
     "day": "FRI",
-    "name": "Meduza",
-    "stage": "cosmicMeadow",
+    "name": "Inspektorga Djet",
+    "stage": "electricolit",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "FRI",
+    "name": "J Patron",
+    "stage": "casaBacara",
+    "start": "21:15",
+    "end": "22:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Jackie Hollander",
+    "stage": "circuitGrounds",
+    "start": "19:00",
+    "end": "20:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Jared Jackson",
+    "stage": "ubuntu",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Jason Splat",
+    "stage": "picnicPlayti",
+    "start": "03:15",
+    "end": "04:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Jem",
+    "stage": "insomniacs",
+    "start": "19:00",
+    "end": "20:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Johannes Schuster",
+    "stage": "stereoBloom",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Joey G",
+    "stage": "forest1",
     "start": "23:00",
     "end": "00:30"
   },
   {
     "day": "FRI",
-    "name": "Nico Moreno",
+    "name": "Joseph Capriati",
     "stage": "neonGarden",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Jruiz",
+    "stage": "casaBacara",
+    "start": "19:00",
+    "end": "21:15"
+  },
+  {
+    "day": "FRI",
+    "name": "Kella Nd",
+    "stage": "electricolit",
+    "start": "23:30",
+    "end": "01:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Kuko",
+    "stage": "stereoBloom",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Kygor E",
+    "stage": "electricolit",
+    "start": "03:00",
+    "end": "04:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Lady Sinclair",
+    "stage": "forest1",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Laidback Luke B2B Chuck IE",
+    "stage": "kineticField",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Level Up",
+    "stage": "circuitGrounds",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Levity",
+    "stage": "kineticField",
     "start": "23:00",
     "end": "00:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Louis Love",
+    "stage": "yeeC",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Lucky Lou",
+    "stage": "casaBacara",
+    "start": "03:00",
+    "end": "04:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Luke Dean",
+    "stage": "stereoBloom",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Luuk van Dijk",
+    "stage": "quantumValley",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Mache Te",
+    "stage": "ubuntu",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Massilian O Paolo Jara",
+    "stage": "stereoBloom",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Matty Ralph",
+    "stage": "quantumValley",
+    "start": "20:00",
+    "end": "21:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Max Dean",
+    "stage": "circuitGrounds",
+    "start": "02:30",
+    "end": "04:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Max Low",
+    "stage": "forest1",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Max Dean B2B Luke Dean",
+    "stage": "circuitGrounds",
+    "start": "18:00",
+    "end": "19:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Meduza",
+    "stage": "cosmicMeadow",
+    "start": "01:00",
+    "end": "02:25"
+  },
+  {
+    "day": "FRI",
+    "name": "Mestiza",
+    "stage": "neonGarden",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Moon Pup",
+    "stage": "yeeC",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "FRI",
+    "name": "MPH",
+    "stage": "cosmicMeadow",
+    "start": "02:30",
+    "end": "03:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Mr. Deeds",
+    "stage": "ubuntu",
+    "start": "02:00",
+    "end": "03:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Muzz",
+    "stage": "neonGarden",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Nico Moreno",
+    "stage": "circuitGrounds",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Notion",
+    "stage": "cosmicMeadow",
+    "start": "01:30",
+    "end": "02:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Nxsty",
+    "stage": "electricolit",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Obsku R",
+    "stage": "stereoBloom",
+    "start": "03:15",
+    "end": "04:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Omar+",
+    "stage": "stereoBloom",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Param IDA",
+    "stage": "forest1",
+    "start": "23:00",
+    "end": "01:00"
   },
   {
     "day": "FRI",
@@ -92,16 +519,107 @@
   },
   {
     "day": "FRI",
-    "name": "Peggy Gou",
-    "stage": "neonGarden",
-    "start": "23:30",
-    "end": "01:00"
+    "name": "Paul van Dyk B2B",
+    "stage": "stereoBloom",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Pegasus",
+    "stage": "quantumValley",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Pizzi",
+    "stage": "ubuntu",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
+    "name": "PL5&T",
+    "stage": "beatboxArt",
+    "start": "04:00",
+    "end": "05:00"
   },
   {
     "day": "FRI",
     "name": "Porter Robinson",
     "stage": "kineticField",
     "start": "00:30",
+    "end": "01:35"
+  },
+  {
+    "day": "FRI",
+    "name": "Punky Brewstar",
+    "stage": "insomniacs",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "FRI",
+    "name": "R.A.W.",
+    "stage": "electricolit",
+    "start": "03:30",
+    "end": "05:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Rebekah",
+    "stage": "wasteLand",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Riot",
+    "stage": "neonGarden",
+    "start": "19:00",
+    "end": "20:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Roadhouse",
+    "stage": "yeeC",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Robert Hood",
+    "stage": "wasteLand",
+    "start": "02:30",
+    "end": "03:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Roddy Lima",
+    "stage": "circuitGrounds",
+    "start": "20:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Ron D Core",
+    "stage": "yeeC",
+    "start": "00:00",
+    "end": "01:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Sami G",
+    "stage": "casaBacara",
+    "start": "21:15",
+    "end": "22:15"
+  },
+  {
+    "day": "FRI",
+    "name": "Salute B2B Chloe Caille T",
+    "stage": "stereoBloom",
+    "start": "01:00",
     "end": "02:00"
   },
   {
@@ -113,6 +631,41 @@
   },
   {
     "day": "FRI",
+    "name": "Sarah De Warren",
+    "stage": "quantumValley",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Serafina",
+    "stage": "stereoBloom",
+    "start": "20:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Skanka",
+    "stage": "ubuntu",
+    "start": "03:30",
+    "end": "05:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Skibkid",
+    "stage": "electricolit",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Slam M",
+    "stage": "stereoBloom",
+    "start": "20:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
     "name": "Sofi Tukker",
     "stage": "kineticField",
     "start": "23:19",
@@ -120,10 +673,143 @@
   },
   {
     "day": "FRI",
+    "name": "Soso Dru",
+    "stage": "casaBacara",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Stan Christ",
+    "stage": "stereoBloom",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Steve Leclair",
+    "stage": "casaBacara",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Stacy Christine",
+    "stage": "wasteLand",
+    "start": "19:00",
+    "end": "20:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Sussy Baka",
+    "stage": "forest1",
+    "start": "20:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Tavat Li",
+    "stage": "beatboxArt",
+    "start": "03:00",
+    "end": "04:15"
+  },
+  {
+    "day": "FRI",
+    "name": "Taylor Kade",
+    "stage": "forest1",
+    "start": "01:00",
+    "end": "02:00"
+  },
+  {
+    "day": "FRI",
+    "name": "The Carry Nation",
+    "stage": "forest1",
+    "start": "20:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
+    "name": "The Chain Smokers",
+    "stage": "kineticField",
+    "start": "01:00",
+    "end": "02:00"
+  },
+  {
+    "day": "FRI",
+    "name": "The Masquerade B2B",
+    "stage": "circuitGrounds",
+    "start": "20:00",
+    "end": "21:00"
+  },
+  {
+    "day": "FRI",
+    "name": "The Outlaw",
+    "stage": "cosmicMeadow",
+    "start": "01:00",
+    "end": "02:00"
+  },
+  {
+    "day": "FRI",
+    "name": "The Soman",
+    "stage": "casaBacara",
+    "start": "19:00",
+    "end": "20:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Toma N",
+    "stage": "stereoBloom",
+    "start": "04:00",
+    "end": "05:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Topcat",
+    "stage": "wasteLand",
+    "start": "03:00",
+    "end": "04:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Trouble",
+    "stage": "ubuntu",
+    "start": "19:00",
+    "end": "20:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Tsumani",
+    "stage": "forest1",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "FRI",
     "name": "Underworld",
     "stage": "kineticField",
     "start": "02:00",
-    "end": "03:30"
+    "end": "03:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Vigro Deep",
+    "stage": "ubuntu",
+    "start": "22:30",
+    "end": "00:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Walker & Royce B2B VNS3A",
+    "stage": "cosmicMeadow",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "FRI",
+    "name": "Weste Nd",
+    "stage": "circuitGrounds",
+    "start": "21:00",
+    "end": "22:00"
   },
   {
     "day": "FRI",
@@ -133,11 +819,82 @@
     "end": "03:30"
   },
   {
+    "day": "FRI",
+    "name": "Zaane",
+    "stage": "wasteLand",
+    "start": "01:30",
+    "end": "02:30"
+  },
+  {
+    "day": "FRI",
+    "name": "Zaane E",
+    "stage": "wasteLand",
+    "start": "02:00",
+    "end": "03:00"
+  },
+
+  {
+    "day": "SAT",
+    "name": "A.M.C",
+    "stage": "quantumValley",
+    "start": "18:00",
+    "end": "19:00"
+  },
+  {
     "day": "SAT",
     "name": "Above & Beyond",
     "stage": "kineticField",
     "start": "04:00",
+    "end": "05:14"
+  },
+  {
+    "day": "SAT",
+    "name": "Abana",
+    "stage": "electricolit",
+    "start": "02:00",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Adrian Mills",
+    "stage": "kineticField",
+    "start": "18:00",
+    "end": "19:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Ahmed Spins",
+    "stage": "neonGarden",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Airglo",
+    "stage": "electricolit",
+    "start": "02:00",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "AJ Ball",
+    "stage": "forest1",
+    "start": "19:00",
+    "end": "20:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Alyssa Jolee",
+    "stage": "stereoBloom",
+    "start": "04:30",
     "end": "05:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Andro Cided",
+    "stage": "electricolit",
+    "start": "21:00",
+    "end": "22:30"
   },
   {
     "day": "SAT",
@@ -148,6 +905,69 @@
   },
   {
     "day": "SAT",
+    "name": "AR/CO",
+    "stage": "kineticField",
+    "start": "19:00",
+    "end": "20:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Astrix",
+    "stage": "neonGarden",
+    "start": "01:45",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Bashka B2B Sedef Adasi",
+    "stage": "bassPod",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Bad Boom Box B2B Ollie Lishman",
+    "stage": "bassPod",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Baugr Upper 8",
+    "stage": "wasteLand",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Benwal",
+    "stage": "wasteLand",
+    "start": "02:00",
+    "end": "03:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Benni Ola",
+    "stage": "forest1",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Billy Gillies",
+    "stage": "quantumValley",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Bolo",
+    "stage": "stereoBloom",
+    "start": "04:00",
+    "end": "05:00"
+  },
+  {
+    "day": "SAT",
     "name": "Boys Noize",
     "stage": "neonGarden",
     "start": "23:00",
@@ -155,24 +975,283 @@
   },
   {
     "day": "SAT",
+    "name": "Bunt.",
+    "stage": "neonGarden",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Canary Yellow",
+    "stage": "forest1",
+    "start": "23:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Carne Yval",
+    "stage": "casaBacara",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Casto R & Pollu X",
+    "stage": "forest1",
+    "start": "01:00",
+    "end": "02:00"
+  },
+  {
+    "day": "SAT",
+    "name": "CID",
+    "stage": "neonGarden",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Club Angel",
+    "stage": "stereoBloom",
+    "start": "04:30",
+    "end": "05:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Code Back B2B Audio Freq B2B Neshi",
+    "stage": "stereoBloom",
+    "start": "23:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "CRS7",
+    "stage": "electricolit",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Cut Down",
+    "stage": "wasteLand",
+    "start": "19:00",
+    "end": "20:00"
+  },
+  {
+    "day": "SAT",
     "name": "Da Tweekaz",
+    "stage": "bassPod",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Damon Sharpe",
+    "stage": "wasteLand",
+    "start": "02:30",
+    "end": "04:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Dazy Duke",
+    "stage": "forest1",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Dead X",
     "stage": "bassPod",
     "start": "21:00",
     "end": "22:30"
   },
   {
     "day": "SAT",
-    "name": "Dead X",
+    "name": "Disciple",
     "stage": "bassPod",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Discovery Project",
+    "stage": "electricolit",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Discovery Very Project",
+    "stage": "electricolit",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "SAT",
+    "name": "DJ Fla Pjack",
+    "stage": "yeeC",
+    "start": "23:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "DJ Gig Ola B2B Mary Drop Inz",
+    "stage": "circuitGrounds",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "SAT",
+    "name": "DJ Mand Y",
+    "stage": "circuitGrounds",
+    "start": "19:00",
+    "end": "20:00"
+  },
+  {
+    "day": "SAT",
+    "name": "DJ Octo Rp B2B Flux Pavilio N B2B Fii",
+    "stage": "circuitGrounds",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Doctor P B2B Flux Pavillion",
+    "stage": "circuitGrounds",
+    "start": "01:30",
+    "end": "03:15"
+  },
+  {
+    "day": "SAT",
+    "name": "Dreya V",
+    "stage": "bassPod",
+    "start": "20:00",
+    "end": "21:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Dramas",
+    "stage": "forest1",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Eli Fola",
+    "stage": "casaBacara",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Eptic B2B Space Laces",
+    "stage": "circuitGrounds",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Eric Davenport",
+    "stage": "picnicPlayti",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Espii",
+    "stage": "electricolit",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Eve Lauren",
+    "stage": "electricolit",
+    "start": "21:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Fallen With Children",
+    "stage": "circuitGrounds",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Falko",
+    "stage": "ubuntu",
+    "start": "04:30",
+    "end": "05:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Fester, Oscure & Thee-O",
+    "stage": "casaBacara",
     "start": "23:00",
-    "end": "00:30"
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Floyd Lavine",
+    "stage": "ubuntu",
+    "start": "02:00",
+    "end": "03:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Fluttershy",
+    "stage": "electricolit",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Fury",
+    "stage": "ubuntu",
+    "start": "23:00",
+    "end": "01:00"
   },
   {
     "day": "SAT",
     "name": "Getter",
     "stage": "bassPod",
     "start": "22:30",
-    "end": "23:00"
+    "end": "23:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Gette R",
+    "stage": "bassPod",
+    "start": "00:30",
+    "end": "01:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Gusta",
+    "stage": "casaBacara",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Haai",
+    "stage": "wasteLand",
+    "start": "23:00",
+    "end": "00:45"
+  },
+  {
+    "day": "SAT",
+    "name": "Haai B2B Luke Alessi",
+    "stage": "wasteLand",
+    "start": "23:00",
+    "end": "00:45"
+  },
+  {
+    "day": "SAT",
+    "name": "Hanna H Laing",
+    "stage": "cosmicMeadow",
+    "start": "20:00",
+    "end": "21:30"
   },
   {
     "day": "SAT",
@@ -190,10 +1269,73 @@
   },
   {
     "day": "SAT",
+    "name": "HOL!",
+    "stage": "cosmicMeadow",
+    "start": "03:30",
+    "end": "05:00"
+  },
+  {
+    "day": "SAT",
+    "name": "HNTR",
+    "stage": "wasteLand",
+    "start": "02:30",
+    "end": "04:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Hybri D Minds",
+    "stage": "neonGarden",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Jimni Crick et",
+    "stage": "electricolit",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
     "name": "John Summit",
     "stage": "kineticField",
     "start": "00:32",
     "end": "01:40"
+  },
+  {
+    "day": "SAT",
+    "name": "Jon Bishop",
+    "stage": "casaBacara",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Josh Baker B2B Ke Ttama B2B Prosp A",
+    "stage": "cosmicMeadow",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Josh Baker",
+    "stage": "cosmicMeadow",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Justus TNZ",
+    "stage": "forest1",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SAT",
+    "name": "KB Da DJ",
+    "stage": "ubuntu",
+    "start": "03:00",
+    "end": "05:30"
   },
   {
     "day": "SAT",
@@ -211,9 +1353,79 @@
   },
   {
     "day": "SAT",
+    "name": "Ki/Ki",
+    "stage": "neonGarden",
+    "start": "02:15",
+    "end": "03:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Koji Aiken",
+    "stage": "electricolit",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Lady Faith B2B Destiny TNZ",
+    "stage": "stereoBloom",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Lil Texas",
+    "stage": "wasteLand",
+    "start": "01:45",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Lilly Palmer",
+    "stage": "circuitGrounds",
+    "start": "04:30",
+    "end": "05:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Linne Y",
+    "stage": "forest1",
+    "start": "20:00",
+    "end": "21:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Love2 Hate",
+    "stage": "electricolit",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SAT",
     "name": "Luciano",
     "stage": "neonGarden",
     "start": "00:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Lucky Lou",
+    "stage": "casaBacara",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Luke Alexandra",
+    "stage": "forest1",
+    "start": "21:15",
+    "end": "22:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Madd S",
+    "stage": "forest1",
+    "start": "23:30",
     "end": "01:00"
   },
   {
@@ -222,6 +1434,146 @@
     "stage": "quantumValley",
     "start": "00:30",
     "end": "01:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Maddi R",
+    "stage": "quantumValley",
+    "start": "00:30",
+    "end": "01:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Malug I",
+    "stage": "cosmicMeadow",
+    "start": "03:30",
+    "end": "04:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Maria Healy",
+    "stage": "quantumValley",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Mary Drop Inz",
+    "stage": "circuitGrounds",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Matha Me",
+    "stage": "neonGarden",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Matti Lo",
+    "stage": "wasteLand",
+    "start": "02:00",
+    "end": "03:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Matt Faulk",
+    "stage": "wasteLand",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SAT",
+    "name": "MCR-T",
+    "stage": "stereoBloom",
+    "start": "23:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Meedy",
+    "stage": "ubuntu",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Melli Nfunk",
+    "stage": "electricolit",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Micah Martin",
+    "stage": "stereoBloom",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Mink",
+    "stage": "neonGarden",
+    "start": "19:00",
+    "end": "20:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Mish",
+    "stage": "stereoBloom",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "SAT",
+    "name": "N0where Girl",
+    "stage": "yeeC",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Night Stalker",
+    "stage": "electricolit",
+    "start": "21:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Noizu",
+    "stage": "quantumValley",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Odd Language",
+    "stage": "forest1",
+    "start": "01:15",
+    "end": "02:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Off In Lala",
+    "stage": "ubuntu",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Okayval",
+    "stage": "beatboxArt",
+    "start": "04:15",
+    "end": "05:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Omno M",
+    "stage": "quantumValley",
+    "start": "21:00",
+    "end": "22:30"
   },
   {
     "day": "SAT",
@@ -239,10 +1591,206 @@
   },
   {
     "day": "SAT",
-    "name": "The Prodigy",
-    "stage": "kineticField",
-    "start": "21:30",
+    "name": "PHNX",
+    "stage": "ubuntu",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Player Dave",
+    "stage": "wasteLand",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Playe R Dave",
+    "stage": "wasteLand",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Polar Bears",
+    "stage": "stereoBloom",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Prosp A",
+    "stage": "circuitGrounds",
+    "start": "01:30",
+    "end": "02:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Pukin G Spice Latte",
+    "stage": "picnicPlayti",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Raje",
+    "stage": "forest1",
+    "start": "21:15",
+    "end": "22:45"
+  },
+  {
+    "day": "SAT",
+    "name": "Reid Speed",
+    "stage": "yeeC",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Rob Gee B2B Benny Dee",
+    "stage": "wasteLand",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Rommi I",
+    "stage": "forest1",
+    "start": "01:00",
+    "end": "02:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Roxy Ferrari",
+    "stage": "casaBacara",
+    "start": "21:00",
     "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Roz",
+    "stage": "cosmicMeadow",
+    "start": "20:00",
+    "end": "21:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Sammo Y Virji",
+    "stage": "kineticField",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Samson",
+    "stage": "forest1",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Skila H",
+    "stage": "beatboxArt",
+    "start": "04:00",
+    "end": "05:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Slim Mcora W",
+    "stage": "forest1",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Slugg",
+    "stage": "stereoBloom",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Snow Strippers",
+    "stage": "neonGarden",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Spray",
+    "stage": "wasteLand",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Sqishi",
+    "stage": "forest1",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Starr Za",
+    "stage": "ubuntu",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Steve Aoki",
+    "stage": "kineticField",
+    "start": "21:15",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Sub Focus",
+    "stage": "kineticField",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Subtr Onics",
+    "stage": "circuitGrounds",
+    "start": "01:47",
+    "end": "03:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Super Strings",
+    "stage": "quantumValley",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SAT",
+    "name": "T78",
+    "stage": "cosmicMeadow",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Taylor Kade",
+    "stage": "casaBacara",
+    "start": "02:30",
+    "end": "04:00"
+  },
+  {
+    "day": "SAT",
+    "name": "The Saints",
+    "stage": "stereoBloom",
+    "start": "21:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Thomas Schumacher",
+    "stage": "cosmicMeadow",
+    "start": "03:30",
+    "end": "05:00"
   },
   {
     "day": "SAT",
@@ -250,6 +1798,34 @@
     "stage": "circuitGrounds",
     "start": "00:15",
     "end": "01:45"
+  },
+  {
+    "day": "SAT",
+    "name": "Tiga",
+    "stage": "stereoBloom",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Tony Camboa",
+    "stage": "casaBacara",
+    "start": "21:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SAT",
+    "name": "Trace",
+    "stage": "yeeC",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Vulka UF",
+    "stage": "electricolit",
+    "start": "02:30",
+    "end": "04:00"
   },
   {
     "day": "SAT",
@@ -266,6 +1842,28 @@
     "end": "22:30"
   },
   {
+    "day": "SAT",
+    "name": "YDG",
+    "stage": "neonGarden",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SAT",
+    "name": "Zakes Bantwini",
+    "stage": "ubuntu",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SAT",
+    "name": "2DY4",
+    "stage": "forest1",
+    "start": "23:00",
+    "end": "01:00"
+  },
+
+  {
     "day": "SUN",
     "name": "999999999",
     "stage": "neonGarden",
@@ -274,10 +1872,66 @@
   },
   {
     "day": "SUN",
+    "name": "A.M.C",
+    "stage": "neonGarden",
+    "start": "22:30",
+    "end": "00:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Adiel",
+    "stage": "neonGarden",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Ahee B2B Liquid Stranger",
+    "stage": "circuitGrounds",
+    "start": "01:00",
+    "end": "02:05"
+  },
+  {
+    "day": "SUN",
+    "name": "AK120",
+    "stage": "electricolit",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SUN",
     "name": "Alison Wonderland",
     "stage": "kineticField",
     "start": "21:00",
+    "end": "22:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Alison Wonderland B2B",
+    "stage": "neonGarden",
+    "start": "23:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Alves",
+    "stage": "kineticField",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Anna",
+    "stage": "kineticField",
+    "start": "21:00",
     "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "APX1",
+    "stage": "ubuntu",
+    "start": "03:00",
+    "end": "05:00"
   },
   {
     "day": "SUN",
@@ -288,10 +1942,115 @@
   },
   {
     "day": "SUN",
+    "name": "Ashley Walls",
+    "stage": "yeeC",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Assembly",
+    "stage": "stereoBloom",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Bad Ash",
+    "stage": "yeeC",
+    "start": "21:15",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Beltran",
+    "stage": "circuitGrounds",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Beltran B2B Simas",
+    "stage": "wasteLand",
+    "start": "03:30",
+    "end": "05:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Black Tiger Sex Machine B2B Nic B2B Sting",
+    "stage": "circuitGrounds",
+    "start": "02:30",
+    "end": "04:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Boogi Et B2B Nic B2B Sting",
+    "stage": "circuitGrounds",
+    "start": "02:30",
+    "end": "04:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Boray A",
+    "stage": "yeeC",
+    "start": "20:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Brosa",
+    "stage": "yeeC",
+    "start": "22:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Cassi An",
+    "stage": "neonGarden",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Chassi",
+    "stage": "casaBacara",
+    "start": "19:00",
+    "end": "21:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Charles Fee Logod",
+    "stage": "casaBacara",
+    "start": "02:15",
+    "end": "03:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Chibs",
+    "stage": "forest1",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Chris Lorenz B2B Sub Zero Project",
+    "stage": "wasteLand",
+    "start": "00:30",
+    "end": "02:00"
+  },
+  {
+    "day": "SUN",
     "name": "Chris Stussy",
     "stage": "neonGarden",
     "start": "23:30",
     "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Claws",
+    "stage": "stereoBloom",
+    "start": "21:00",
+    "end": "22:30"
   },
   {
     "day": "SUN",
@@ -302,10 +2061,227 @@
   },
   {
     "day": "SUN",
+    "name": "Close Friends Only",
+    "stage": "casaBacara",
+    "start": "03:00",
+    "end": "04:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Close Friends Only B2B Juos Rommi I",
+    "stage": "casaBacara",
+    "start": "03:00",
+    "end": "04:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Conn Or Q",
+    "stage": "ubuntu",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Cristoph",
+    "stage": "neonGarden",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Dabin",
+    "stage": "circuitGrounds",
+    "start": "22:30",
+    "end": "23:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Dena",
+    "stage": "electricolit",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Disco Cowboy",
+    "stage": "yeeC",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "DJ Gigolo & Fur",
+    "stage": "neonGarden",
+    "start": "22:30",
+    "end": "00:00"
+  },
+  {
+    "day": "SUN",
+    "name": "DJ Isaac",
+    "stage": "stereoBloom",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SUN",
+    "name": "DJ Ten B2B Red Axes",
+    "stage": "wasteLand",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Donald Glaud E",
+    "stage": "casaBacara",
+    "start": "01:15",
+    "end": "02:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Doozi E",
+    "stage": "yeeC",
+    "start": "21:15",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Eazybaked",
+    "stage": "circuitGrounds",
+    "start": "21:00",
+    "end": "22:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Eli & Fur",
+    "stage": "quantumValley",
+    "start": "22:30",
+    "end": "00:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Eric D-Lux",
+    "stage": "yeeC",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Espii",
+    "stage": "casaBacara",
+    "start": "19:00",
+    "end": "21:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Falle N",
+    "stage": "ubuntu",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Floyd Lavine",
+    "stage": "ubuntu",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Frank IE Bones",
+    "stage": "yeeC",
+    "start": "23:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Funk Tribu",
+    "stage": "kineticField",
+    "start": "22:30",
+    "end": "23:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Goshfather",
+    "stage": "stereoBloom",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Gravagerz",
+    "stage": "circuitGrounds",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Griz B2B Wooli",
+    "stage": "kineticField",
+    "start": "23:11",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Hamdi",
+    "stage": "stereoBloom",
+    "start": "23:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
     "name": "Indira Paganotto",
     "stage": "neonGarden",
     "start": "01:00",
     "end": "02:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Infekt B2B Samplifier",
+    "stage": "circuitGrounds",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Isabel La",
+    "stage": "stereoBloom",
+    "start": "21:15",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "John Price",
+    "stage": "casaBacara",
+    "start": "20:00",
+    "end": "22:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Juos",
+    "stage": "forest1",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Just.S Haun",
+    "stage": "wasteLand",
+    "start": "23:00",
+    "end": "00:45"
+  },
+  {
+    "day": "SUN",
+    "name": "Justin Hawkes",
+    "stage": "yeeC",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Kendo",
+    "stage": "electricolit",
+    "start": "19:00",
+    "end": "21:00"
   },
   {
     "day": "SUN",
@@ -316,10 +2292,122 @@
   },
   {
     "day": "SUN",
+    "name": "Kimmy Cat",
+    "stage": "yeeC",
+    "start": "21:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Kinah Au",
+    "stage": "stereoBloom",
+    "start": "22:30",
+    "end": "00:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Klang Kuenstler",
+    "stage": "quantumValley",
+    "start": "03:15",
+    "end": "04:30"
+  },
+  {
+    "day": "SUN",
+    "name": "KLO",
+    "stage": "stereoBloom",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
     "name": "Kream",
     "stage": "quantumValley",
     "start": "04:30",
     "end": "05:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Kuta",
+    "stage": "yeeC",
+    "start": "23:30",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Layto N Giordan I",
+    "stage": "kineticField",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Lexxy Jax",
+    "stage": "electricolit",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Linska",
+    "stage": "circuitGrounds",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Lo.RE",
+    "stage": "wasteLand",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Lucky Rabbi T",
+    "stage": "casaBacara",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Lu.RE",
+    "stage": "wasteLand",
+    "start": "04:30",
+    "end": "05:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Mado RRL B2B Sea Tree",
+    "stage": "stereoBloom",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Marc V",
+    "stage": "electricolit",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Mark E Quark",
+    "stage": "picnicPlayti",
+    "start": "03:00",
+    "end": "04:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Mark Lewis",
+    "stage": "yeeC",
+    "start": "22:00",
+    "end": "23:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Mars",
+    "stage": "yeeC",
+    "start": "21:00",
+    "end": "22:30"
   },
   {
     "day": "SUN",
@@ -337,6 +2425,111 @@
   },
   {
     "day": "SUN",
+    "name": "Massa No",
+    "stage": "neonGarden",
+    "start": "03:15",
+    "end": "05:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Morgan Sea Tree",
+    "stage": "circuitGrounds",
+    "start": "03:00",
+    "end": "04:30"
+  },
+  {
+    "day": "SUN",
+    "name": "MTK",
+    "stage": "electricolit",
+    "start": "03:00",
+    "end": "04:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Mune Quita",
+    "stage": "casaBacara",
+    "start": "02:30",
+    "end": "03:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Murp Ny's Law",
+    "stage": "stereoBloom",
+    "start": "20:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Nativesun",
+    "stage": "ubuntu",
+    "start": "02:00",
+    "end": "03:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Nekter",
+    "stage": "wasteLand",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Neon Deluze",
+    "stage": "stereoBloom",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Nerz",
+    "stage": "electricolit",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Nico Vries",
+    "stage": "circuitGrounds",
+    "start": "04:00",
+    "end": "05:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Night Stalker",
+    "stage": "quantumValley",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Nightstalker",
+    "stage": "quantumValley",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Nostalgix",
+    "stage": "circuitGrounds",
+    "start": "20:00",
+    "end": "21:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Odd Langua Ge",
+    "stage": "stereoBloom",
+    "start": "20:00",
+    "end": "21:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Okayval",
+    "stage": "electricolit",
+    "start": "01:30",
+    "end": "03:00"
+  },
+  {
+    "day": "SUN",
     "name": "Peekaboo",
     "stage": "bassPod",
     "start": "23:00",
@@ -344,10 +2537,73 @@
   },
   {
     "day": "SUN",
+    "name": "Picnic Play Ti",
+    "stage": "picnicPlayti",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Raje",
+    "stage": "ubuntu",
+    "start": "21:15",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Rebuke",
+    "stage": "neonGarden",
+    "start": "21:15",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Restricted",
+    "stage": "circuitGrounds",
+    "start": "01:30",
+    "end": "02:20"
+  },
+  {
+    "day": "SUN",
+    "name": "Rohaa N",
+    "stage": "ubuntu",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Rommi I B2B",
+    "stage": "casaBacara",
+    "start": "03:00",
+    "end": "04:15"
+  },
+  {
+    "day": "SUN",
     "name": "Rooler",
     "stage": "wasteLand",
-    "start": "23:00",
+    "start": "22:30",
     "end": "00:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Sabin E Blaizin",
+    "stage": "ubuntu",
+    "start": "03:00",
+    "end": "04:15"
+  },
+  {
+    "day": "SUN",
+    "name": "San Holo",
+    "stage": "circuitGrounds",
+    "start": "21:30",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Scoob A",
+    "stage": "ubuntu",
+    "start": "03:00",
+    "end": "04:15"
   },
   {
     "day": "SUN",
@@ -360,8 +2616,71 @@
     "day": "SUN",
     "name": "Shingo Nakamura",
     "stage": "quantumValley",
-    "start": "23:00",
-    "end": "00:00"
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Shipwrek",
+    "stage": "kineticField",
+    "start": "20:00",
+    "end": "21:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Sidney Charles B2B Bush Baby",
+    "stage": "neonGarden",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "SIHK",
+    "stage": "stereoBloom",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Silva Bumpa",
+    "stage": "neonGarden",
+    "start": "02:15",
+    "end": "03:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Silver Panda",
+    "stage": "wasteLand",
+    "start": "01:00",
+    "end": "02:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Simon Apex & Lost Tribu Set",
+    "stage": "electricolit",
+    "start": "22:30",
+    "end": "00:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Sippy",
+    "stage": "circuitGrounds",
+    "start": "19:30",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Sisto",
+    "stage": "casaBacara",
+    "start": "02:45",
+    "end": "03:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Skream",
+    "stage": "wasteLand",
+    "start": "22:30",
+    "end": "00:30"
   },
   {
     "day": "SUN",
@@ -372,6 +2691,27 @@
   },
   {
     "day": "SUN",
+    "name": "Sommer Ray",
+    "stage": "yeeC",
+    "start": "23:00",
+    "end": "00:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Sqishi",
+    "stage": "forest1",
+    "start": "01:15",
+    "end": "02:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Steve Loria",
+    "stage": "yeeC",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
     "name": "Sub Zero Project",
     "stage": "wasteLand",
     "start": "00:30",
@@ -379,10 +2719,66 @@
   },
   {
     "day": "SUN",
+    "name": "Synth Aven",
+    "stage": "beatboxArt",
+    "start": "04:00",
+    "end": "05:15"
+  },
+  {
+    "day": "SUN",
+    "name": "Tenst Eps",
+    "stage": "wasteLand",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "The Purge",
+    "stage": "stereoBloom",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Tim Clark",
+    "stage": "wasteLand",
+    "start": "02:30",
+    "end": "03:30"
+  },
+  {
+    "day": "SUN",
     "name": "Tinlicker",
     "stage": "quantumValley",
     "start": "00:00",
     "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Trace",
+    "stage": "kineticField",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Vieze Asbak",
+    "stage": "stereoBloom",
+    "start": "22:00",
+    "end": "23:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Vigro Deep",
+    "stage": "ubuntu",
+    "start": "21:00",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Vicious",
+    "stage": "beatboxArt",
+    "start": "04:15",
+    "end": "05:15"
   },
   {
     "day": "SUN",
@@ -400,9 +2796,79 @@
   },
   {
     "day": "SUN",
+    "name": "Waru No",
+    "stage": "quantumValley",
+    "start": "19:00",
+    "end": "21:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Ward Andrews B2B",
+    "stage": "stereoBloom",
+    "start": "20:00",
+    "end": "21:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Warface",
+    "stage": "wasteLand",
+    "start": "03:30",
+    "end": "04:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Whet Han",
+    "stage": "circuitGrounds",
+    "start": "02:20",
+    "end": "03:00"
+  },
+  {
+    "day": "SUN",
+    "name": "William Black",
+    "stage": "circuitGrounds",
+    "start": "21:00",
+    "end": "22:30"
+  },
+  {
+    "day": "SUN",
+    "name": "Willie Pake",
+    "stage": "casaBacara",
+    "start": "02:45",
+    "end": "03:45"
+  },
+  {
+    "day": "SUN",
+    "name": "Wolfi E",
+    "stage": "forest1",
+    "start": "21:30",
+    "end": "23:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Yosuf",
+    "stage": "wasteLand",
+    "start": "22:30",
+    "end": "00:00"
+  },
+  {
+    "day": "SUN",
+    "name": "Zakes Bantwini",
+    "stage": "ubuntu",
+    "start": "23:00",
+    "end": "01:00"
+  },
+  {
+    "day": "SUN",
     "name": "Zedd",
     "stage": "kineticField",
     "start": "23:30",
     "end": "01:00"
+  },
+  {
+    "day": "SUN",
+    "name": "2B Happy",
+    "stage": "picnicPlayti",
+    "start": "03:00",
+    "end": "04:15"
   }
 ]
