@@ -737,7 +737,6 @@
         </div>
         <div class="map-svg-wrap" style="position:relative;overflow:hidden;background:var(--surface)" id="map-svg-wrap">
           <svg id="map-svg" viewBox="0 0 680 780" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="width:100%;display:block;transform-origin:center center;transition:transform 0.15s">
-            <image href="map.png" x="0" y="0" width="680" height="780" preserveAspectRatio="xMidYMid slice" style="filter:brightness(0.28) saturate(0.5) hue-rotate(230deg)"/>
           </svg>
           <div class="map-zoom-btns">
             <button class="map-zoom-btn" onclick="mapZoom(1)">+</button>
@@ -933,7 +932,7 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.22';
+const APP_VERSION = '2.23';
 
 // ── SPOTIFY IDS ───────────────────────────────────────────
 const SPOTIFY_IDS = {
@@ -1695,12 +1694,37 @@ function renderMap() {
         stroke="#0d083a" stroke-width="6" paint-order="stroke">${stageName(name)}</text>`;
     }).join('');
     mapSvg.innerHTML = `
-      <image href="map.png" x="0" y="0" width="680" height="780" preserveAspectRatio="xMidYMid slice" style="filter:brightness(0.28) saturate(0.5) hue-rotate(230deg)"/>
+      <defs>
+        <filter id="map-img-filter" color-interpolation-filters="sRGB">
+          <feColorMatrix type="saturate" values="0.5"/>
+          <feComponentTransfer>
+            <feFuncR type="linear" slope="0.28"/>
+            <feFuncG type="linear" slope="0.28"/>
+            <feFuncB type="linear" slope="0.28"/>
+          </feComponentTransfer>
+          <feColorMatrix type="hueRotate" values="230"/>
+        </filter>
+      </defs>
+      <image href="map.png" x="0" y="0" width="680" height="780" preserveAspectRatio="xMidYMid slice" filter="url(#map-img-filter)"/>
       <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.35"/>
       ${allCircles}
       ${allLabels}`;
   } else {
-    const mapBg = `<image href="map.png" x="0" y="0" width="680" height="780" preserveAspectRatio="xMidYMid slice" style="filter:brightness(0.28) saturate(0.5) hue-rotate(230deg)"/>
+    const mapBg = `<defs>
+        <filter id="map-img-filter" color-interpolation-filters="sRGB">
+          <!-- desaturate -->
+          <feColorMatrix type="saturate" values="0.5"/>
+          <!-- darken to ~28% brightness -->
+          <feComponentTransfer>
+            <feFuncR type="linear" slope="0.28"/>
+            <feFuncG type="linear" slope="0.28"/>
+            <feFuncB type="linear" slope="0.28"/>
+          </feComponentTransfer>
+          <!-- hue-rotate 230deg approximated via matrix -->
+          <feColorMatrix type="hueRotate" values="230"/>
+        </filter>
+      </defs>
+      <image href="map.png" x="0" y="0" width="680" height="780" preserveAspectRatio="xMidYMid slice" filter="url(#map-img-filter)"/>
       <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.35"/>`;
     mapSvg.innerHTML = `
       ${mapBg}
