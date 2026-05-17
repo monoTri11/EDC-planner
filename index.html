@@ -190,7 +190,13 @@
   .tab-btn.active .tab-pill .tab-badge { background: var(--accent); color: var(--bg2); border-color: var(--bg2); }
 
   /* SCREENS */
-  .screen { display: none; padding: calc(var(--nav-h) + env(safe-area-inset-top)) 0 84px; min-height: 100dvh; overflow: visible; }
+  /* Each screen scrolls independently — we store/restore positions */
+  .screen {
+    display: none;
+    padding: calc(var(--nav-h) + env(safe-area-inset-top)) 0 84px;
+    min-height: 100dvh; overflow: visible;
+    /* overflow-y on body handles scroll; screens are block */
+  }
   .screen.active { display: block; }
 
   /* HEADER */
@@ -421,7 +427,7 @@
   .sched-remove:active { border-color: #ff606060; color: #ff6060; }
   .sched-remove svg { width: 12px; height: 12px; stroke-width: 2.5; stroke: currentColor; fill: none; }
   .walk-row { display: flex; align-items: center; gap: 8px; padding: 2px 20px 5px; }
-  .walk-line { flex: 1; height: 1px; background: var(--border); }
+  .walk-line-svg { flex: 1; overflow: hidden; }
   .walk-label { font-family: 'DM Mono', monospace; font-size: 10px; white-space: nowrap; }
   .conflict-banner {
     margin: 36px 20px 14px; padding: 11px 14px; border-radius: 8px;
@@ -442,6 +448,35 @@
   .map-no-sel {
     padding: 40px 20px; text-align: center;
     font-family: 'DM Mono', monospace; font-size: 12px; color: var(--muted); line-height: 2;
+  }
+  /* Map view mode toggle */
+  .map-view-tabs { display: flex; gap: 6px; padding: 0 16px 10px; }
+  .map-view-tab {
+    flex-shrink: 0; padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border2); background: none; cursor: pointer;
+    font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted);
+    transition: all 0.18s; letter-spacing: 0.05em;
+  }
+  .map-view-tab.active { background: #ffffff14; border-color: var(--border2); color: var(--text); }
+  /* Zoom controls */
+  .map-zoom-btns {
+    position: absolute; bottom: 12px; right: 12px; z-index: 10;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .map-zoom-btn {
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--surface2); border: 1px solid var(--border2);
+    color: var(--text); font-size: 20px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .map-zoom-btn:active { background: var(--surface); }
+  /* Time input consistent height */
+  .sq-input[type=time] {
+    height: 52px; padding-top: 20px; padding-bottom: 8px;
+    font-size: 13px; line-height: 1;
+    -webkit-appearance: none; appearance: none;
   }
   .map-day-tabs { display: flex; gap: 8px; padding: 0 16px 10px; overflow-x: auto; scrollbar-width: none; }
   .map-day-tabs::-webkit-scrollbar { display: none; }
@@ -696,9 +731,17 @@
     <div id="map-empty" class="map-no-sel" style="display:none"></div>
     <div id="map-visual" style="display:none">
       <div class="map-container" style="padding-top:32px">
-        <div class="map-svg-wrap" style="position:relative;overflow:hidden">
+        <div class="map-view-tabs" id="map-view-tabs">
+          <button class="map-view-tab active" onclick="setMapView('route')">Route</button>
+          <button class="map-view-tab" onclick="setMapView('all')">All Stages</button>
+        </div>
+        <div class="map-svg-wrap" style="position:relative;overflow:hidden" id="map-svg-wrap">
           <img src="map.png" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.28) saturate(0.5) hue-rotate(230deg);z-index:0">
-          <svg id="map-svg" viewBox="0 0 680 780" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1"></svg>
+          <svg id="map-svg" viewBox="0 0 680 780" xmlns="http://www.w3.org/2000/svg" style="position:relative;z-index:1;transform-origin:top left;transition:transform 0.2s"></svg>
+          <div class="map-zoom-btns">
+            <button class="map-zoom-btn" onclick="mapZoom(1)">+</button>
+            <button class="map-zoom-btn" onclick="mapZoom(-1)">−</button>
+          </div>
         </div>
       </div>
     </div>
@@ -724,7 +767,7 @@
         <button class="sq-day-btn" data-day="SUN" onclick="setSqDay('SUN')">Sun May 17</button>
       </div>
       <div style="position:relative">
-        <input class="sq-input" id="sq-time" type="time" style="padding-top:20px;padding-bottom:8px">
+        <input class="sq-input" id="sq-time" type="time">
         <span style="position:absolute;top:8px;left:14px;font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);pointer-events:none;letter-spacing:0.05em">TIME</span>
       </div>
       <div class="sq-loc-toggle">
@@ -889,7 +932,7 @@
 
 <script>
 // ── VERSION ───────────────────────────────────────────────
-const APP_VERSION = '2.17';
+const APP_VERSION = '2.21';
 
 // ── SPOTIFY IDS ───────────────────────────────────────────
 const SPOTIFY_IDS = {
@@ -977,26 +1020,40 @@ const sc = s => STAGE_CFG[s] || '#888';
 const stageName = s => s.replace(/([A-Z])/g, ' $1').replace(/^./, c => c.toUpperCase());
 
 // ── WALK TIMES ────────────────────────────────────────────
+// Walk times account for heavy crowd traffic + winding festival paths.
+// Assume ~1.8x straight-line time, rounded up to nearest minute.
+// Leave earlier than you think — peak hours (11pm–2am) can add 2–5 min more.
 const WALK = {
-  'kineticField-quantumValley':4,   'quantumValley-kineticField':4,
-  'kineticField-cosmicMeadow':6,    'cosmicMeadow-kineticField':6,
-  'kineticField-neonGarden':5,      'neonGarden-kineticField':5,
-  'kineticField-circuitGrounds':12, 'circuitGrounds-kineticField':12,
-  'kineticField-bassPod':10,        'bassPod-kineticField':10,
-  'kineticField-wasteLand':14,      'wasteLand-kineticField':14,
-  'kineticField-stereoBloom':5,     'stereoBloom-kineticField':5,
-  'kineticField-bionicJungle':7,    'bionicJungle-kineticField':7,
-  'quantumValley-neonGarden':5,     'neonGarden-quantumValley':5,
-  'quantumValley-cosmicMeadow':8,   'cosmicMeadow-quantumValley':8,
-  'quantumValley-circuitGrounds':8, 'circuitGrounds-quantumValley':8,
-  'quantumValley-bassPod':10,       'bassPod-quantumValley':10,
-  'neonGarden-cosmicMeadow':8,      'cosmicMeadow-neonGarden':8,
-  'neonGarden-circuitGrounds':8,    'circuitGrounds-neonGarden':8,
-  'cosmicMeadow-circuitGrounds':14, 'circuitGrounds-cosmicMeadow':14,
-  'cosmicMeadow-bassPod':8,         'bassPod-cosmicMeadow':8,
-  'cosmicMeadow-wasteLand':6,       'wasteLand-cosmicMeadow':6,
-  'circuitGrounds-bassPod':4,       'bassPod-circuitGrounds':4,
-  'bassPod-wasteLand':4,            'wasteLand-bassPod':4,
+  'kineticField-quantumValley':8,    'quantumValley-kineticField':8,
+  'kineticField-cosmicMeadow':12,    'cosmicMeadow-kineticField':12,
+  'kineticField-neonGarden':10,      'neonGarden-kineticField':10,
+  'kineticField-circuitGrounds':20,  'circuitGrounds-kineticField':20,
+  'kineticField-bassPod':18,         'bassPod-kineticField':18,
+  'kineticField-wasteLand':25,       'wasteLand-kineticField':25,
+  'kineticField-stereoBloom':10,     'stereoBloom-kineticField':10,
+  'kineticField-bionicJungle':13,    'bionicJungle-kineticField':13,
+  'kineticField-forestHouse':22,     'forestHouse-kineticField':22,
+  'quantumValley-neonGarden':10,     'neonGarden-quantumValley':10,
+  'quantumValley-cosmicMeadow':15,   'cosmicMeadow-quantumValley':15,
+  'quantumValley-circuitGrounds':15, 'circuitGrounds-quantumValley':15,
+  'quantumValley-bassPod':18,        'bassPod-quantumValley':18,
+  'quantumValley-forestHouse':18,    'forestHouse-quantumValley':18,
+  'neonGarden-cosmicMeadow':15,      'cosmicMeadow-neonGarden':15,
+  'neonGarden-circuitGrounds':15,    'circuitGrounds-neonGarden':15,
+  'neonGarden-forestHouse':15,       'forestHouse-neonGarden':15,
+  'cosmicMeadow-circuitGrounds':25,  'circuitGrounds-cosmicMeadow':25,
+  'cosmicMeadow-bassPod':15,         'bassPod-cosmicMeadow':15,
+  'cosmicMeadow-wasteLand':12,       'wasteLand-cosmicMeadow':12,
+  'cosmicMeadow-bionicJungle':10,    'bionicJungle-cosmicMeadow':10,
+  'circuitGrounds-bassPod':8,        'bassPod-circuitGrounds':8,
+  'circuitGrounds-wasteLand':10,     'wasteLand-circuitGrounds':10,
+  'circuitGrounds-forestHouse':10,   'forestHouse-circuitGrounds':10,
+  'bassPod-wasteLand':8,             'wasteLand-bassPod':8,
+  'bassPod-forestHouse':12,          'forestHouse-bassPod':12,
+  'wasteLand-forestHouse':15,        'forestHouse-wasteLand':15,
+  'stereoBloom-bionicJungle':8,      'bionicJungle-stereoBloom':8,
+  'stereoBloom-cosmicMeadow':10,     'cosmicMeadow-stereoBloom':10,
+  'bionicJungle-kineticField':13,    'kineticField-bionicJungle':13,
 };
 
 // ── STAGE POSITIONS on SVG map (x,y center) ──────────────
@@ -1218,6 +1275,9 @@ let selected = new Set(JSON.parse(localStorage.getItem('edc_sel') || '[]'));
 let browseDay = 'ALL';
 let sortMode  = 'name';
 let mapDay    = 'FRI';
+let mapView   = 'route'; // 'route' | 'all'
+let mapScale  = 1;
+const TAB_SCROLL = { browse: 0, schedule: 0, map: 0 };
 
 function saveSelected() { localStorage.setItem('edc_sel', JSON.stringify([...selected])); }
 
@@ -1235,18 +1295,30 @@ function fmt(t) {
   const ap = (h%24)<12?'am':'pm'; const h12=(h%12)||12;
   return `${h12}:${m.toString().padStart(2,'0')}${ap}`;
 }
+function fmtDur(mins) {
+  if (mins <= 0) return '0min';
+  const h = Math.floor(mins / 60), m = mins % 60;
+  if (h > 0 && m > 0) return `${h}hr ${m}min`;
+  if (h > 0) return `${h}hr`;
+  return `${m}min`;
+}
 function dc(day) { return {FRI:'fri',SAT:'sat',SUN:'sun'}[day]; }
 
-function hasConflict(name) {
-  const a = lineup.find(x=>x.name===name); if(!a) return false;
+function getConflicts(name) {
+  // Returns array of {name, overlapMins} for every conflict, or []
+  const a = lineup.find(x=>x.name===name); if(!a) return [];
   const as=toMins(a.start), ae=toMins(a.end);
-  return [...selected].some(n=>{
-    if(n===name) return false;
+  return [...selected].reduce((acc,n)=>{
+    if(n===name) return acc;
     const b=lineup.find(x=>x.name===n);
-    if(!b||b.day!==a.day) return false;
-    return as<toMins(b.end) && toMins(b.start)<ae;
-  });
+    if(!b||b.day!==a.day) return acc;
+    const bs=toMins(b.start), be=toMins(b.end);
+    const overlapMins = Math.min(ae,be) - Math.max(as,bs);
+    if(overlapMins > 0) acc.push({name:n, overlapMins});
+    return acc;
+  },[]);
 }
+function hasConflict(name) { return getConflicts(name).length > 0; }
 
 function updateBadge() {
   const badge = document.getElementById('sched-badge');
@@ -1385,35 +1457,53 @@ function renderSchedule() {
 
   let anyConflict=false, html='';
 
+  const routeColors = {FRI:'#9b8dff',SAT:'#ff7eb3',SUN:'#4dffc4'};
   ['FRI','SAT','SUN'].forEach(day=>{
     const artists=byDay[day].sort((a,b)=>toMins(a.start)-toMins(b.start));
     if(!artists.length) return;
     const dl={FRI:'FRI · MAY 15',SAT:'SAT · MAY 16',SUN:'SUN · MAY 17'};
+    const routeColor = routeColors[day];
     html+=`<div class="day-section"><div class="day-label ${dc(day)}">${dl[day]}</div>`;
 
     artists.forEach((a,i)=>{
-      const conflict=hasConflict(a.name);
+      const conflicts=getConflicts(a.name);
+      const conflict=conflicts.length>0;
       if(conflict) anyConflict=true;
       const color=sc(a.stage);
+      const dur = toMins(a.end) - toMins(a.start);
 
       if(i>0){
         const prev=artists[i-1];
         const wt=WALK[`${prev.stage}-${a.stage}`];
         const gap=toMins(a.start)-toMins(prev.end);
+        const tight=wt!=null && gap<wt;
+        const lineColor = tight ? 'var(--warn)' : routeColor;
+        const dashAttr = (!tight && prev.stage!==a.stage) ? 'stroke-dasharray="6 4"' : '';
         if(wt!=null){
-          const tight=gap<wt;
           html+=`<div class="walk-row">
-            <div class="walk-line"></div>
-            <div class="walk-label" style="color:${tight?'var(--warn)':'var(--muted)'}">${wt} min ${tight?'fast ⚠':'easy'} walk</div>
-            <div class="walk-line"></div>
+            <svg class="walk-line-svg" height="6"><line x1="0" y1="3" x2="100%" y2="3" stroke="${lineColor}" stroke-width="2" stroke-linecap="round" ${dashAttr}/></svg>
+            <div class="walk-label" style="color:${tight?'var(--warn)':'var(--muted)'}">
+              ${fmtDur(wt)} walk ${tight?'⚠ leave now':'(comfortable)'}${gap>0?` · ${fmtDur(gap)} gap`:''}
+            </div>
+            <svg class="walk-line-svg" height="6"><line x1="0" y1="3" x2="100%" y2="3" stroke="${lineColor}" stroke-width="2" stroke-linecap="round" ${dashAttr}/></svg>
+          </div>`;
+        } else if (gap > 0) {
+          html+=`<div class="walk-row">
+            <svg class="walk-line-svg" height="6"><line x1="0" y1="3" x2="100%" y2="3" stroke="${routeColor}" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 4"/></svg>
+            <div class="walk-label" style="color:var(--muted)">${fmtDur(gap)} gap</div>
+            <svg class="walk-line-svg" height="6"><line x1="0" y1="3" x2="100%" y2="3" stroke="${routeColor}" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 4"/></svg>
           </div>`;
         }
       }
 
+      const conflictDetail = conflict
+        ? conflicts.map(c=>`<div style="font-size:10px;color:var(--warn);font-family:'DM Mono',monospace;margin-top:3px">⚠ overlaps ${c.name} by ${fmtDur(c.overlapMins)}</div>`).join('')
+        : '';
+
       html+=`
         <div class="sched-item ${conflict?'conflict':''}">
           ${conflict?'<div class="conflict-pill">CONFLICT</div>':''}
-          <div class="sched-time">${fmt(a.start)}<br>${fmt(a.end)}</div>
+          <div class="sched-time">${fmt(a.start)}<br>${fmt(a.end)}<br><span style="font-size:9px;opacity:0.55">${fmtDur(dur)}</span></div>
           <div class="sched-bar" style="background:${color}"></div>
           <div class="sched-info">
             <div class="sched-name">${a.name}</div>
@@ -1421,8 +1511,9 @@ function renderSchedule() {
               <span class="sched-dot" style="background:${color}"></span>
               <span class="sched-stage" style="color:${color}">${stageName(a.stage)}</span>
             </div>
+            ${conflictDetail}
           </div>
-          <button class="sched-remove" onclick="removeArtist('${a.name.replace(/'/g,"\\'")}')">
+          <button class="sched-remove" onclick="removeArtist('${a.name.replace(/'/g,"\'")}')">
             <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </div>`;
@@ -1430,7 +1521,7 @@ function renderSchedule() {
     html+=`</div>`;
   });
 
-  document.getElementById('schedule-list').innerHTML=html;
+    document.getElementById('schedule-list').innerHTML=html;
   document.getElementById('conflict-banner').classList.toggle('visible',anyConflict);
 }
 
@@ -1454,6 +1545,12 @@ function renderMap() {
 
   document.getElementById('map-day-tabs').innerHTML =
     days.map(d=>`<button class="map-day-tab ${mapDay===d?'a-'+dc(d):''}" onclick="setMapDay('${d}')">${dayLabels[d]}</button>`).join('');
+
+  // Sync view toggle buttons
+  document.querySelectorAll('.map-view-tab').forEach(b=>{
+    const v = b.textContent.trim().toLowerCase().replace(' ','');
+    b.classList.toggle('active', v === mapView.replace(' ',''));
+  });
 
   const dayArtists = [...selected]
     .map(n=>lineup.find(x=>x.name===n))
@@ -1581,12 +1678,33 @@ function renderMap() {
     return '';
   }).join('');
 
-  mapSvg.innerHTML = `
-    <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.45"/>
-    ${allStagePinCircles}
-    ${pathSvg}
-    ${allMarkers}
-    ${allStageLabels}`;
+  if (mapView === 'all') {
+    // All stages view: show every stage with its color, no route overlay
+    const allCircles = Object.entries(STAGE_POS).map(([name,pos])=>{
+      const color = sc(name);
+      return `<g>
+        <circle cx="${pos.x}" cy="${pos.y}" r="14" fill="${color}22" stroke="${color}" stroke-width="1.5"/>
+        <circle cx="${pos.x}" cy="${pos.y}" r="4" fill="${color}"/>
+      </g>`;
+    }).join('');
+    const allLabels = Object.entries(STAGE_POS).map(([name,pos])=>{
+      const color = sc(name);
+      return `<text x="${pos.x}" y="${pos.y+48}" text-anchor="middle"
+        font-family="DM Mono,monospace" font-size="20" fill="${color}"
+        stroke="#0d083a" stroke-width="6" paint-order="stroke">${stageName(name)}</text>`;
+    }).join('');
+    mapSvg.innerHTML = `
+      <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.45"/>
+      ${allCircles}
+      ${allLabels}`;
+  } else {
+    mapSvg.innerHTML = `
+      <rect x="0" y="0" width="680" height="780" fill="#0d083a" opacity="0.45"/>
+      ${allStagePinCircles}
+      ${pathSvg}
+      ${allMarkers}
+      ${allStageLabels}`;
+  }
 
   const routeList = combined.map(item => {
     if (item.type === 'artist') {
@@ -1600,16 +1718,36 @@ function renderMap() {
       const wt = nextStage ? WALK[`${s.stage}-${nextStage}`] : null;
       const gap = nextItem ? nextItem.t - lastEnd : null;
       const isEasy = wt != null && gap != null && gap >= wt;
+      const dashAttr = isEasy ? 'stroke-dasharray="6 4"' : '';
+      const lineClr = isEasy ? 'var(--muted)' : 'var(--warn)';
       const walkLine = wt
-        ? `<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:${isEasy?'var(--muted)':'var(--warn)'}">→ ${wt} min ${isEasy?'easy':'fast'} walk to step ${item.stepNum+1}</div>`
-        : (gap !== null ? `<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:var(--muted)">→ ${gap} min until step ${item.stepNum+1}</div>` : '');
+        ? `<div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+            <svg width="20" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="20" y2="3" stroke="${routeColor}" stroke-width="2" stroke-linecap="round" ${dashAttr}/></svg>
+            <span style="font-size:10px;font-family:DM Mono,monospace;color:${lineClr}">${fmtDur(wt)} walk to step ${item.stepNum+1}${isEasy?' (comfortable)':' ⚠ leave now'}</span>
+          </div>`
+        : (gap !== null ? `<div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+            <svg width="20" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="20" y2="3" stroke="${routeColor}" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 4"/></svg>
+            <span style="font-size:10px;font-family:DM Mono,monospace;color:var(--muted)">${fmtDur(gap)} until step ${item.stepNum+1}</span>
+          </div>` : '');
+      const isLast = item.stepNum === combined.length;
+      // vertical connector line below the circle — solid or dashed based on next walk type
+      const connLine = !isLast
+        ? `<div style="width:2px;flex:1;min-height:12px;background:${isEasy||!wt?'transparent':'transparent'};position:relative;margin:0 auto">
+             <svg width="2" style="position:absolute;left:0;top:0;bottom:0;width:2px;height:100%"><line x1="1" y1="0" x2="1" y2="100%" stroke="${routeColor}" stroke-width="2" ${isEasy||!wt?'stroke-dasharray="4 4"':''}/></svg>
+           </div>`
+        : '';
       return `
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
-          <div style="width:22px;height:22px;border-radius:50%;background:${routeColor};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">
-            <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${item.stepNum}</span>
+        <div style="display:flex;gap:12px;align-items:stretch;padding:0 16px 0">
+          <!-- Left column: circle + vertical line -->
+          <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:22px">
+            <div style="width:22px;height:22px;border-radius:50%;background:${routeColor};display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1">
+              <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000">${item.stepNum}</span>
+            </div>
+            ${connLine}
           </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">~${stayMins} min at stage</div>
+          <!-- Right: content -->
+          <div style="flex:1;min-width:0;padding-bottom:16px">
+            <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px;margin-top:2px">~${fmtDur(stayMins)} at stage</div>
             <div style="font-size:11px;color:${color};font-family:DM Mono,monospace;margin-bottom:3px">${stageName(s.stage)}</div>
             <div style="font-size:13px;line-height:1.8">${names}</div>
             ${walkLine}
@@ -1619,30 +1757,58 @@ function renderMap() {
       const sq = item.sq;
       const loc = sq.w3w ? `///${sq.w3w}` : (SQ_LOC_MAP[sq.location]?.label || sq.location);
       const nextItem = combined[item.stepNum];
-      const gap = nextItem ? nextItem.t - sqToMins(sq.time) : null;
-      const walkLine = gap !== null
-        ? `<div style="font-size:10px;font-family:DM Mono,monospace;margin-top:6px;color:var(--muted)">→ ${gap} min until step ${item.stepNum+1}</div>`
+      const sqGap = nextItem ? nextItem.t - sqToMins(sq.time) : null;
+      const walkLine = sqGap !== null
+        ? `<div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+            <svg width="20" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="20" y2="3" stroke="#ffd700" stroke-width="2" stroke-linecap="round" stroke-dasharray="6 4"/></svg>
+            <span style="font-size:10px;font-family:DM Mono,monospace;color:var(--muted)">${fmtDur(sqGap)} until step ${item.stepNum+1}</span>
+          </div>`
         : '';
       const iconEdit = `<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/></svg>`;
       const iconTrash = `<svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>`;
+      const sqIsLast = item.stepNum === combined.length;
+      const sqConnLine = !sqIsLast
+        ? `<div style="width:2px;flex:1;min-height:12px;position:relative;margin:0 auto">
+             <svg width="2" style="position:absolute;left:0;top:0;bottom:0;width:2px;height:100%"><line x1="1" y1="0" x2="1" y2="100%" stroke="#ffd700" stroke-width="2" stroke-dasharray="4 4"/></svg>
+           </div>`
+        : '';
       return `
-        <div style="display:flex;gap:12px;align-items:flex-start;padding:0 16px 14px">
-          <div style="width:16px;height:16px;background:#ffd700;transform:rotate(45deg);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px">
-            <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000;transform:rotate(-45deg);display:block">${item.stepNum}</span>
+        <div style="display:flex;gap:12px;align-items:stretch;padding:0 16px 0">
+          <!-- Left column: diamond + vertical line -->
+          <div style="display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:22px">
+            <div style="width:16px;height:16px;background:#ffd700;transform:rotate(45deg);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:3px;z-index:1">
+              <span style="font-family:DM Mono,monospace;font-size:10px;font-weight:700;color:#000;transform:rotate(-45deg);display:block">${item.stepNum}</span>
+            </div>
+            ${sqConnLine}
           </div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">side quest</div>
-            <div style="font-size:11px;color:#ffd700;font-family:DM Mono,monospace;margin-bottom:3px">${loc}</div>
-            <div style="font-size:13px;line-height:1.8;font-weight:700">${sq.name} <span style="color:var(--muted);font-weight:400">${fmt(sq.time)}</span></div>
-            ${walkLine}
-          </div>
-          <div style="display:flex;gap:2px;flex-shrink:0;align-items:flex-start;margin-top:0">
-            <button onclick="openSqSheet(sideQuests['${sq.day}'].find(q=>q.id===${sq.id}))" style="background:rgba(255,255,255,0.06);border:none;color:var(--muted);cursor:pointer;min-width:36px;min-height:36px;border-radius:50%;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">${iconEdit}</button>
-            <button onclick="removeSq(${sq.id})" style="background:rgba(255,255,255,0.06);border:none;color:var(--muted);cursor:pointer;min-width:36px;min-height:36px;border-radius:50%;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">${iconTrash}</button>
+          <!-- Right: content + edit/del -->
+          <div style="flex:1;min-width:0;padding-bottom:16px;display:flex;gap:4px;align-items:flex-start">
+            <div style="flex:1;min-width:0;margin-top:2px">
+              <div style="font-size:10px;color:var(--muted);font-family:DM Mono,monospace;margin-bottom:4px">side quest</div>
+              <div style="font-size:11px;color:#ffd700;font-family:DM Mono,monospace;margin-bottom:3px">${loc}</div>
+              <div style="font-size:13px;line-height:1.8;font-weight:700">${sq.name} <span style="color:var(--muted);font-weight:400">${fmt(sq.time)}</span></div>
+              ${walkLine}
+            </div>
+            <div style="display:flex;gap:2px;flex-shrink:0">
+              <button onclick="openSqSheet(sideQuests['${sq.day}'].find(q=>q.id===${sq.id}))" style="background:rgba(255,255,255,0.06);border:none;color:var(--muted);cursor:pointer;min-width:36px;min-height:36px;border-radius:50%;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">${iconEdit}</button>
+              <button onclick="removeSq(${sq.id})" style="background:rgba(255,255,255,0.06);border:none;color:var(--muted);cursor:pointer;min-width:36px;min-height:36px;border-radius:50%;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center">${iconTrash}</button>
+            </div>
           </div>
         </div>`;
     }
   }).join('');
+
+  if (mapView === 'all') {
+    mapRouteInfo.innerHTML = `
+      <div style="padding:16px 20px;display:flex;flex-wrap:wrap;gap:8px 14px">
+        ${Object.entries(STAGE_CFG).map(([k,c])=>`
+          <div style="display:flex;align-items:center;gap:5px;font-family:DM Mono,monospace;font-size:11px">
+            <span style="width:8px;height:8px;border-radius:50%;background:${c};flex-shrink:0;display:inline-block"></span>
+            <span style="color:${c}">${stageName(k)}</span>
+          </div>`).join('')}
+      </div>`;
+    return;
+  }
 
   mapRouteInfo.innerHTML = `
     <div style="display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px">
@@ -1652,20 +1818,132 @@ function renderMap() {
     ${stops.length ? `<div style="display:flex;gap:20px;align-items:center;padding:0 20px 14px;font-family:DM Mono,monospace;font-size:10px;color:var(--muted)">
       <div style="display:flex;align-items:center;gap:7px">
         <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round"/></svg>
-        <span>walk fast</span>
+        <span>tight — leave now</span>
       </div>
       <div style="display:flex;align-items:center;gap:7px">
         <svg width="28" height="6" style="flex-shrink:0"><line x1="0" y1="3" x2="28" y2="3" stroke="${routeColor}" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="6 4"/></svg>
-        <span>easy walk</span>
+        <span>comfortable walk</span>
       </div>
     </div>` : ''}
-    ${routeList}`;
+    <div style="padding:8px 0 8px">${routeList}</div>`;
 }
 
-function setMapDay(d) { mapDay=d; renderMap(); }
+function setMapDay(d) { mapDay=d; mapPanX=0; mapPanY=0; mapScale=1; renderMap(); }
+function setMapView(v) {
+  mapView = v;
+  mapPanX=0; mapPanY=0; mapScale=1;
+  document.querySelectorAll('.map-view-tab').forEach(b=>{
+    b.classList.toggle('active', b.textContent.toLowerCase().replace(' ','')===v.replace(' ',''));
+  });
+  renderMap();
+}
+// ── MAP PAN + ZOOM ────────────────────────────────────────
+let mapPanX = 0, mapPanY = 0;
+const MAP_ZOOM_LEVELS = [0.75, 1, 1.33, 1.75, 2.25, 3];
+
+function applyMapTransform() {
+  const svg = document.getElementById('map-svg');
+  if (!svg) return;
+  // Clamp pan so map never drifts fully off screen
+  const wrap = document.getElementById('map-svg-wrap');
+  if (wrap) {
+    const ww = wrap.clientWidth, wh = wrap.clientHeight;
+    const sw = ww * mapScale, sh = wh * mapScale;
+    const maxX = Math.max(0, (sw - ww) / 2 + 40);
+    const maxY = Math.max(0, (sh - wh) / 2 + 40);
+    mapPanX = Math.max(-maxX, Math.min(maxX, mapPanX));
+    mapPanY = Math.max(-maxY, Math.min(maxY, mapPanY));
+  }
+  svg.style.transformOrigin = 'center center';
+  svg.style.transform = `translate(${mapPanX}px,${mapPanY}px) scale(${mapScale})`;
+}
+
+function mapZoom(dir) {
+  const cur = MAP_ZOOM_LEVELS.indexOf(mapScale);
+  const fallback = dir > 0 ? MAP_ZOOM_LEVELS.length - 1 : 0;
+  const curIdx = cur === -1 ? 1 : cur;
+  const next = Math.max(0, Math.min(MAP_ZOOM_LEVELS.length - 1, curIdx + dir));
+  if (next === curIdx) return;
+  // Zoom toward center: adjust pan so center stays stable
+  const prevScale = mapScale;
+  mapScale = MAP_ZOOM_LEVELS[next];
+  const ratio = mapScale / prevScale;
+  mapPanX *= ratio;
+  mapPanY *= ratio;
+  if (mapScale <= 1) { mapPanX = 0; mapPanY = 0; }
+  applyMapTransform();
+}
+
+// Touch pan & pinch-zoom on the map wrap only
+(function initMapTouch() {
+  let lastTouches = null;
+  let panStart = null;
+  let pinchStartDist = null;
+  let pinchStartScale = null;
+
+  function dist(t) {
+    const dx = t[0].clientX - t[1].clientX;
+    const dy = t[0].clientY - t[1].clientY;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+  function midpoint(t) {
+    return { x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2 };
+  }
+
+  document.addEventListener('touchstart', e => {
+    const wrap = document.getElementById('map-svg-wrap');
+    if (!wrap || !wrap.contains(e.target)) return;
+    if (e.touches.length === 1 && mapScale > 1) {
+      panStart = { x: e.touches[0].clientX - mapPanX, y: e.touches[0].clientY - mapPanY };
+      e.preventDefault();
+    } else if (e.touches.length === 2) {
+      pinchStartDist = dist(e.touches);
+      pinchStartScale = mapScale;
+      panStart = null;
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchmove', e => {
+    const wrap = document.getElementById('map-svg-wrap');
+    if (!wrap || !wrap.contains(e.target)) return;
+    if (e.touches.length === 1 && panStart && mapScale > 1) {
+      mapPanX = e.touches[0].clientX - panStart.x;
+      mapPanY = e.touches[0].clientY - panStart.y;
+      applyMapTransform();
+      e.preventDefault();
+    } else if (e.touches.length === 2 && pinchStartDist) {
+      const newDist = dist(e.touches);
+      const rawScale = pinchStartScale * (newDist / pinchStartDist);
+      mapScale = Math.max(MAP_ZOOM_LEVELS[0], Math.min(MAP_ZOOM_LEVELS[MAP_ZOOM_LEVELS.length-1], rawScale));
+      applyMapTransform();
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  document.addEventListener('touchend', e => {
+    const wrap = document.getElementById('map-svg-wrap');
+    if (!wrap || !wrap.contains(e.target)) return;
+    if (e.touches.length < 2) {
+      pinchStartDist = null;
+      // Snap scale to nearest level
+      const nearest = MAP_ZOOM_LEVELS.reduce((a, b) => Math.abs(b - mapScale) < Math.abs(a - mapScale) ? b : a);
+      mapScale = nearest;
+      if (mapScale <= 1) { mapPanX = 0; mapPanY = 0; }
+      applyMapTransform();
+    }
+    if (e.touches.length === 0) panStart = null;
+  }, { passive: false });
+})();
 
 // ── NAV ───────────────────────────────────────────────────
 function switchTab(tab, btn) {
+  // Save current scroll
+  const cur = document.querySelector('.screen.active');
+  if (cur) {
+    const id = cur.id.replace('screen-','');
+    TAB_SCROLL[id] = window.scrollY;
+  }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('screen-'+tab).classList.add('active');
@@ -1674,6 +1952,8 @@ function switchTab(tab, btn) {
   if(tab==='schedule') { renderSchedule(); fab.classList.remove('visible'); }
   else if(tab==='map')      { renderMap(); fab.classList.remove('visible'); }
   else if(tab==='browse')   renderBrowse();
+  // Restore scroll for this tab
+  requestAnimationFrame(()=>window.scrollTo(0, TAB_SCROLL[tab]||0));
 }
 
 function showToast(msg) {
@@ -1823,12 +2103,16 @@ if ('serviceWorker' in navigator) {
   }).catch(()=>{});
 }
 
-// ── PREVENT PINCH/DOUBLE-TAP ZOOM ────────────────────────
+// ── PREVENT PINCH/DOUBLE-TAP ZOOM (outside map) ─────────
 document.addEventListener('touchstart', e => {
+  const wrap = document.getElementById('map-svg-wrap');
+  if (wrap && wrap.contains(e.target)) return; // map handles its own touches
   if (e.touches.length > 1) e.preventDefault();
 }, { passive: false });
 let _lastTap = 0;
 document.addEventListener('touchend', e => {
+  const wrap = document.getElementById('map-svg-wrap');
+  if (wrap && wrap.contains(e.target)) return;
   const now = Date.now();
   if (now - _lastTap < 300) e.preventDefault();
   _lastTap = now;
